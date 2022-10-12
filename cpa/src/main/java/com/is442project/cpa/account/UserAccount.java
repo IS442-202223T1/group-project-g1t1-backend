@@ -25,6 +25,8 @@ public class UserAccount {
     @NotNull
     private String name;
 
+    private String contactNumber;
+
     private String password;
 
     private String contactNumber;
@@ -68,6 +70,14 @@ public class UserAccount {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public String getPassword() {
