@@ -22,7 +22,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-            .antMatchers("/console/**").permitAll()
+            .antMatchers("/h2-console/**").permitAll()
             .and().authorizeRequests()
             .antMatchers(HttpMethod.POST, AuthenticationConfigConstants.SIGN_UP_URL).permitAll()
             .anyRequest().authenticated()
