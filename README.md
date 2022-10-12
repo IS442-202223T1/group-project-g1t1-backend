@@ -1,116 +1,91 @@
-<div id="top"></div>
+# Backend
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
+[![Build Status](https://travis-ci.org/codecentric/springboot-sample-app.svg?branch=master)](https://travis-ci.org/codecentric/springboot-sample-app)
+[![Coverage Status](https://coveralls.io/repos/github/codecentric/springboot-sample-app/badge.svg?branch=master)](https://coveralls.io/github/codecentric/springboot-sample-app?branch=master)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-  <h3 align="center">OOP Project</h3>
+Minimal [Spring Boot](http://projects.spring.io/spring-boot/) sample app.
 
-</div>
+## Requirements
 
+For building and running the application you need:
 
+- [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [Maven 3](https://maven.apache.org)
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+## Running the application locally
 
+There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `cpa.src.main.java.com.is442project.cpa.CorporatePassApplication` class from your IDE.
 
+Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-maven-plugin.html).
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+Navigate to `.../group-project-g1t1-backend/cpa` and execute the following command:
 
+```shell
+mvn spring-boot:run
+```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+By default, the application runs on port 8080.
 
+## Authentication via JWT
 
+All endpoints (except for `/api/v1/admin/create`) require authentication via JWT. This token is issued by the `/login` endpoint.
 
-### Built With
+In order to request a token, a user account must first be created.
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+```shell
+curl --location --request POST 'http://localhost:8080/api/v1/admin/create' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"new_user@gmail.com",
+    "password": "new_user_password"
+}'
+```
 
-* [React.js](https://reactjs.org/)
+Afterwhich, use the `/login` endpoint to retrieve the JWT token for the user account. Note that the param name for email here is substituted by `username`
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+```shell
+curl -i --location --request POST 'http://localhost:8080/login' --header 'Content-Type: application/json' --data-raw '{
+    "username":"new_user@gmail.com",
+    "password": "new_user_password"
+}'
+```
 
+This should return a bearer token. This bearer token must be used to authorize subsequent API calls. For instance, the following should return a `[200]` response:
 
+```shell
+curl -i --location --request GET 'http://localhost:8080/api/v1/admin/test' --header 'Content-Type: application/json' --header 'Authorization: Bearer XXX'
+```
 
-<!-- GETTING STARTED -->
-## Getting Started
+Alternatively, use `scripts/get_access_token.sh` to get an access token printed in your terminal.
+```shell
+❯ ./scripts/get_access_token.sh
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Bearer XXX
+```
 
-### Prerequisites
+## Deploying the application to OpenShift
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+The easiest way to deploy the sample application to OpenShift is to use the [OpenShift CLI](https://docs.openshift.org/latest/cli_reference/index.html):
 
-### Installation
+```shell
+oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app
+```
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+This will create:
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+* An ImageStream called "springboot-maven3-centos"
+* An ImageStream called "springboot-sample-app"
+* A BuildConfig called "springboot-sample-app"
+* DeploymentConfig called "springboot-sample-app"
+* Service called "springboot-sample-app"
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+If you want to access the app from outside your OpenShift installation, you have to expose the springboot-sample-app service:
 
+```shell
+oc expose springboot-sample-app --hostname=www.example.com
+```
 
+## Copyright
 
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+Released under the Apache License 2.0. See the [LICENSE](https://github.com/codecentric/springboot-sample-app/blob/master/LICENSE) file.
