@@ -1,9 +1,7 @@
 package com.is442project.cpa.admin.authentication;
 
-import com.is442project.cpa.admin.authentication.JWTAuthenticationFilter;
-import com.is442project.cpa.admin.authentication.JWTAuthorizationFilter;
-import com.is442project.cpa.admin.authentication.AuthenticationUserDetailService;
 import com.is442project.cpa.config.AuthenticationConfigConstants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
