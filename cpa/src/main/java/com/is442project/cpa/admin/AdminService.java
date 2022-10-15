@@ -38,6 +38,6 @@ public class AdminService implements UserOps {
 
     @Override
     public ProfileDto userLogin(String email, String password) {
-        return new ProfileDto("test", "test", "123456", password, Arrays.asList("Administrator"));
+        return new ProfileDto("test", "test", "123456", Arrays.asList("Administrator"));
     }
 }
