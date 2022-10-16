@@ -1,8 +1,8 @@
 package com.is442project.cpa.admin;
 
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 
-@Entity
+@Embeddable
 public class GeneralOfficePersonnel extends Role{
     public GeneralOfficePersonnel() {
         super("GOP");
