@@ -26,21 +26,24 @@ public class UserAccount {
 
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userAccount")
+    private String contactNumber;
+
+    @ElementCollection
     private List<Role> roles = new ArrayList<>();
 
     public UserAccount() {
     }
 
     public UserAccount(String email, String name) {
-        this(email, name, String.valueOf(UUID.randomUUID()), Arrays.asList(new Borrower("", false)));
+        this(email, name, String.valueOf(UUID.randomUUID()),"", Arrays.asList(new Borrower()));
     }
 
-    public UserAccount(String email, String name, String password, List<Role> roles) {
+    public UserAccount(String email, String name, String password, String contactNumber , List<Role> roles) {
         this.email = email;
         this.username = email;
         this.name = name;
         this.password = password;
+        this.contactNumber = contactNumber;
         this.roles = roles;
     }
 
@@ -79,6 +82,14 @@ public class UserAccount {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public List<Role> getRoles() {

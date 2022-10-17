@@ -2,9 +2,6 @@ package com.is442project.cpa.admin;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.ContextStartedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
@@ -21,7 +18,7 @@ public class UserSeeder {
     }
 
     public void insertTestData() {
-        UserAccount admin = new UserAccount("testAdmin@gmail.com", "TestAdmin", "testadmin", Arrays.asList(new Administrator()));
+        UserAccount admin = new UserAccount("testAdmin@gmail.com", "TestAdmin", "testadmin", null,Arrays.asList(new Administrator(), new Borrower()));
 
         UserAccount user01 = new UserAccount("david@sportsschool.edu.sg", "David Tan");
         UserAccount user02 = new UserAccount("mary@nysi.org.sg", "Mary Lim");
