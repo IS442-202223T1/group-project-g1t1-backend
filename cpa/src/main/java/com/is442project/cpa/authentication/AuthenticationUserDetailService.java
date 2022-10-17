@@ -1,4 +1,4 @@
-package com.is442project.cpa.admin.authentication;
+package com.is442project.cpa.authentication;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

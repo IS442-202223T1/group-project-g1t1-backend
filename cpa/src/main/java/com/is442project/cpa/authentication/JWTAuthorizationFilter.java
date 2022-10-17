@@ -1,9 +1,8 @@
-package com.is442project.cpa.admin.authentication;
+package com.is442project.cpa.authentication;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import com.is442project.cpa.config.AuthenticationConfigConstants;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,6 +1,5 @@
-package com.is442project.cpa.admin.authentication;
+package com.is442project.cpa.authentication;
 
-import com.is442project.cpa.config.AuthenticationConfigConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
