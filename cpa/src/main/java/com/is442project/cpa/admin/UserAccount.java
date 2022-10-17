@@ -15,8 +15,14 @@ public class UserAccount {
     @Id
     private String email;
 
+    /* intended to be replicate of email for org.springframework.security.core.Authentication
+    which relies on the attribute `username` to be present */
+    private String username;
+
     @NotNull
     private String name;
+
+    private String contactNumber;
 
     private String password;
 
@@ -34,6 +40,7 @@ public class UserAccount {
 
     public UserAccount(String email, String name, String password, String contactNumber , List<Role> roles) {
         this.email = email;
+        this.username = email;
         this.name = name;
         this.password = password;
         this.contactNumber = contactNumber;
@@ -46,6 +53,11 @@ public class UserAccount {
 
     public void setEmail(String email) {
         this.email = email;
+        this.username = email;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getName() {
@@ -54,6 +66,14 @@ public class UserAccount {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public String getPassword() {
