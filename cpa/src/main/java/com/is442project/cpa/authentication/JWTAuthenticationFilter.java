@@ -3,7 +3,7 @@ package com.is442project.cpa.authentication;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.is442project.cpa.admin.UserAccount;
+import com.is442project.cpa.account.UserAccount;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

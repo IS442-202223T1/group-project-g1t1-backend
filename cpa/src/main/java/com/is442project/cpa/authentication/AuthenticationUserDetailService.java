@@ -5,8 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.is442project.cpa.admin.UserAccount;
-import com.is442project.cpa.admin.AdminService;
+
+import com.is442project.cpa.account.AccountService;
+import com.is442project.cpa.account.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationUserDetailService implements UserDetailsService {
-    private final AdminService adminService;
+    private final AccountService adminService;
     @Override public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserAccount user = adminService.readUserByEmail(email);
         if (user == null) {

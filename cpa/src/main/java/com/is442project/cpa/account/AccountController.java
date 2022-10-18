@@ -1,4 +1,4 @@
-package com.is442project.cpa.admin;
+package com.is442project.cpa.account;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-public class AdminController {
+public class AccountController {
     private final UserOps userOps;
     private final String API_V1_ADMIN = "/api/v1/admin";
     public final String API_V1_ADMIN_LOGIN = API_V1_ADMIN+ "/login";
 
-    public AdminController(AdminService adminService) {
+    public AccountController(AccountService adminService) {
         userOps = adminService;
     }
 
