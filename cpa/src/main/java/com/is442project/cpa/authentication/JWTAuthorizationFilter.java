@@ -5,11 +5,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,8 +43,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .build()
                 .verify(token.replace(AuthenticationConfigConstants.TOKEN_PREFIX, ""))
                 .getSubject();
+
             if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                // TODO: Add the roles based on the user's roles
+                List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+                authorities.add(new SimpleGrantedAuthority("Borrower"));
+                authorities.add(new SimpleGrantedAuthority("Admin"));
+                return new UsernamePasswordAuthenticationToken(user, null, authorities);
             }
             return null;
         }

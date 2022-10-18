@@ -18,8 +18,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll().and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, AuthenticationConfigConstants.SIGN_UP_URL).permitAll()
+                .authorizeRequests().antMatchers("/h2-console/**").permitAll().and() // permit h2-console
+                .authorizeRequests().antMatchers(HttpMethod.POST, AuthenticationConfigConstants.SIGN_UP_URL).permitAll().and() // permit signup URL on POST
+                .authorizeRequests().antMatchers("/api/v1/**").access("hasAuthority('Admin')") // only permit Admin on /api/v1/**
                 .anyRequest().authenticated().and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))

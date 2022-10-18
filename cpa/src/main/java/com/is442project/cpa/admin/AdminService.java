@@ -29,6 +29,7 @@ public class AdminService implements UserOps {
         user.setName(userCreateRequest.getName());
         user.setContactNumber(userCreateRequest.getContactNumber());
         user.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
+        user.setRoles(Arrays.asList(new Borrower())); // TODO: Add roles based on the user's roles (OR default as borrrower?)
         userAccountRepository.save(user);
         return user;
     }

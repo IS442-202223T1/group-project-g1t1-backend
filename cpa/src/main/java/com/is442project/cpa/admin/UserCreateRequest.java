@@ -9,10 +9,10 @@ public class UserCreateRequest {
     private String contactNumber;
     private String password;
 
-    public UserCreateRequest(String email, String name, String contractNumber, String password) {
+    public UserCreateRequest(String email, String name, String contactNumber, String password) {
         this.email = email;
         this.name = name;
-        this.contactNumber = contractNumber;
+        this.contactNumber = contactNumber;
         this.password = password;
     }
 
