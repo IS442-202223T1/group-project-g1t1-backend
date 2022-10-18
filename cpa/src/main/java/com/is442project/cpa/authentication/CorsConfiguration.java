@@ -15,7 +15,9 @@ public class CorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
+                        .allowedHeaders("Authorization", "Cache-Control", "Content-Type")
                         .allowedMethods("*")
+                        .exposedHeaders("*")
                         .allowedOrigins("http://localhost:3000");
             }
         };
