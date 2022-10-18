@@ -3,6 +3,9 @@ package com.is442project.cpa.account;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +29,7 @@ public class UserAccount {
 
     private String contactNumber;
 
-    @ElementCollection
+    @ElementCollection(fetch=FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
 
     public UserAccount() {
@@ -40,7 +43,8 @@ public class UserAccount {
         this.email = email;
         this.username = email;
         this.name = name;
-        this.password = password;
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.password = bCryptPasswordEncoder.encode(password);
         this.contactNumber = contactNumber;
         this.roles = roles;
     }

@@ -2,6 +2,9 @@ package com.is442project.cpa.authentication;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.is442project.cpa.account.AccountService;
+import com.is442project.cpa.account.UserAccountRepository;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,17 +42,17 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(AuthenticationConfigConstants.HEADER_STRING);
         if (token != null) {
             // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()))
+            DecodedJWT decodedToken = JWT.require(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()))
                 .build()
-                .verify(token.replace(AuthenticationConfigConstants.TOKEN_PREFIX, ""))
-                .getSubject();
+                .verify(token.replace(AuthenticationConfigConstants.TOKEN_PREFIX, ""));
 
-            if (user != null) {
-                // TODO: Add the roles based on the user's roles
+            if (decodedToken != null) {
                 List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-                authorities.add(new SimpleGrantedAuthority("Borrower"));
-                authorities.add(new SimpleGrantedAuthority("Admin"));
-                return new UsernamePasswordAuthenticationToken(user, null, authorities);
+                List<String> userRoleClaim = decodedToken.getClaim("USER_ROLES").asList(String.class);
+                for (String role : userRoleClaim) {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                }
+                return new UsernamePasswordAuthenticationToken(decodedToken.getSubject(), null, authorities);
             }
             return null;
         }

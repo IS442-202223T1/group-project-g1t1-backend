@@ -47,10 +47,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) throws IOException, ServletException {
+        // System.out.println(auth.getAuthorities());
+        // String[] 
+
+        String [] roles = auth.getAuthorities().stream().map(a -> a.getAuthority()).toArray(String[]::new);
+
         String token = JWT.create()
             .withSubject(((User) auth.getPrincipal()).getUsername())
-        // TODO: dynamically add roles based on the user's roles
-            .withArrayClaim("USER_ROLES", new String[] {"Borrower", "Admin"})
+            .withArrayClaim("USER_ROLES", roles)
             .withExpiresAt(new Date(System.currentTimeMillis() + AuthenticationConfigConstants.EXPIRATION_TIME))
             .sign(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()));
         response.addHeader(AuthenticationConfigConstants.HEADER_STRING, AuthenticationConfigConstants.TOKEN_PREFIX + token);
