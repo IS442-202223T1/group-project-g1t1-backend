@@ -20,7 +20,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers("/h2-console/**").permitAll().and() // permit h2-console
                 .authorizeRequests().antMatchers(HttpMethod.POST, AuthenticationConfigConstants.SIGN_UP_URL).permitAll().and() // permit signup URL on POST
-                .authorizeRequests().antMatchers("/api/v1/**").access("hasAuthority('admin')") // only permit Admin on /api/v1/**
+                .authorizeRequests().antMatchers("/api/v1/**").access("hasAuthority('borrower')") // only permit Admin on /api/v1/**
                 .anyRequest().authenticated().and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
