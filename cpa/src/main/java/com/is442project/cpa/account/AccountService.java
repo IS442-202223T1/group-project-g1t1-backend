@@ -1,8 +1,9 @@
-package com.is442project.cpa.admin;
+package com.is442project.cpa.account;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.is442project.cpa.admin.exception.UnauthorizedException;
 import org.springframework.stereotype.Component;
+
+import com.is442project.cpa.account.exception.UnauthorizedException;
 
 import java.util.Optional;
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 import javax.persistence.EntityNotFoundException;
 
 @Component
-public class AdminService implements UserOps {
+public class AccountService implements UserOps {
 
     public final UserAccountRepository userAccountRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -34,7 +35,7 @@ public class AdminService implements UserOps {
         return user;
     }
 
-    public AdminService(UserAccountRepository userAccountRepository) {
+    public AccountService(UserAccountRepository userAccountRepository) {
         this.userAccountRepository = userAccountRepository;
     }
 

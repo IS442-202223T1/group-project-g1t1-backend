@@ -1,6 +1,6 @@
 TARGET_URL='http://localhost:8080'
 
-curl -s --location --request POST "${TARGET_URL}/api/v1/admin/create" \
+curl -s --location --request POST "${TARGET_URL}/api/v1/account/create" \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email":"new_user@gmail.com",

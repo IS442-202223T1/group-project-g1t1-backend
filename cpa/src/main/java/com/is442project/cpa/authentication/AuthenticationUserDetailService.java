@@ -5,8 +5,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.is442project.cpa.admin.UserAccount;
-import com.is442project.cpa.admin.AdminService;
+
+import com.is442project.cpa.account.AccountService;
+import com.is442project.cpa.account.Role;
+import com.is442project.cpa.account.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +18,16 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationUserDetailService implements UserDetailsService {
-    private final AdminService adminService;
+    private final AccountService accountService;
     @Override public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserAccount user = adminService.readUserByEmail(email);
+        UserAccount user = accountService.readUserByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException(email);
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        // TODO: dynamically add roles based on the user's roles
-        authorities.add(new SimpleGrantedAuthority("Borrower"));
-        authorities.add(new SimpleGrantedAuthority("Admin"));
+        for (Role role : user.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority(role.getLabel()));
+        }
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 }

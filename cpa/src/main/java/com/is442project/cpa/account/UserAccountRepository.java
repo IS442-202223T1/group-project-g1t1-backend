@@ -1,4 +1,4 @@
-package com.is442project.cpa.admin;
+package com.is442project.cpa.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

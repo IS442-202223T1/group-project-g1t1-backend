@@ -3,7 +3,7 @@ package com.is442project.cpa.authentication;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.is442project.cpa.admin.UserAccount;
+import com.is442project.cpa.account.UserAccount;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,10 +47,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) throws IOException, ServletException {
+        // System.out.println(auth.getAuthorities());
+        // String[] 
+
+        String [] roles = auth.getAuthorities().stream().map(a -> a.getAuthority()).toArray(String[]::new);
+
         String token = JWT.create()
             .withSubject(((User) auth.getPrincipal()).getUsername())
-        // TODO: dynamically add roles based on the user's roles
-            .withArrayClaim("USER_ROLES", new String[] {"Borrower", "Admin"})
+            .withArrayClaim("USER_ROLES", roles)
             .withExpiresAt(new Date(System.currentTimeMillis() + AuthenticationConfigConstants.EXPIRATION_TIME))
             .sign(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()));
         response.addHeader(AuthenticationConfigConstants.HEADER_STRING, AuthenticationConfigConstants.TOKEN_PREFIX + token);

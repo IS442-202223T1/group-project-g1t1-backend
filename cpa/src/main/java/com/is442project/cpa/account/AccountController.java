@@ -1,6 +1,7 @@
-package com.is442project.cpa.admin;
+package com.is442project.cpa.account;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,14 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/admin")
-public class AdminController {
+@RequestMapping("/api/v1/account")
+public class AccountController {
     private final UserOps userOps;
-    private final String API_V1_ADMIN = "/api/v1/admin";
-    public final String API_V1_ADMIN_LOGIN = API_V1_ADMIN+ "/login";
 
-    public AdminController(AdminService adminService) {
-        userOps = adminService;
+    public AccountController(AccountService accountService) {
+        userOps = accountService;
     }
 
     @GetMapping("/test")
@@ -31,6 +30,11 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/me")
+    public UserAccount getAuthenticatedUserProfile() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userOps.readUserByEmail(email);
+    }
     @GetMapping("/user_profile")
     public UserAccount getUserProfile(@RequestParam("email") String email) {
         return userOps.readUserByEmail(email);
