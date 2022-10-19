@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 @Service
 public class EmailService {
@@ -33,6 +34,32 @@ public class EmailService {
             ex.printStackTrace();
         }
     }
+
+    public void sendHtmlMessageWithAttachments(String to, String subject, String body, List<Attachment> attachments){
+        try {
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            mimeMessageHelper.setFrom(EMAIL_SENDER);
+            mimeMessageHelper.setTo(to);
+            mimeMessageHelper.setSubject(subject);
+            mimeMessageHelper.setText(body, true);
+
+            attachments.forEach(attachment -> {
+                try {
+                    mimeMessageHelper.addAttachment(attachment.fileName(),attachment.file());
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            emailSender.send(mimeMessage);
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+
 
 
 }
