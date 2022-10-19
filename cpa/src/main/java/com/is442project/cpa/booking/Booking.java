@@ -27,7 +27,7 @@ public class Booking {
     @JoinColumn(name = "email")
     private UserAccount borrower;
 
-    private boolean isIssued;
+    private boolean isCollected;
     private boolean isReturned;
     private boolean isLost;
 
@@ -69,11 +69,11 @@ public class Booking {
     }
 
     public boolean isIssued() {
-        return isIssued;
+        return isCollected;
     }
 
     public void setIssued(boolean issued) {
-        isIssued = issued;
+        isCollected = issued;
     }
 
     public boolean isReturned() {
