@@ -21,7 +21,7 @@ class CorporatePassApplicationTests {
 
 	@Test
 	public void sentHtmlEmail_givenValidEmail_shouldSendEmail() {
-		emailService.sendHtmlMessage("joshua.zhangzy@gmail.com", "Project IS442", "HELLO WORLD! <br> <br> <h2>Let's Party!</h2>");
+		emailService.sendHtmlMessage("is442.2022group1@gmail.com", "Project IS442", "HELLO WORLD! <br> <br> <h2>Let's Party!</h2>");
 	}
 
 	@Test
@@ -31,7 +31,7 @@ class CorporatePassApplicationTests {
 		Attachment attachment = new Attachment("Zoo Authorization Letter", file);
 
 		//act
-		emailService.sendHtmlMessageWithAttachments("joshua.zhangzy@gmail.com", "Project IS442",
+		emailService.sendHtmlMessageWithAttachments("is442.2022group1@gmail.com", "Project IS442",
 				"HELLO WORLD! <br> <br> <h2>Let's Party!</h2>", List.of(attachment));
 	}
 
