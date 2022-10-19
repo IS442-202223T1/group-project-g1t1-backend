@@ -44,7 +44,7 @@ public class EmailService {
         }
     }
 
-    public void sendHtmlTemplate(String to, String subject, String templatePath) {
+    public boolean sendHtmlTemplate(String to, String subject, String templatePath) {
         String message;
         try {
             message = Files.asCharSource(new File(templatePath), Charsets.UTF_8).read();
@@ -58,12 +58,15 @@ public class EmailService {
             mimeMessageHelper.setText(message, true);
 
             emailSender.send(mimeMessage);
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         } 
         catch (MessagingException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public void sendHtmlMessageWithAttachments(String to, String subject, String body, List<Attachment> attachments){
