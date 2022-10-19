@@ -1,5 +1,6 @@
 package com.is442project.cpa.account;
 
+import com.is442project.cpa.common.email.EmailService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +14,15 @@ import javax.persistence.EntityNotFoundException;
 @Component
 public class AccountService implements UserOps {
 
-    public final UserAccountRepository userAccountRepository;
+    private final UserAccountRepository userAccountRepository;
+
+    private final EmailService emailService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+    public AccountService(UserAccountRepository userAccountRepository, EmailService emailService) {
+        this.userAccountRepository = userAccountRepository;
+        this.emailService = emailService;
+    }
 
     public UserAccount readUserByEmail (String email) {
         return userAccountRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
@@ -33,10 +41,6 @@ public class AccountService implements UserOps {
         user.setRoles(Arrays.asList(new Borrower())); // TODO: Add roles based on the user's roles (OR default as borrrower?)
         userAccountRepository.save(user);
         return user;
-    }
-
-    public AccountService(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
     }
 
     @Override
