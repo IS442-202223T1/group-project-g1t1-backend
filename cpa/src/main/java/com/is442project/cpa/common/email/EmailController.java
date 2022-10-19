@@ -28,7 +28,7 @@ public class EmailController {
         String[] toComponents = to.split("@");
         List<String> permittedEmails = Arrays.asList("sportsschool.edu.sg", "nysi.org.sg");
 
-        if (emailChecking && (toComponents.length < 2 || !permittedEmails.contains(toComponents[1]))) {
+        if (emailChecking && (toComponents.length != 2 || !permittedEmails.contains(toComponents[1]))) {
             return ResponseEntity.badRequest().body("Invalid email");
         }
 
