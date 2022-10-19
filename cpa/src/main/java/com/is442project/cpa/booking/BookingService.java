@@ -1,29 +1,43 @@
 package com.is442project.cpa.booking;
 
-import java.util.*;
-public class BookingService implements BorrowerOps, GopOps{
-    public BookingResponseDto bookPass(ArrayList<String> passNumberLists){
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+@Component
+public class BookingService implements BorrowerOps, GopOps{
+
+    public final BookingRepository bookingRepository;
+
+    public BookingService(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
     }
 
-    public BookingResponseDto cancelBooking(String bookingID){
+    public ResponseEntity<Booking> bookPass(BookingDto bookingDto){
+        Booking newBooking = new Booking(bookingDto.Date, bookingDto.Borrower);
+        return ResponseEntity.ok(bookingRepository.save(newBooking));
+    }
 
+
+    public BookingResponseDto cancelBooking(String bookingID){
+        return null;
     }
 
     public List<BookingResponseDto> getAllBooking(String userID){
-
+        return null;
     }
 
     public CorporatePass reportLost(String corporatePassNumber){
-
+        return null;
     }
 
     public List<BookingResponseDto> getCurrentBooking(){
-
+        return null;
     };
 
     public List<BookingResponseDto> getPastBooking(){
-
+        return null;
     };
 
     public boolean collectCard(String cardId){
