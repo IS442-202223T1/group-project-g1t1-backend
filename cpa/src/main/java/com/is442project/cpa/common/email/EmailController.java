@@ -23,8 +23,8 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity sendEmail(@RequestBody String to) {
+    @PostMapping("/verify")
+    public ResponseEntity sendVerificationEmail(@RequestBody String to) {
         String[] toComponents = to.split("@");
         List<String> permittedEmails = Arrays.asList("sportsschool.edu.sg", "nysi.org.sg");
 
