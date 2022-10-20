@@ -1,11 +1,11 @@
 package com.is442project.cpa.booking;
 
-import java.util.*;
+import org.springframework.http.ResponseEntity;
 
-import com.is442project.cpa.admin.*;
+import java.util.List;
 
-interface BorrowerOps {
-    public abstract BookingResponseDto bookPass(ArrayList<String> passNumberLists);
+public interface BorrowerOps {
+    public abstract ResponseEntity<Booking> bookPass(BookingDto bookingDto);
 
     public abstract BookingResponseDto cancelBooking(String bookingID);
 

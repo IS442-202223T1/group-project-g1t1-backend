@@ -1,6 +1,4 @@
-package com.is442project.cpa.admin;
-
-import com.sun.istack.NotNull;
+package com.is442project.cpa.account;
 
 import javax.persistence.*;
 import java.util.Objects;

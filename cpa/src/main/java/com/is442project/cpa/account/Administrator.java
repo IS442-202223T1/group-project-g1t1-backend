@@ -1,11 +1,11 @@
-package com.is442project.cpa.admin;
+package com.is442project.cpa.account;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class Administrator extends Role{
     public Administrator() {
-        super("Admin");
+        super("admin");
     }
 
     @Override

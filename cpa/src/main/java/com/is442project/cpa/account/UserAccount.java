@@ -1,8 +1,11 @@
-package com.is442project.cpa.admin;
+package com.is442project.cpa.account;
 
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +18,10 @@ public class UserAccount {
     @Id
     private String email;
 
+    /* intended to be replicate of email for org.springframework.security.core.Authentication
+    which relies on the attribute `username` to be present */
+    private String username;
+
     @NotNull
     private String name;
 
@@ -22,7 +29,7 @@ public class UserAccount {
 
     private String contactNumber;
 
-    @ElementCollection
+    @ElementCollection(fetch=FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
 
     public UserAccount() {
@@ -34,8 +41,10 @@ public class UserAccount {
 
     public UserAccount(String email, String name, String password, String contactNumber , List<Role> roles) {
         this.email = email;
+        this.username = email;
         this.name = name;
-        this.password = password;
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.password = bCryptPasswordEncoder.encode(password);
         this.contactNumber = contactNumber;
         this.roles = roles;
     }
@@ -46,6 +55,11 @@ public class UserAccount {
 
     public void setEmail(String email) {
         this.email = email;
+        this.username = email;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getName() {

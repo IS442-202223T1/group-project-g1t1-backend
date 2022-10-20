@@ -1,4 +1,4 @@
-package com.is442project.cpa.admin.exception;
+package com.is442project.cpa.account.exception;
 
 public class UnauthorizedException extends RuntimeException{
 
