@@ -6,4 +6,5 @@ public class AuthenticationConfigConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_UP_URL = "/api/v1/account/create";
+    public static final String VERIFY_EMAIL_URL = "/api/v1/email/verify";
 }
