@@ -6,15 +6,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps{
 
     private final BookingRepository bookingRepository;
+    private final CorporatePassRepository corporatePassRepository;
     private final AccountService accountService;
 
-    public BookingService(BookingRepository bookingRepository, AccountService accountService) {
+    public BookingService(BookingRepository bookingRepository, AccountService accountService, CorporatePassRepository corporatePassRepository) {
         this.bookingRepository = bookingRepository;
+        this.corporatePassRepository = corporatePassRepository;
         this.accountService = accountService;
     }
 
@@ -46,16 +51,25 @@ public class BookingService implements BorrowerOps, GopOps{
 
     public boolean collectCard(String cardId){
         // update Card where id equal to card id, set is available to false
-        return false;
+        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
+        corporatePass.setStatus("collected");
+        corporatePassRepository.save(corporatePass);
+        return true;
     };
 
     public boolean returnCard(String cardId){
         // update Card where id equal to card id, set is available to true
-        return false;
+        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
+        corporatePass.setStatus("available");
+        corporatePassRepository.save(corporatePass);
+        return true;
     }
 
     public boolean markLost(String cardId){
-        return false;
+        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
+        corporatePass.setStatus("lost");
+        corporatePassRepository.save(corporatePass);
+        return true;
     }
 
 
