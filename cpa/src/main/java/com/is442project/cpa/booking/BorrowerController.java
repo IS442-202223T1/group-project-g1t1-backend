@@ -1,5 +1,8 @@
 package com.is442project.cpa.booking;
 
+import java.util.ArrayList;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +19,13 @@ public class BorrowerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addBooking(@RequestBody BookingDto bookingDto){
-        return borrowerOps.bookPass(bookingDto);
+    public ResponseEntity<?> addBooking(@RequestBody BookingDto bookingDto){
+        try {
+            ArrayList<Booking> newBookings = borrowerOps.bookPass(bookingDto);
+            return ResponseEntity.ok(newBookings);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }

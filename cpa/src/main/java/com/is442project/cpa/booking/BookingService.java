@@ -2,9 +2,10 @@ package com.is442project.cpa.booking;
 
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -18,10 +19,47 @@ public class BookingService implements BorrowerOps, GopOps{
         this.accountService = accountService;
     }
 
-    public ResponseEntity<Booking> bookPass(BookingDto bookingDto){
+    public ArrayList<Booking> bookPass(BookingDto bookingDto) throws RuntimeException{
+        // need to include corp pass 
+
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.email);
-        Booking newBooking = new Booking(bookingDto.Date, borrowerObject);
-        return ResponseEntity.ok(bookingRepository.save(newBooking));
+        int userBookings = bookingDto.requestedBookings;
+        ArrayList<Booking> bookingResults = new ArrayList<>();
+
+        if (checkExceedBookingLimit(bookingDto)){
+            throw new RuntimeException("Exceed Booking Limit");
+        }
+        if (checkInsufficientPass(bookingDto)){
+            throw new RuntimeException("Insufficient Pass");
+        }
+
+        for (int i=0 ; i<userBookings ; i++){
+            Booking newBooking = new Booking(bookingDto.date, borrowerObject);
+            Booking bookingResult = bookingRepository.save(newBooking);
+            bookingResults.add(bookingResult);
+        }
+
+        return bookingResults;
+
+    }
+
+    public boolean checkExceedBookingLimit(BookingDto bookingDto){
+        int Year = bookingDto.date.getYear();
+        int Month = bookingDto.date.getMonthValue();
+        String Email = bookingDto.email;
+        int userBookings = bookingDto.requestedBookings;
+        int numUserBookingsInMonth = bookingRepository.countForMonthByUser(Year, Month, Email);
+        
+        return numUserBookingsInMonth + userBookings > 2;
+    }
+    
+    public boolean checkInsufficientPass(BookingDto bookingDto){
+        // need to receive corp pass
+        int maxNumberOfCards = 2;
+
+        int numBookingsOnDate = bookingRepository.countPassBookingsForDate(bookingDto.date);
+
+        return numBookingsOnDate + bookingDto.requestedBookings > maxNumberOfCards;
     }
 
     public BookingResponseDto cancelBooking(String bookingID){
@@ -57,6 +95,5 @@ public class BookingService implements BorrowerOps, GopOps{
     public boolean markLost(String cardId){
         return false;
     }
-
 
 }
