@@ -1,19 +1,25 @@
 package com.is442project.cpa.booking;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.is442project.cpa.common.template.Template;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "membership")
+@Data
 public class Membership {
+
     @Id
     private String membershipType;
 
-    public Membership(String membershipType){
-        this.membershipType = membershipType;
-    };
+    @AttributeOverride(name="templateContent", column=@Column(name="EMAIL_TEMPLATE_CONTENT"))
+    @Embedded
+    private Template emailTemplate;
+
+    @AttributeOverride(name="templateContent", column=@Column(name="ATTACHMENT_TEMPLATE_CONTENT"))
+    @Embedded
+    private Template attachmentTemplate;
 
     public Membership(){}
 
@@ -23,5 +29,11 @@ public class Membership {
 
     public void setMembershipType(String membershipType){
         this.membershipType = membershipType;
+    }
+
+    public Membership(String membershipType, Template emailTemplate, Template attachmentTemplate ) {
+        this.membershipType = membershipType;
+        this.emailTemplate = emailTemplate;
+        this.attachmentTemplate = attachmentTemplate;
     }
 }

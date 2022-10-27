@@ -3,6 +3,9 @@ package com.is442project.cpa.booking;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.is442project.cpa.common.template.AttachmentTemplate;
+import com.is442project.cpa.common.template.EmailTemplate;
+
 import java.util.Arrays;
 
 @Configuration
@@ -18,13 +21,16 @@ public class MembershipSeeder {
     }
 
     public void insertTestData() {
-        Membership membership = new Membership("Jalan Besar Stadium");
-        Membership membership2 = new Membership("Bedok Stadium");
-        Membership membership3 = new Membership("Temasek Junior College");
+        EmailTemplate emailTemplate = new EmailTemplate();
+        AttachmentTemplate attachmentTemplate = new AttachmentTemplate();
+        emailTemplate.setTemplateContent("test");
+        attachmentTemplate.setTemplateContent("test");
+        Membership membership = new Membership("Jalan Besar Stadium", emailTemplate, attachmentTemplate);
+        Membership membership2 = new Membership("Bedok Stadium", emailTemplate, attachmentTemplate);
+        Membership membership3 = new Membership("Temasek Junior College", emailTemplate, attachmentTemplate);
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3));
 
         System.out.println("======TEST USER ACCOUNT INSERTED======");
     }
 }
-

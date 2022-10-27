@@ -3,6 +3,8 @@ package com.is442project.cpa.booking;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.is442project.cpa.common.template.*;
+
 import java.util.Arrays;
 
 @Configuration
@@ -19,7 +21,9 @@ public class CorporatePassSeeder {
     }
 
     public void insertTestData() {
-        Membership membership = new Membership("Jalan Besar Stadium");
+        EmailTemplate emailTemplate = new EmailTemplate();
+        AttachmentTemplate attachmentTemplate = new AttachmentTemplate();
+        Membership membership = new Membership("Jalan Besar Stadium", emailTemplate, attachmentTemplate);
         membershipRepository.saveAllAndFlush(Arrays.asList(membership));
         CorporatePass pass1 = new CorporatePass(membership, "A1", "available", 4);
         CorporatePass pass2 = new CorporatePass(membership, "B2", "collected", 4);
