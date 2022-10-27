@@ -9,10 +9,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "corporatePass")
 public class CorporatePass {
-    Membership membershipType;
-
     @Id 
     String number;
+    @ManyToOne
+    @JoinColumn(name = "membershipType")
+    Membership membershipType;
 
     String status;
     int maxPersonsAdmitted;
@@ -22,6 +23,10 @@ public class CorporatePass {
         this.number = number;
         this.status = status;
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+    }
+
+    public CorporatePass(){
+
     }
 
     public Membership getMembershipType(){

@@ -1,5 +1,7 @@
 package com.is442project.cpa.booking;
 
+import java.util.List;
+
 interface GopOps {
 //    public abstract List<BookingDto> getCurrentBooking();
 
@@ -10,4 +12,6 @@ interface GopOps {
     public abstract boolean returnCard(String cardId);
 
     public abstract boolean markLost(String cardId);
+
+    public abstract List<CorporatePass> getAllPasses();
 }

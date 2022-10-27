@@ -8,11 +8,14 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "membership")
 public class Membership {
+    @Id
     private String membershipType;
 
     public Membership(String membershipType){
         this.membershipType = membershipType;
     };
+
+    public Membership(){}
 
     public String getMembershipType(){
         return membershipType;

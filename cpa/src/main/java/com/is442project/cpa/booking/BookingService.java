@@ -49,6 +49,10 @@ public class BookingService implements BorrowerOps, GopOps{
         return null;
     };
 
+    public List<CorporatePass> getAllPasses(){
+        return corporatePassRepository.findAll();
+    }
+
     public boolean collectCard(String cardId){
         // update Card where id equal to card id, set is available to false
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
