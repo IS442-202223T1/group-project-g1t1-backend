@@ -52,7 +52,7 @@ class CorporatePassApplicationTests {
 			Attachment attachment = new Attachment("Zoo Authorization Letter", pdfFactory.generatePdfFile());
 
 		//act
-		emailService.sendHtmlMessageWithAttachments("joshua.zhangzy@gmail.com", "Project IS442",
+		emailService.sendHtmlMessageWithAttachments("is442.2022group1@gmail.com", "Project IS442",
 				"HELLO WORLD! <br> <br> <h2>Let's Party!</h2>", List.of(attachment));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
