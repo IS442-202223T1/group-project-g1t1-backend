@@ -24,7 +24,9 @@ public class BookingSeeder {
         templateContent.append("Dear <borrower_name>,\n\n");
         templateContent.append("We are pleased to inform that your booking to <attraction_name> is confirmed as follows:");
 
-        Membership testMembership01 = new Membership(new EmailTemplate(templateContent.toString()), new AttachmentTemplate(templateContent.toString()));
+        EmailTemplate emailTemplate = new EmailTemplate();
+        AttachmentTemplate attachmentTemplate = new AttachmentTemplate();
+        Membership testMembership01 = new Membership("Jalan Besar Stadium",new EmailTemplate(templateContent.toString()), new AttachmentTemplate(templateContent.toString()));
 
         membershipRepository.saveAllAndFlush(Arrays.asList(testMembership01));
     }

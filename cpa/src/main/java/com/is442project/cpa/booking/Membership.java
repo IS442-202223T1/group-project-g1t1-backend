@@ -8,12 +8,10 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Membership {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long membershipId;
+    private String membershipType;
 
     @AttributeOverride(name="templateContent", column=@Column(name="EMAIL_TEMPLATE_CONTENT"))
     @Embedded
@@ -23,7 +21,18 @@ public class Membership {
     @Embedded
     private Template attachmentTemplate;
 
-    public Membership(Template emailTemplate, Template attachmentTemplate ) {
+    public Membership(){}
+
+    public String getMembershipType(){
+        return membershipType;
+    }
+
+    public void setMembershipType(String membershipType){
+        this.membershipType = membershipType;
+    }
+
+    public Membership(String membershipType, Template emailTemplate, Template attachmentTemplate ) {
+        this.membershipType = membershipType;
         this.emailTemplate = emailTemplate;
         this.attachmentTemplate = attachmentTemplate;
     }
