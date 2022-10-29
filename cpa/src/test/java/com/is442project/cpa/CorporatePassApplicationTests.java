@@ -1,19 +1,20 @@
 package com.is442project.cpa;
 
 import com.is442project.cpa.account.AccountService;
-import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.Booking;
 import com.is442project.cpa.booking.Membership;
 import com.is442project.cpa.booking.MembershipRepository;
 import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
+import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.PdfFactory;
+import com.is442project.cpa.common.template.AttachmentTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -41,12 +42,21 @@ class CorporatePassApplicationTests {
 	@Test
 	public void sentHtmlEmailWithAttachments_givenOneAttachhment_shouldSendEmail(){
 		//arrange
-		File file = new File("AuthorisationLetterZoo.pdf");
-		Attachment attachment = new Attachment("Zoo Authorization Letter", file);
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("Date: <current_date>%n%n"));
+
+		AttachmentTemplate attachmentTemplate = new AttachmentTemplate(sb.toString());
+		AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+		PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
+		try {
+			Attachment attachment = new Attachment("Zoo Authorization Letter", pdfFactory.generatePdfFile());
 
 		//act
 		emailService.sendHtmlMessageWithAttachments("is442.2022group1@gmail.com", "Project IS442",
 				"HELLO WORLD! <br> <br> <h2>Let's Party!</h2>", List.of(attachment));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
