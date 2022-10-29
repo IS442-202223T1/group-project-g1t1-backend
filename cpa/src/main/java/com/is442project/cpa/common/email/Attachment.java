@@ -1,6 +1,5 @@
 package com.is442project.cpa.common.email;
+import javax.mail.util.ByteArrayDataSource;
 
-import java.io.File;
-
-public record Attachment(String fileName, File file) {
+public record Attachment(String fileName, ByteArrayDataSource file) {
 }
