@@ -11,7 +11,13 @@ public class CardOpsData {
         this.cardID = cardID;
     }
 
+    public CardOpsData(){}
+
     public String getCardID(){
         return cardID;
+    }
+
+    public String toString(){
+        return "Card ID " + cardID;
     }
 }
