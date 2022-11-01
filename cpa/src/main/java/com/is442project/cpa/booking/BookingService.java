@@ -15,12 +15,14 @@ public class BookingService implements BorrowerOps, GopOps{
 
     private final BookingRepository bookingRepository;
     private final CorporatePassRepository corporatePassRepository;
+    private final MembershipRepository membershipRepository;
     private final AccountService accountService;
 
-    public BookingService(BookingRepository bookingRepository, AccountService accountService, CorporatePassRepository corporatePassRepository) {
+    public BookingService(BookingRepository bookingRepository, AccountService accountService, CorporatePassRepository corporatePassRepository, MembershipRepository membershipRepository) {
         this.bookingRepository = bookingRepository;
         this.corporatePassRepository = corporatePassRepository;
         this.accountService = accountService;
+        this.membershipRepository = membershipRepository;
     }
 
     public ResponseEntity<Booking> bookPass(BookingDto bookingDto){
@@ -35,6 +37,10 @@ public class BookingService implements BorrowerOps, GopOps{
 
     public List<BookingResponseDto> getAllBooking(String userID){
         return null;
+    }
+
+    public List<Membership> getAllAttractions() {
+        return membershipRepository.findAll();
     }
 
     public CorporatePass reportLost(String corporatePassNumber){
