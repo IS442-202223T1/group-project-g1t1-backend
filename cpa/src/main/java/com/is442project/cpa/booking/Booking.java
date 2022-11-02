@@ -5,6 +5,7 @@ import com.is442project.cpa.account.UserAccount;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "booking")
@@ -14,11 +15,8 @@ public class Booking {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int bookingId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "corpPass")
-//    private CorporatePass CorporatePass;
-
-//    private Membership membershipType;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<CorporatePass> CorporatePasses;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate borrowDate;
