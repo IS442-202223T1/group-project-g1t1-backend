@@ -7,11 +7,11 @@ interface GopOps {
 
 //    public abstract List<BookingDto> getPastBooking();
 
-    public abstract boolean collectCard(String cardId);
+    public abstract boolean collectCard(Long cardId);
 
-    public abstract boolean returnCard(String cardId);
+    public abstract boolean returnCard(Long cardId);
 
-    public abstract boolean markLost(String cardId);
+    public abstract boolean markLost(Long cardId);
 
     public abstract List<CorporatePass> getAllPasses();
 }
