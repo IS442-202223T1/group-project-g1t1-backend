@@ -27,8 +27,10 @@ public class MembershipSeeder {
         Membership membership = new Membership("Jalan Besar Stadium", emailTemplate, attachmentTemplate);
         Membership membership2 = new Membership("Bedok Stadium", emailTemplate, attachmentTemplate);
         Membership membership3 = new Membership("Temasek Junior College", emailTemplate, attachmentTemplate);
+        Membership membership4 = new Membership("S.E.A Aquarium", emailTemplate, attachmentTemplate);
+        membership4.setElectronicPass(true);
 
-        membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3));
+        membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3, membership4));
 
         System.out.println("======TEST MEMBERSHIP INSERTED======");
     }
