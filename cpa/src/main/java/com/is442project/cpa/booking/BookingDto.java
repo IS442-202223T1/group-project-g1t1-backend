@@ -1,10 +1,26 @@
 package com.is442project.cpa.booking;
 
-import java.time.LocalDate;
+import lombok.Data;
 
+import java.time.LocalDate;
+import java.util.List;
+@Data
 public class BookingDto {
-    public LocalDate Date;
-    public String email;
+    private LocalDate Date;
+    private String email;
+    private List<String> corporatePassId;
+
+
+    public BookingDto() {
+    }
+
+    public BookingDto(LocalDate date, String email, List<String> corporatePassId) {
+        Date = date;
+        this.email = email;
+        this.corporatePassId = corporatePassId;
+    }
+
+
 
     @Override
     public String toString() {

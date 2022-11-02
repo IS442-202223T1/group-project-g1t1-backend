@@ -24,8 +24,8 @@ public class BookingService implements BorrowerOps, GopOps{
     }
 
     public ResponseEntity<Booking> bookPass(BookingDto bookingDto){
-        UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.email);
-        Booking newBooking = new Booking(bookingDto.Date, borrowerObject);
+        UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.getEmail());
+        Booking newBooking = new Booking(bookingDto.getDate(), borrowerObject);
         return ResponseEntity.ok(bookingRepository.save(newBooking));
     }
 
