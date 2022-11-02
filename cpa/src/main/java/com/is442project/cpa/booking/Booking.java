@@ -15,7 +15,7 @@ public class Booking {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int bookingId;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany
     private List<CorporatePass> CorporatePasses;
 
     @JsonFormat(pattern="yyyy-MM-dd")
@@ -37,18 +37,13 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
+    public Booking() {
+    }
+
     public Booking(LocalDate borrowDate, UserAccount borrower) {
         this.borrowDate = borrowDate;
         this.borrower = borrower;
     }
-
-    //    public com.is442project.cpa.booking.CorporatePass getCorporatePass() {
-//        return CorporatePass;
-//    }
-//
-//    public void setCorporatePass(com.is442project.cpa.booking.CorporatePass corporatePass) {
-//        CorporatePass = corporatePass;
-//    }
 
     public LocalDate getBorrowDate() {
         return borrowDate;
@@ -90,5 +85,19 @@ public class Booking {
         isLost = lost;
     }
 
+    public List<CorporatePass> getCorporatePasses() {
+        return CorporatePasses;
+    }
 
+    public void setCorporatePasses(List<CorporatePass> corporatePasses) {
+        CorporatePasses = corporatePasses;
+    }
+
+    public boolean isCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
 }

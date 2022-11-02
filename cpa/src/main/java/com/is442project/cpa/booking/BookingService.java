@@ -5,10 +5,8 @@ import com.is442project.cpa.account.UserAccount;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps{
@@ -43,17 +41,17 @@ public class BookingService implements BorrowerOps, GopOps{
 
     public List<BookingResponseDto> getCurrentBooking(){
         return null;
-    };
+    }
 
     public List<BookingResponseDto> getPastBooking(){
         return null;
-    };
+    }
 
     public List<CorporatePass> getAllPasses(){
         return corporatePassRepository.findAll();
     }
 
-    public boolean collectCard(String cardId){
+    public boolean collectCard(Long cardId){
         // update Card where id equal to card id, set is available to false
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
         corporatePass.setStatus("collected");
@@ -61,7 +59,7 @@ public class BookingService implements BorrowerOps, GopOps{
         return true;
     };
 
-    public boolean returnCard(String cardId){
+    public boolean returnCard(Long cardId){
         // update Card where id equal to card id, set is available to true
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
         corporatePass.setStatus("available");
@@ -69,7 +67,7 @@ public class BookingService implements BorrowerOps, GopOps{
         return true;
     }
 
-    public boolean markLost(String cardId){
+    public boolean markLost(Long cardId){
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
         corporatePass.setStatus("lost");
         corporatePassRepository.save(corporatePass);

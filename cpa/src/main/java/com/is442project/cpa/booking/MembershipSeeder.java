@@ -1,10 +1,9 @@
 package com.is442project.cpa.booking;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
 import com.is442project.cpa.common.template.AttachmentTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 
@@ -31,6 +30,6 @@ public class MembershipSeeder {
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3));
 
-        System.out.println("======TEST USER ACCOUNT INSERTED======");
+        System.out.println("======TEST MEMBERSHIP INSERTED======");
     }
 }
