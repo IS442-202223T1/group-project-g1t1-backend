@@ -18,6 +18,17 @@ public class AdminService implements AdminOps {
         if (!existingUser.isPresent()) {
             throw new IllegalArgumentException("User does not exist");
         }
+        UserAccount user = existingUser.get();
+        user.setIsActive(false);
+        userAccountRepository.save(user);
+        return true;
+    }
+
+    public boolean deleteEmployee(String email) {
+        Optional<UserAccount> existingUser = userAccountRepository.findByEmail(email);
+        if (!existingUser.isPresent()) {
+            throw new IllegalArgumentException("User does not exist");
+        }
         userAccountRepository.delete(existingUser.get());
         return true;
     }

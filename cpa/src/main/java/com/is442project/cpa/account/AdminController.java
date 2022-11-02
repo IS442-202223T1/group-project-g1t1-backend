@@ -22,10 +22,20 @@ public class AdminController {
         return ResponseEntity.ok("Test Success!");
     }
 
-    @DeleteMapping("/disable_employee/{email}")
+    @PutMapping("/disable_employee/{email}")
     public ResponseEntity disableEmployee (@PathVariable String email) {
         try {
             adminOps.disableEmployee(email);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete_employee/{email}")
+    public ResponseEntity deleteEmployee (@PathVariable String email) {
+        try {
+            adminOps.deleteEmployee(email);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
