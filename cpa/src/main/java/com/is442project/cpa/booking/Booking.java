@@ -27,9 +27,8 @@ public class Booking {
     @JoinColumn(name = "email")
     private UserAccount borrower;
 
-    private boolean isCollected;
-    private boolean isReturned;
-    private boolean isLost;
+    private double feesDue;
+    private String status;
 
     public int getBookingId() {
         return bookingId;
@@ -68,27 +67,23 @@ public class Booking {
         this.borrower = borrower;
     }
 
-    public boolean isIssued() {
-        return isCollected;
+    public double getFeesDue(){
+        return feesDue;
     }
 
-    public void setIssued(boolean issued) {
-        isCollected = issued;
+    public void setFeesDue(double fees){
+        feesDue = fees;
     }
 
-    public boolean isReturned() {
-        return isReturned;
+    public void clearDues(){
+        feesDue = 0; 
     }
 
-    public void setReturned(boolean returned) {
-        isReturned = returned;
+    public String getStatus(){
+        return status;
     }
 
-    public boolean isLost() {
-        return isLost;
-    }
-
-    public void setLost(boolean lost) {
-        isLost = lost;
+    public void setStatus(String status){
+        this.status = status;
     }
 }
