@@ -5,7 +5,6 @@ import com.is442project.cpa.account.UserAccount;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "booking")
@@ -15,8 +14,8 @@ public class Booking {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int bookingId;
 
-    @OneToMany
-    private List<CorporatePass> CorporatePasses;
+    @ManyToOne
+    private CorporatePass corporatePass;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate borrowDate;
@@ -85,12 +84,12 @@ public class Booking {
         isLost = lost;
     }
 
-    public List<CorporatePass> getCorporatePasses() {
-        return CorporatePasses;
+    public CorporatePass getCorporatePass() {
+        return corporatePass;
     }
 
-    public void setCorporatePasses(List<CorporatePass> corporatePasses) {
-        CorporatePasses = corporatePasses;
+    public void setCorporatePass(CorporatePass corporatePass) {
+        this.corporatePass = corporatePass;
     }
 
     public boolean isCollected() {

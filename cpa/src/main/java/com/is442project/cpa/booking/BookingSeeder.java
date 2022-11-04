@@ -37,7 +37,7 @@ public class BookingSeeder {
         Booking booking1 = new Booking();
         booking1.setBorrower(borrower1);
         booking1.setBorrowDate(LocalDate.of(2022, 11, 16));
-        booking1.setCorporatePasses(Arrays.asList(corporatePass1));
+        booking1.setCorporatePass(corporatePass1);
 
         bookingRepository.saveAllAndFlush(Arrays.asList(booking1));
 
