@@ -4,13 +4,12 @@ import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.exception.MembershipNotFoundException;
 import com.is442project.cpa.common.email.EmailService;
-import com.is442project.cpa.common.template.PhysicalEmailTemplate;
+import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -44,12 +43,14 @@ public class BookingService implements BorrowerOps, GopOps{
         Booking newBooking = new Booking();
         List<Booking> bookedpasses = newBooking.bookPass(bookingDto.getDate(),  borrowerObject, availPasses, bookingDto.getQty(), bookingRepository);
 
-        if(!membership.isElectronicPass) {
-            PhysicalEmailTemplate emailTemplate = new PhysicalEmailTemplate(membership.getEmailTemplate(), bookedpasses);
-            TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
-            emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation", templateEngine.getContent());
-        } else {
+        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookedpasses);
+        TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
+        emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation", templateEngine.getContent());
 
+        if(!membership.isElectronicPass) {
+            //todo attach authorisation form
+        } else {
+            //todo attach ePasses
         }
 
         return ResponseEntity.ok(new BookingResponseDto(bookedpasses.get(0)));

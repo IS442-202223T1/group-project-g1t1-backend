@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Embeddable
-public class PhysicalEmailTemplate extends Template implements TemplateResources {
+public class EmailTemplate extends Template implements TemplateResources {
 
     @Transient
     private List<Booking> bookings;
 
-    private PhysicalEmailTemplate() {
+    private EmailTemplate() {
         Map<String, String>placeholderMaps = new HashMap<>();
         placeholderMaps.put("<borrower_name>", "$borrower_name");
         placeholderMaps.put("<attraction_name>", "$attraction_name");
@@ -24,13 +24,13 @@ public class PhysicalEmailTemplate extends Template implements TemplateResources
         this.setPlaceHolders(placeholderMaps);
     }
 
-    public PhysicalEmailTemplate(Template template, List<Booking> bookings){
+    public EmailTemplate(Template template, List<Booking> bookings){
         this();
         this.bookings = bookings;
         setTemplateContent(template.getTemplateContent());
     }
 
-    public PhysicalEmailTemplate(String templateContent, List<Booking> bookings) {
+    public EmailTemplate(String templateContent, List<Booking> bookings) {
         this();
         this.bookings = bookings;
         setTemplateContent(templateContent);

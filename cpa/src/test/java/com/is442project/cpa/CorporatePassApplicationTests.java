@@ -10,13 +10,12 @@ import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AttachmentTemplate;
-import com.is442project.cpa.common.template.PhysicalEmailTemplate;
+import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,10 +72,10 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(1).get();
 
-		PhysicalEmailTemplate physicalEmailTemplate = new PhysicalEmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
+		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
 
 
-		TemplateEngine templateEngine = new TemplateEngine(physicalEmailTemplate);
+		TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
 
 		//act
 		System.out.println(templateEngine.getContent());
