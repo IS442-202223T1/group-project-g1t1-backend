@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -72,7 +73,7 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(1).get();
 
-		PhysicalEmailTemplate physicalEmailTemplate = new PhysicalEmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
+		PhysicalEmailTemplate physicalEmailTemplate = new PhysicalEmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
 
 
 		TemplateEngine templateEngine = new TemplateEngine(physicalEmailTemplate);

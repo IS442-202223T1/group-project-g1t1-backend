@@ -6,12 +6,13 @@ import org.apache.velocity.VelocityContext;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 @Embeddable
 public class PhysicalEmailTemplate extends Template implements TemplateResources {
 
     @Transient
-    private Booking booking;
+    private List<Booking> bookings;
 
     private PhysicalEmailTemplate() {
         Map<String, String>placeholderMaps = new HashMap<>();
@@ -23,34 +24,27 @@ public class PhysicalEmailTemplate extends Template implements TemplateResources
         this.setPlaceHolders(placeholderMaps);
     }
 
-    public PhysicalEmailTemplate(Template template, Booking booking){
+    public PhysicalEmailTemplate(Template template, List<Booking> bookings){
         this();
-        this.booking = booking;
+        this.bookings = bookings;
         setTemplateContent(template.getTemplateContent());
     }
 
-    public PhysicalEmailTemplate(String templateContent, Booking booking) {
+    public PhysicalEmailTemplate(String templateContent, List<Booking> bookings) {
         this();
-        this.booking = booking;
+        this.bookings = bookings;
         setTemplateContent(templateContent);
-    }
-
-    public Booking getBooking() {
-        return booking;
-    }
-
-    public void setBooking(Booking booking) {
-        this.booking = booking;
     }
 
     @Override
     public VelocityContext getTemplateContextMapper() {
         VelocityContext context = new VelocityContext();
 
-        context.put("borrower_name", booking.getBorrower().getName());
-        context.put("attraction_name", booking.getCorporatePass().getMembershipType().getMembershipType());
-        context.put("visit_date", booking.getBorrowDate());
-        context.put("corp_pass_number", booking.getCorporatePass().getNumber());
+        context.put("borrower_name", bookings.get(0).getBorrower().getName());
+        context.put("attraction_name", bookings.get(0).getCorporatePass().getMembershipType().getMembershipType());
+        context.put("visit_date", bookings.get(0).getBorrowDate());
+        context.put("corp_pass_number", bookings.stream().map(booking -> booking.getCorporatePass().getNumber())
+                .reduce("", (p1, p2)-> p1 + " , " + p2).substring(2));
 
         return context;
     }

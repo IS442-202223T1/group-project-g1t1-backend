@@ -30,30 +30,29 @@ public class BookingService implements BorrowerOps, GopOps{
         this.emailService = emailService;
     }
 
-    public ResponseEntity<Booking> bookPass(BookingDto bookingDto){
+    public ResponseEntity<BookingResponseDto> bookPass(BookingDto bookingDto){
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.getEmail());
 
         Membership membership = membershipRepository.findById(bookingDto.getMembershipId())
                 .orElseThrow(() -> new MembershipNotFoundException(bookingDto.getMembershipId()));
 
         //todo implement code to check availability of passes, to write some query on the repo
-        //List<CorporatePass> passesAvailable = corporatePassRepository.findAvailblePasses(bookingDto.getMembershipId(), bookingDto.getDate());
-        List<CorporatePass> passesAvailable = corporatePassRepository.findAll(); //fake implementation, can remove once above is done.
+        //List<CorporatePass> availPasses = corporatePassRepository.findAvailblePasses(bookingDto.getMembershipId(), bookingDto.getDate());
+        List<CorporatePass> availPasses = corporatePassRepository.findAll(); //fake implementation, can remove once above is done.
 
         //todo implement bookpass, currently is a fake implementation.
-        Booking newBooking = new Booking(LocalDate.now(), borrowerObject, passesAvailable.get(0));
-        Booking booked = newBooking.bookPass(bookingRepository);
-
+        Booking newBooking = new Booking();
+        List<Booking> bookedpasses = newBooking.bookPass(bookingDto.getDate(),  borrowerObject, availPasses, bookingDto.getQty(), bookingRepository);
 
         if(!membership.isElectronicPass) {
-            PhysicalEmailTemplate emailTemplate = new PhysicalEmailTemplate(membership.getEmailTemplate(), booked);
+            PhysicalEmailTemplate emailTemplate = new PhysicalEmailTemplate(membership.getEmailTemplate(), bookedpasses);
             TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
             emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation", templateEngine.getContent());
         } else {
 
         }
 
-        return ResponseEntity.ok(bookingRepository.save(newBooking));
+        return ResponseEntity.ok(new BookingResponseDto(bookedpasses.get(0)));
     }
 
     public BookingResponseDto cancelBooking(String bookingID){

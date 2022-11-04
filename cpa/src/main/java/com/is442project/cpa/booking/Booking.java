@@ -6,6 +6,8 @@ import com.is442project.cpa.account.UserAccount;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "booking")
@@ -102,10 +104,16 @@ public class Booking {
         isCollected = collected;
     }
 
-    public Booking bookPass(BookingRepository bookingRepository){
+    public List<Booking> bookPass(LocalDate borrowDate, UserAccount borrower, List<CorporatePass> availPasses, int qty, BookingRepository bookingRepository){
         //todo business logic to check user have exceed booking limit
         //todo business logic to check user have any outstanding dues
 
-        return bookingRepository.saveAndFlush(this);
+        List<Booking> toBookPasses = new ArrayList<>();
+        for (int i = 0; i < qty; i++) {
+            Booking booking = new Booking(LocalDate.now(), borrower, availPasses.get(i));
+            toBookPasses.add(booking);
+        }
+
+        return bookingRepository.saveAllAndFlush(toBookPasses);
     }
 }
