@@ -1,6 +1,7 @@
 package com.is442project.cpa.booking;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.is442project.cpa.account.Borrower;
 import com.is442project.cpa.account.UserAccount;
 
 import javax.persistence.*;
@@ -39,9 +40,10 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(LocalDate borrowDate, UserAccount borrower) {
+    public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass) {
         this.borrowDate = borrowDate;
         this.borrower = borrower;
+        this.corporatePass = corporatePass;
     }
 
     public LocalDate getBorrowDate() {
@@ -98,5 +100,12 @@ public class Booking {
 
     public void setCollected(boolean collected) {
         isCollected = collected;
+    }
+
+    public Booking bookPass(BookingRepository bookingRepository){
+        //todo business logic to check user have exceed booking limit
+        //todo business logic to check user have any outstanding dues
+
+        return bookingRepository.saveAndFlush(this);
     }
 }

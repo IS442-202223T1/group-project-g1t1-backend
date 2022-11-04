@@ -2,6 +2,7 @@ package com.is442project.cpa;
 
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.booking.Booking;
+import com.is442project.cpa.booking.BookingRepository;
 import com.is442project.cpa.booking.Membership;
 import com.is442project.cpa.booking.MembershipRepository;
 import com.is442project.cpa.common.email.Attachment;
@@ -9,7 +10,7 @@ import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AttachmentTemplate;
-import com.is442project.cpa.common.template.EmailTemplate;
+import com.is442project.cpa.common.template.PhysicalEmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ class CorporatePassApplicationTests {
 
 	@Autowired
 	AccountService accountService;
+
+	@Autowired
+	BookingRepository bookingRepository;
 
 	@Test
 	public void sentHtmlEmail_givenValidEmail_shouldSendEmail() {
@@ -65,13 +69,13 @@ class CorporatePassApplicationTests {
 		//arrange
 		Membership sampleMemberShip = membershipRepository.findById("Jalan Besar Stadium").get();
 
-		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent());
 
-		Booking booking = new Booking(LocalDate.now(), accountService.readUserByEmail("testAdmin@gmail.com"));
+		Booking booking = bookingRepository.findById(1).get();
 
-		emailTemplate.setBooking(booking);
+		PhysicalEmailTemplate physicalEmailTemplate = new PhysicalEmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
 
-		TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
+
+		TemplateEngine templateEngine = new TemplateEngine(physicalEmailTemplate);
 
 		//act
 		System.out.println(templateEngine.getContent());
