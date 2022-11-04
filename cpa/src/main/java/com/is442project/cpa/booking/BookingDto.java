@@ -8,19 +8,21 @@ import java.util.List;
 public class BookingDto {
     private LocalDate Date;
     private String email;
-    private List<String> corporatePassId;
+
+    private String membershipId;
+
+    private int qty;
 
 
     public BookingDto() {
     }
 
-    public BookingDto(LocalDate date, String email, List<String> corporatePassId) {
+    public BookingDto(LocalDate date, String email, String membershipId, int qty) {
         Date = date;
         this.email = email;
-        this.corporatePassId = corporatePassId;
+        this.membershipId = membershipId;
+        this.qty = qty;
     }
-
-
 
     @Override
     public String toString() {
