@@ -42,9 +42,15 @@ public class Booking {
     }
 
     public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass) {
+        this(borrowDate, borrower, corporatePass, 0, "active");
+    }
+
+    public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass, double feesDue, String status) {
         this.borrowDate = borrowDate;
         this.borrower = borrower;
         this.corporatePass = corporatePass;
+        this.feesDue = feesDue;
+        this.status = status;
     }
 
     public LocalDate getBorrowDate() {
