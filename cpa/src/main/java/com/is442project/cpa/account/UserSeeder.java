@@ -22,8 +22,9 @@ public class UserSeeder {
 
         UserAccount user01 = new UserAccount("david@sportsschool.edu.sg", "David Tan", "davidtan", null, Arrays.asList(new Borrower()));
         UserAccount user02 = new UserAccount("mary@nysi.org.sg", "Mary Lim", "marylim", null, Arrays.asList(new Borrower()));
+        UserAccount user03 = new UserAccount("joshua.zhangzy@gmail.com", "Joshua", "Joshua", null, Arrays.asList(new Borrower()));
 
-        userAccountRepository.saveAllAndFlush(Arrays.asList(admin, user01, user02));
+        userAccountRepository.saveAllAndFlush(Arrays.asList(admin, user01, user02, user03));
 
         System.out.println("======TEST USER ACCOUNT INSERTED======");
     }

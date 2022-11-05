@@ -1,33 +1,46 @@
 package com.is442project.cpa.booking;
 
-import com.is442project.cpa.common.template.AttachmentTemplate;
-import com.is442project.cpa.common.template.EmailTemplate;
+import com.is442project.cpa.account.AccountService;
+import com.is442project.cpa.account.UserAccount;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Configuration
 @Profile("dev")
+@DependsOn({"userSeeder", "membershipSeeder", "corporatePassSeeder"})
 public class BookingSeeder {
 
     private final MembershipRepository membershipRepository;
 
-    public BookingSeeder(MembershipRepository membershipRepository) {
+    private final CorporatePassRepository corporatePassRepository;
+
+    private BookingRepository bookingRepository;
+
+    private final AccountService accountService;
+
+    public BookingSeeder(MembershipRepository membershipRepository, CorporatePassRepository corporatePassRepository, BookingRepository bookingRepository, AccountService accountService) {
         this.membershipRepository = membershipRepository;
-        insertTestMembership();
+        this.corporatePassRepository = corporatePassRepository;
+        this.bookingRepository = bookingRepository;
+        this.accountService = accountService;
+        insertTestBooking();
     }
 
-    private void insertTestMembership() {
+    private void insertTestBooking(){
+        UserAccount borrower1 = accountService.readUserByEmail("joshua.zhangzy@gmail.com");
+        CorporatePass corporatePass1 = corporatePassRepository.findById(Long.parseLong("1")).get();
 
-        StringBuilder templateContent = new StringBuilder();
-        templateContent.append("Dear <borrower_name>,\n\n");
-        templateContent.append("We are pleased to inform that your booking to <attraction_name> is confirmed as follows:");
+        Booking booking1 = new Booking();
+        booking1.setBorrower(borrower1);
+        booking1.setBorrowDate(LocalDate.of(2022, 11, 16));
+        booking1.setCorporatePass(corporatePass1);
 
-        EmailTemplate emailTemplate = new EmailTemplate();
-        AttachmentTemplate attachmentTemplate = new AttachmentTemplate();
-        Membership testMembership01 = new Membership("Jalan Besar Stadium",new EmailTemplate(templateContent.toString()), new AttachmentTemplate(templateContent.toString()));
+        bookingRepository.saveAllAndFlush(Arrays.asList(booking1));
 
-        membershipRepository.saveAllAndFlush(Arrays.asList(testMembership01));
+        System.out.println("======TEST BOOKING INSERTED======");
     }
 }

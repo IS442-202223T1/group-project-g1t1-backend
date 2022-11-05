@@ -1,14 +1,15 @@
 package com.is442project.cpa.booking;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-
-import com.is442project.cpa.common.template.*;
 
 import java.util.Arrays;
 
+
 @Configuration
 @Profile("dev")
+@DependsOn("membershipSeeder")
 public class CorporatePassSeeder {
 
     public final CorporatePassRepository corporatePassRepository;
@@ -21,10 +22,8 @@ public class CorporatePassSeeder {
     }
 
     public void insertTestData() {
-        EmailTemplate emailTemplate = new EmailTemplate();
-        AttachmentTemplate attachmentTemplate = new AttachmentTemplate();
-        Membership membership = new Membership("Jalan Besar Stadium", emailTemplate, attachmentTemplate);
-        membershipRepository.saveAllAndFlush(Arrays.asList(membership));
+        Membership membership =  membershipRepository.findById("Jalan Besar Stadium").get();
+
         CorporatePass pass1 = new CorporatePass(membership, "A1", "available", 4);
         CorporatePass pass2 = new CorporatePass(membership, "B2", "collected", 4);
         CorporatePass pass3 = new CorporatePass(membership, "C3", "returned", 4);
@@ -32,6 +31,6 @@ public class CorporatePassSeeder {
 
         corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4));
 
-        System.out.println("======TEST USER ACCOUNT INSERTED======");
+        System.out.println("======TEST CORPORATE PASS INSERTED======");
     }
 }

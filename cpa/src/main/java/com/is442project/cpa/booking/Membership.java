@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -20,6 +21,9 @@ public class Membership {
     @AttributeOverride(name="templateContent", column=@Column(name="ATTACHMENT_TEMPLATE_CONTENT"))
     @Embedded
     private Template attachmentTemplate;
+
+    @NotNull
+    boolean isElectronicPass;
 
     public Membership(){}
 

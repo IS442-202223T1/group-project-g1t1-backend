@@ -23,19 +23,19 @@ public class GopController {
 
     @PutMapping("collectCard")
     public ResponseEntity collectCard(@RequestBody CardOpsData cardOpsData){
-        gopOps.collectCard(cardOpsData.getCardID());
+        gopOps.collectCard(Long.parseLong(cardOpsData.getCardID()));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("returnCard")
     public ResponseEntity returnCard(@RequestBody CardOpsData cardOpsData){
-        gopOps.returnCard(cardOpsData.getCardID());
+        gopOps.returnCard(Long.parseLong(cardOpsData.getCardID()));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("markLost")
     public ResponseEntity markLost(@RequestBody CardOpsData cardOpsData){
-        gopOps.markLost(cardOpsData.getCardID());
+        gopOps.markLost(Long.parseLong(cardOpsData.getCardID()));
         return ResponseEntity.ok().build();
     }
 
