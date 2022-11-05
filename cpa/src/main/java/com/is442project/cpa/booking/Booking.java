@@ -91,14 +91,6 @@ public class Booking {
         this.corporatePass = corporatePass;
     }
 
-    public boolean isCollected() {
-        return isCollected;
-    }
-
-    public void setCollected(boolean collected) {
-        isCollected = collected;
-    }
-
     public List<Booking> bookPass(LocalDate borrowDate, UserAccount borrower, List<CorporatePass> availPasses, int qty, BookingRepository bookingRepository){
         //todo business logic to check user have exceed booking limit
         //todo business logic to check user have any outstanding dues
