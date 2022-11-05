@@ -1,10 +1,13 @@
 package com.is442project.cpa.booking;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.is442project.cpa.account.Borrower;
 import com.is442project.cpa.account.UserAccount;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "booking")
@@ -14,11 +17,8 @@ public class Booking {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int bookingId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "corpPass")
-//    private CorporatePass CorporatePass;
-
-//    private Membership membershipType;
+    @ManyToOne
+    private CorporatePass corporatePass;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate borrowDate;
@@ -39,18 +39,14 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public Booking(LocalDate borrowDate, UserAccount borrower) {
-        this.borrowDate = borrowDate;
-        this.borrower = borrower;
+    public Booking() {
     }
 
-    //    public com.is442project.cpa.booking.CorporatePass getCorporatePass() {
-//        return CorporatePass;
-//    }
-//
-//    public void setCorporatePass(com.is442project.cpa.booking.CorporatePass corporatePass) {
-//        CorporatePass = corporatePass;
-//    }
+    public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass) {
+        this.borrowDate = borrowDate;
+        this.borrower = borrower;
+        this.corporatePass = corporatePass;
+    }
 
     public LocalDate getBorrowDate() {
         return borrowDate;
@@ -90,5 +86,34 @@ public class Booking {
 
     public void setLost(boolean lost) {
         isLost = lost;
+    }
+
+    public CorporatePass getCorporatePass() {
+        return corporatePass;
+    }
+
+    public void setCorporatePass(CorporatePass corporatePass) {
+        this.corporatePass = corporatePass;
+    }
+
+    public boolean isCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
+
+    public List<Booking> bookPass(LocalDate borrowDate, UserAccount borrower, List<CorporatePass> availPasses, int qty, BookingRepository bookingRepository){
+        //todo business logic to check user have exceed booking limit
+        //todo business logic to check user have any outstanding dues
+
+        List<Booking> toBookPasses = new ArrayList<>();
+        for (int i = 0; i < qty; i++) {
+            Booking booking = new Booking(LocalDate.now(), borrower, availPasses.get(i));
+            toBookPasses.add(booking);
+        }
+
+        return bookingRepository.saveAllAndFlush(toBookPasses);
     }
 }

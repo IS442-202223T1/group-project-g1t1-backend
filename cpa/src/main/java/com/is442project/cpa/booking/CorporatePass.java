@@ -1,15 +1,16 @@
 package com.is442project.cpa.booking;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.is442project.cpa.account.UserAccount;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "corporatePass")
 public class CorporatePass {
-    @Id 
+    @Id
+    @GeneratedValue
+    Long id;
+
+    @NotNull
     String number;
     @ManyToOne
     @JoinColumn(name = "membershipType")
@@ -37,8 +38,28 @@ public class CorporatePass {
         this.membershipType = membershipType;
     }
 
-    public String getID(){
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNumber() {
         return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public int getMaxPersonsAdmitted() {
+        return maxPersonsAdmitted;
+    }
+
+    public void setMaxPersonsAdmitted(int maxPersonsAdmitted) {
+        this.maxPersonsAdmitted = maxPersonsAdmitted;
     }
 
     public String getStatus(){

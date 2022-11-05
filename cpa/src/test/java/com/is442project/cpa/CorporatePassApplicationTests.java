@@ -2,6 +2,7 @@ package com.is442project.cpa;
 
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.booking.Booking;
+import com.is442project.cpa.booking.BookingRepository;
 import com.is442project.cpa.booking.Membership;
 import com.is442project.cpa.booking.MembershipRepository;
 import com.is442project.cpa.common.email.Attachment;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -33,6 +34,9 @@ class CorporatePassApplicationTests {
 
 	@Autowired
 	AccountService accountService;
+
+	@Autowired
+	BookingRepository bookingRepository;
 
 	@Test
 	public void sentHtmlEmail_givenValidEmail_shouldSendEmail() {
@@ -65,11 +69,11 @@ class CorporatePassApplicationTests {
 		//arrange
 		Membership sampleMemberShip = membershipRepository.findById("Jalan Besar Stadium").get();
 
-		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent());
 
-		Booking booking = new Booking(LocalDate.now(), accountService.readUserByEmail("testAdmin@gmail.com"));
+		Booking booking = bookingRepository.findById(1).get();
 
-		emailTemplate.setBooking(booking);
+		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
+
 
 		TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
 

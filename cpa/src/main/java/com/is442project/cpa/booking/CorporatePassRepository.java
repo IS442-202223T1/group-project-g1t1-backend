@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 @Repository
-public interface CorporatePassRepository extends JpaRepository<CorporatePass, String> {
+public interface CorporatePassRepository extends JpaRepository<CorporatePass, Long> {
     Optional<CorporatePass> findByNumber(String cardID);
 }
