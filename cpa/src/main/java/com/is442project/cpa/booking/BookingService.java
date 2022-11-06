@@ -101,12 +101,22 @@ public class BookingService implements BorrowerOps, GopOps{
         return null;
     }
 
-    public List<BookingResponseDto> getCurrentBooking(){
-        return null;
+    public List<BookingResponseDto> getCurrentBooking(String email){
+        List<BookingResponseDto> response = new ArrayList<>();
+        List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "confirmed");
+        for(Booking booking : currentBooking){
+            response.add( new BookingResponseDto(booking));
+        }
+        return response;
     }
 
-    public List<BookingResponseDto> getPastBooking(){
-        return null;
+    public List<BookingResponseDto> getPastBooking(String email){
+        List<BookingResponseDto> response = new ArrayList<>();
+        List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "closed");
+        for(Booking booking : currentBooking){
+            response.add( new BookingResponseDto(booking));
+        }
+        return response;
     }
 
     public List<CorporatePass> getAllPasses(){
