@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 @Data
 public class BookingDto {
-    private LocalDate Date;
+    private LocalDate date;
     private String email;
 
     private String membershipId;
@@ -18,16 +18,32 @@ public class BookingDto {
     }
 
     public BookingDto(LocalDate date, String email, String membershipId, int qty) {
-        Date = date;
+        this.date = date;
         this.email = email;
         this.membershipId = membershipId;
         this.qty = qty;
     }
 
+    public LocalDate getDate(){
+        return date;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getMembershipType(){
+        return membershipId;
+    }
+
+    public int getQuantity(){
+        return qty;
+    }
+
     @Override
     public String toString() {
         return "BookingDto{" +
-                "Date=" + Date +
+                "Date=" + date +
                 ", email='" + email + '\'' +
                 '}';
     }

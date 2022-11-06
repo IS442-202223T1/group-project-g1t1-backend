@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps{
@@ -37,13 +38,41 @@ public class BookingService implements BorrowerOps, GopOps{
 
         //todo implement code to check availability of passes, to write some query on the repo
         //List<CorporatePass> availPasses = corporatePassRepository.findAvailblePasses(bookingDto.getMembershipId(), bookingDto.getDate());
-        List<CorporatePass> availPasses = corporatePassRepository.findAll(); //fake implementation, can remove once above is done.
+        List<Booking> bookingsInMonth = bookingRepository.getAllBookingsByUserInAMonth(bookingDto.getDate().getYear(), bookingDto.getDate().getMonthValue(), bookingDto.getEmail());
+        if(bookingsInMonth.size()>2){
+            // throw error
+        }
+
+        Map<String, Booking> bookingMap = new HashMap<>();
+        for(Booking booking : bookingsInMonth){
+            String hashKey = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembershipType().getMembershipType();
+            bookingMap.put(hashKey, booking);
+        }
+
+        Set<Map.Entry<String,Booking>> set = bookingMap.entrySet();
+        // user has hit loan quota in the month alr
+        if(set.size()>1){
+            // throw error;
+        }
+
+        List<CorporatePass> availPasses = corporatePassRepository.getAvailablePassesForBooking(bookingDto.getDate().getMonth(), bookingDto.getMembershipType()); //fake implementation, can remove once above is done.
+        if(availPasses.size() < bookingDto.getQty()){
+            // throw error
+        }
 
         //todo implement bookpass, currently is a fake implementation.
-        Booking newBooking = new Booking();
-        List<Booking> bookedpasses = newBooking.bookPass(bookingDto.getDate(),  borrowerObject, availPasses, bookingDto.getQty(), bookingRepository);
+        // create booking and save to db
+        // update the impacted corporate passes
+        List<Booking> bookedPasses = new ArrayList<>();
+        for(int i = 0; i<bookingDto.getQty(); i++){
+            CorporatePass assignedPass = availPasses.get(i);
+            collectCard(assignedPass.getId());
+            Booking newBooking = new Booking(LocalDate.now(), borrowerObject, assignedPass);
+            bookedPasses.add(newBooking);
+            bookingRepository.save(newBooking);
+        }
 
-        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookedpasses);
+        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookedPasses);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
         emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation", templateEngine.getContent());
 
@@ -53,7 +82,7 @@ public class BookingService implements BorrowerOps, GopOps{
             //todo attach ePasses
         }
 
-        return ResponseEntity.ok(new BookingResponseDto(bookedpasses.get(0)));
+        return ResponseEntity.ok(new BookingResponseDto(bookedPasses.get(0)));
     }
 
     public BookingResponseDto cancelBooking(String bookingID){
@@ -92,19 +121,20 @@ public class BookingService implements BorrowerOps, GopOps{
         return true;
     };
 
-    public boolean returnCard(Long cardId){
+    public double returnCard(Long cardId){
         // update Card where id equal to card id, set is available to true
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
         corporatePass.setStatus("available");
         corporatePassRepository.save(corporatePass);
-        return true;
+        return 0.0;
     }
 
-    public boolean markLost(Long cardId){
+    public double markLost(Long cardId){
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
         corporatePass.setStatus("lost");
         corporatePassRepository.save(corporatePass);
-        return true;
+        // return corporatePass.getMembershipType().getFees();
+        return 0.0;
     }
 
 

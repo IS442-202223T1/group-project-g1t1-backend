@@ -3,6 +3,8 @@ package com.is442project.cpa.booking;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.is442project.cpa.common.template.Template;
+
 @Entity
 @Table(name = "corporatePass")
 public class CorporatePass {
@@ -24,6 +26,10 @@ public class CorporatePass {
         this.number = number;
         this.status = status;
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+    }
+
+    public CorporatePass(String membershipName, String number, String status, int maxPersonsAdmitted){
+        this(new Membership(membershipName, new Template(), new Template()), number, status, maxPersonsAdmitted);
     }
 
     public CorporatePass(){
@@ -77,5 +83,10 @@ public class CorporatePass {
 
     public void setNumberAdmitted(int maxPersonsAdmitted){
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+    }
+
+    public double getLostFees(){
+        // return membershipType.lostFees;
+        return 0.0;
     }
 }

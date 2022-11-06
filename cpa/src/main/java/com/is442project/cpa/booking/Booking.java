@@ -26,7 +26,6 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "email")
     private UserAccount borrower;
-
     private double feesDue;
     private String status;
 
