@@ -7,7 +7,7 @@ import java.util.List;
 public interface BorrowerOps {
     public abstract ResponseEntity<BookingResponseDto> bookPass(BookingDto bookingDto);
 
-    public abstract BookingResponseDto cancelBooking(String bookingID);
+    public abstract BookingResponseDto cancelBooking(int bookingID);
 
     public abstract  List<BookingResponseDto> getAllBooking(String userID);
 

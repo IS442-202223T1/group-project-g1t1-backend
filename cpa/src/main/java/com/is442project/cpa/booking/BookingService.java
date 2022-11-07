@@ -85,12 +85,27 @@ public class BookingService implements BorrowerOps, GopOps{
         return ResponseEntity.ok(new BookingResponseDto(bookedPasses.get(0)));
     }
 
-    public BookingResponseDto cancelBooking(String bookingID){
-        return null;
+    public BookingResponseDto cancelBooking(int bookingID){
+        Optional<Booking> response = bookingRepository.findById(bookingID);
+        if(response.isPresent()){
+            Booking booking  = response.get();
+            booking.setStatus("cancelled");
+            bookingRepository.save(booking);
+            CorporatePass corporatePass = booking.getCorporatePass();
+            corporatePass.setStatus("available");
+            corporatePassRepository.save(corporatePass);
+            return new BookingResponseDto(booking);
+        }
+        return new BookingResponseDto();
     }
 
     public List<BookingResponseDto> getAllBooking(String userID){
-        return null;
+        List<BookingResponseDto> response = new ArrayList<>();
+        List<Booking> currentBooking = bookingRepository.findAll();
+        for(Booking booking : currentBooking){
+            response.add( new BookingResponseDto(booking));
+        }
+        return response;
     }
 
     public List<Membership> getAllAttractions() {
