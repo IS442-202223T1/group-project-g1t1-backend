@@ -6,35 +6,40 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "corporatePass")
 public class CorporatePass {
+    public enum Status {
+        LOST, AVAILABLE, LOANED
+    }
+
     @Id
     @GeneratedValue
     Long id;
 
     @NotNull
     String number;
-    @ManyToOne
-    @JoinColumn(name = "membershipType")
-    Membership membershipType;
+    @NotNull
+    String membershipType;
 
-    String status;
+    Status status;
     int maxPersonsAdmitted;
+    String passType;
 
-    public CorporatePass(Membership membershipType, String number, String status, int maxPersonsAdmitted){
+    public CorporatePass(String membershipType, String number, Status status, int maxPersonsAdmitted, String passType) {
         this.membershipType = membershipType;
         this.number = number;
         this.status = status;
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+        this.passType = passType;
     }
 
-    public CorporatePass(){
+    public CorporatePass() {
 
     }
 
-    public Membership getMembershipType(){
+    public String getMembershipType() {
         return membershipType;
     }
 
-    public void setMembershipType(Membership membershipType){
+    public void setMembershipType(String membershipType) {
         this.membershipType = membershipType;
     }
 
@@ -62,20 +67,27 @@ public class CorporatePass {
         this.maxPersonsAdmitted = maxPersonsAdmitted;
     }
 
-    public String getStatus(){
+    public Status getStatus() {
         return status;
     }
 
-    public String setStatus(String status){
+    public void setStatus(Status status){
         this.status = status;
-        return status;
     }
 
-    public int getNumberAdmitted(){
+    public int getNumberAdmitted() {
         return maxPersonsAdmitted;
     }
 
-    public void setNumberAdmitted(int maxPersonsAdmitted){
+    public void setNumberAdmitted(int maxPersonsAdmitted) {
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+    }
+
+    public String getPassType() {
+        return passType;
+    }
+
+    public void setPassType(String passType) {
+        this.passType = passType;
     }
 }

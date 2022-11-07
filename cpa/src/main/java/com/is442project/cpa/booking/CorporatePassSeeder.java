@@ -3,6 +3,7 @@ package com.is442project.cpa.booking;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
+import com.is442project.cpa.booking.CorporatePass.Status;
 
 import java.util.Arrays;
 
@@ -22,12 +23,10 @@ public class CorporatePassSeeder {
     }
 
     public void insertTestData() {
-        Membership membership =  membershipRepository.findById("Jalan Besar Stadium").get();
-
-        CorporatePass pass1 = new CorporatePass(membership, "A1", "available", 4);
-        CorporatePass pass2 = new CorporatePass(membership, "B2", "collected", 4);
-        CorporatePass pass3 = new CorporatePass(membership, "C3", "returned", 4);
-        CorporatePass pass4 = new CorporatePass(membership, "D4", "losted", 4);
+        CorporatePass pass1 = new CorporatePass("Mandai Wildlife Reserve", "CARD0001", Status.AVAILABLE, 4, "Physical");
+        CorporatePass pass2 = new CorporatePass("Mandai Wildlife Reserve", "CARD0002", Status.LOANED, 4, "Physical");
+        CorporatePass pass3 = new CorporatePass("Mandai Wildlife Reserve", "CARD0003", Status.AVAILABLE, 4, "Digital");
+        CorporatePass pass4 = new CorporatePass("Mandai Wildlife Reserve", "CARD0004", Status.LOST, 4, "Physical");
 
         corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4));
 

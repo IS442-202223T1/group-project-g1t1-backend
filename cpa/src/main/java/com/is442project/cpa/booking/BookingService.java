@@ -3,6 +3,7 @@ package com.is442project.cpa.booking;
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.exception.MembershipNotFoundException;
+import com.is442project.cpa.booking.CorporatePass.Status;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
@@ -13,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Component
-public class BookingService implements BorrowerOps, GopOps{
+public class BookingService implements BorrowerOps, GopOps, AdminOps{
 
     private MembershipRepository membershipRepository;
     private final BookingRepository bookingRepository;
@@ -80,10 +81,14 @@ public class BookingService implements BorrowerOps, GopOps{
         return corporatePassRepository.findAll();
     }
 
+    public List<CorporatePass> getAllPassesByMembershipType(String membershipType){
+        return corporatePassRepository.findByMembershipType(membershipType);
+    }
+
     public boolean collectCard(Long cardId){
         // update Card where id equal to card id, set is available to false
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
-        corporatePass.setStatus("collected");
+        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);
+        corporatePass.setStatus(Status.LOANED);
         corporatePassRepository.save(corporatePass);
         return true;
     };
@@ -91,17 +96,15 @@ public class BookingService implements BorrowerOps, GopOps{
     public boolean returnCard(Long cardId){
         // update Card where id equal to card id, set is available to true
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
-        corporatePass.setStatus("available");
+        corporatePass.setStatus(Status.AVAILABLE);
         corporatePassRepository.save(corporatePass);
         return true;
     }
 
     public boolean markLost(Long cardId){
         CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
-        corporatePass.setStatus("lost");
+        corporatePass.setStatus(Status.LOST);
         corporatePassRepository.save(corporatePass);
         return true;
     }
-
-
 }
