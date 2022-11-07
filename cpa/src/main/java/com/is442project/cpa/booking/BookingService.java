@@ -96,7 +96,7 @@ public class BookingService implements BorrowerOps, GopOps{
             corporatePassRepository.save(corporatePass);
             return new BookingResponseDto(booking);
         }
-        return new BookingResponseDto();
+        return null;
     }
 
     public List<BookingResponseDto> getAllBooking(String userID){
@@ -127,7 +127,7 @@ public class BookingService implements BorrowerOps, GopOps{
 
     public List<BookingResponseDto> getPastBooking(String email){
         List<BookingResponseDto> response = new ArrayList<>();
-        List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "closed");
+        List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "returned");
         for(Booking booking : currentBooking){
             response.add( new BookingResponseDto(booking));
         }
@@ -146,20 +146,34 @@ public class BookingService implements BorrowerOps, GopOps{
         return true;
     };
 
-    public double returnCard(Long cardId){
+    public double returnCard(int bookingID){
         // update Card where id equal to card id, set is available to true
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
-        corporatePass.setStatus("available");
-        corporatePassRepository.save(corporatePass);
+        Optional<Booking> response = bookingRepository.findById(bookingID);
+        if(response.isPresent()){
+            Booking booking  = response.get();
+            booking.setStatus("returned");
+            bookingRepository.save(booking);
+            CorporatePass corporatePass = booking.getCorporatePass();
+            corporatePass.setStatus("available");
+            corporatePassRepository.save(corporatePass);
+            return 0.0;
+        }
         return 0.0;
     }
 
-    public double markLost(Long cardId){
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
-        corporatePass.setStatus("lost");
-        corporatePassRepository.save(corporatePass);
-        // return corporatePass.getMembershipType().getFees();
+    public double markLost(int bookingID){
+        Optional<Booking> response = bookingRepository.findById(bookingID);
+        if(response.isPresent()){
+            Booking booking  = response.get();
+            booking.setStatus("settlingDues");
+            bookingRepository.save(booking);
+            CorporatePass corporatePass = booking.getCorporatePass();
+            corporatePass.setStatus("lost");
+            corporatePassRepository.save(corporatePass);
+            return 0.0;
+        }
         return 0.0;
+        // return corporatePass.getMembershipType().getFees();
     }
 
 

@@ -9,9 +9,9 @@ interface GopOps {
 
     public abstract boolean collectCard(Long cardId);
 
-    public abstract double returnCard(Long cardId);
+    public abstract double returnCard(int bookingID);
 
-    public abstract double markLost(Long cardId);
+    public abstract double markLost(int bookingID);
 
     public abstract List<CorporatePass> getAllPasses();
 }
