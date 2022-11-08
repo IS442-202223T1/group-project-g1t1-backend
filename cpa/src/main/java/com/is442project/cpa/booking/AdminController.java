@@ -21,9 +21,16 @@ public class AdminController {
     adminOps = bookingService;
   }
 
+  @GetMapping({ "/membership" })
+  @ResponseStatus(code = HttpStatus.OK)
+  public ResponseEntity<List<Membership>> getMemberships() {
+    List<Membership> result = adminOps.getAllMemberships();
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
   @GetMapping({ "/membership/{membershipName}" })
   @ResponseStatus(code = HttpStatus.OK)
-  public ResponseEntity<MembershipDTO> getMembershipTypeDetails(
+  public ResponseEntity<MembershipDTO> getMembershipDetails(
       @PathVariable("membershipName") String membershipName) {
     Membership membership = adminOps.getMembershipByName(membershipName);
     List<CorporatePass> passes = adminOps.getAllPassesByMembership(membership);
