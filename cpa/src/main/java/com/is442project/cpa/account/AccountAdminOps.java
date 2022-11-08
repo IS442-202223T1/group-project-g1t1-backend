@@ -1,6 +1,6 @@
 package com.is442project.cpa.account;
 
-public interface AdminOps {
+public interface AccountAdminOps {
     boolean disableEmployee(String email);
     boolean deleteEmployee(String email);
     boolean grantRole(String email, String roleName);

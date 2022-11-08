@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/admin")
-public class AdminController {
-    private final AdminOps adminOps;
+@RequestMapping("/api/v1/account/admin")
+public class AccountAdminController {
+    private final AccountAdminOps accountAdminOps;
 
-    public AdminController(AdminService adminService) {
-        adminOps = adminService;
+    public AccountAdminController(AccountAdminService accountAdminService) {
+        accountAdminOps = accountAdminService;
     }
 
     @GetMapping("/test")
@@ -25,7 +25,7 @@ public class AdminController {
     @PutMapping("/disable_employee/{email}")
     public ResponseEntity disableEmployee (@PathVariable String email) {
         try {
-            adminOps.disableEmployee(email);
+            accountAdminOps.disableEmployee(email);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -35,7 +35,7 @@ public class AdminController {
     @DeleteMapping("/delete_employee/{email}")
     public ResponseEntity deleteEmployee (@PathVariable String email) {
         try {
-            adminOps.deleteEmployee(email);
+            accountAdminOps.deleteEmployee(email);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -45,7 +45,7 @@ public class AdminController {
     @PutMapping("/grant_role/{email}/{roleName}")
     public ResponseEntity grantRole (@PathVariable String email, @PathVariable String roleName) {
         try {
-            adminOps.grantRole(email, roleName);
+            accountAdminOps.grantRole(email, roleName);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -55,7 +55,7 @@ public class AdminController {
     @PutMapping("/revoke_role/{email}/{roleName}")
     public ResponseEntity revokeRole (@PathVariable String email, @PathVariable String roleName) {
         try {
-            adminOps.revokeRole(email, roleName);
+            accountAdminOps.revokeRole(email, roleName);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

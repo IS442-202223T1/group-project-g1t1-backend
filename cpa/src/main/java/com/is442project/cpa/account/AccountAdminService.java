@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class AdminService implements AdminOps {
+public class AccountAdminService implements AccountAdminOps {
 
     private final UserAccountRepository userAccountRepository;
 
-    public AdminService(UserAccountRepository userAccountRepository) {
+    public AccountAdminService(UserAccountRepository userAccountRepository) {
         this.userAccountRepository = userAccountRepository;
     }
 
