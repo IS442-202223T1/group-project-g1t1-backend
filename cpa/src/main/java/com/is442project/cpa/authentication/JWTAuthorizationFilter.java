@@ -3,8 +3,6 @@ package com.is442project.cpa.authentication;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.is442project.cpa.account.AccountService;
-import com.is442project.cpa.account.UserAccountRepository;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

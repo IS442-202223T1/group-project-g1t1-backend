@@ -3,6 +3,7 @@ package com.is442project.cpa.booking;
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.exception.MembershipNotFoundException;
+import com.is442project.cpa.booking.CorporatePass.Status;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Component
-public class BookingService implements BorrowerOps, GopOps{
+public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     private MembershipRepository membershipRepository;
     private final BookingRepository bookingRepository;
@@ -22,7 +23,9 @@ public class BookingService implements BorrowerOps, GopOps{
     private final AccountService accountService;
     private final EmailService emailService;
 
-    public BookingService(BookingRepository bookingRepository, AccountService accountService, CorporatePassRepository corporatePassRepository, MembershipRepository membershipRepository, EmailService emailService) {
+    public BookingService(BookingRepository bookingRepository, AccountService accountService,
+            CorporatePassRepository corporatePassRepository, MembershipRepository membershipRepository,
+            EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.corporatePassRepository = corporatePassRepository;
         this.accountService = accountService;
@@ -30,22 +33,22 @@ public class BookingService implements BorrowerOps, GopOps{
         this.emailService = emailService;
     }
 
-    public ResponseEntity<BookingResponseDto> bookPass(BookingDto bookingDto){
-        UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.getEmail());
+    public ResponseEntity<BookingResponseDTO> bookPass(BookingDTO bookingDTO) {
+        UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
-        Membership membership = membershipRepository.findById(bookingDto.getMembershipId())
-                .orElseThrow(() -> new MembershipNotFoundException(bookingDto.getMembershipId()));
+        Membership membership = membershipRepository.findById(bookingDTO.getMembershipId())
+                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipId()));
 
         //todo implement code to check availability of passes, to write some query on the repo
         //List<CorporatePass> availPasses = corporatePassRepository.findAvailblePasses(bookingDto.getMembershipId(), bookingDto.getDate());
-        List<Booking> bookingsInMonth = bookingRepository.getAllBookingsByUserInAMonth(bookingDto.getDate().getYear(), bookingDto.getDate().getMonthValue(), bookingDto.getEmail());
+        List<Booking> bookingsInMonth = bookingRepository.getAllBookingsByUserInAMonth(bookingDTO.getDate().getYear(), bookingDTO.getDate().getMonthValue(), bookingDTO.getEmail());
         if(bookingsInMonth.size()>2){
             // throw error
         }
 
         Map<String, Booking> bookingMap = new HashMap<>();
         for(Booking booking : bookingsInMonth){
-            String hashKey = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembershipType().getMembershipType();
+            String hashKey = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembership().getMembershipName();
             bookingMap.put(hashKey, booking);
         }
 
@@ -55,8 +58,8 @@ public class BookingService implements BorrowerOps, GopOps{
             // throw error;
         }
 
-        List<CorporatePass> availPasses = corporatePassRepository.getAvailablePassesForBooking(bookingDto.getDate().getMonth(), bookingDto.getMembershipType()); //fake implementation, can remove once above is done.
-        if(availPasses.size() < bookingDto.getQty()){
+        List<CorporatePass> availPasses = corporatePassRepository.getAvailablePassesForBooking(bookingDTO.getDate().getMonth(), bookingDTO.getMembershipType()); //fake implementation, can remove once above is done.
+        if(availPasses.size() < bookingDTO.getQty()){
             // throw error
         }
 
@@ -64,7 +67,7 @@ public class BookingService implements BorrowerOps, GopOps{
         // create booking and save to db
         // update the impacted corporate passes
         List<Booking> bookedPasses = new ArrayList<>();
-        for(int i = 0; i<bookingDto.getQty(); i++){
+        for(int i = 0; i<bookingDTO.getQty(); i++){
             CorporatePass assignedPass = availPasses.get(i);
             collectCard(assignedPass.getId());
             Booking newBooking = new Booking(LocalDate.now(), borrowerObject, assignedPass);
@@ -74,36 +77,37 @@ public class BookingService implements BorrowerOps, GopOps{
 
         EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookedPasses);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
-        emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation", templateEngine.getContent());
+        emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                templateEngine.getContent());
 
-        if(!membership.isElectronicPass) {
-            //todo attach authorisation form
+        if (!membership.isElectronicPass) {
+            // todo attach authorisation form
         } else {
-            //todo attach ePasses
+            // todo attach ePasses
         }
 
-        return ResponseEntity.ok(new BookingResponseDto(bookedPasses.get(0)));
+        return ResponseEntity.ok(new BookingResponseDTO(bookedPasses.get(0)));
     }
 
-    public BookingResponseDto cancelBooking(int bookingID){
+    public BookingResponseDTO cancelBooking(int bookingID){
         Optional<Booking> response = bookingRepository.findById(bookingID);
         if(response.isPresent()){
             Booking booking  = response.get();
             booking.setStatus("cancelled");
             bookingRepository.save(booking);
             CorporatePass corporatePass = booking.getCorporatePass();
-            corporatePass.setStatus("available");
+            corporatePass.setStatus(Status.AVAILABLE);
             corporatePassRepository.save(corporatePass);
-            return new BookingResponseDto(booking);
+            return new BookingResponseDTO(booking);
         }
         return null;
     }
 
-    public List<BookingResponseDto> getAllBooking(String userID){
-        List<BookingResponseDto> response = new ArrayList<>();
+    public List<BookingResponseDTO> getAllBooking(String userID){
+        List<BookingResponseDTO> response = new ArrayList<>();
         List<Booking> currentBooking = bookingRepository.findAll();
         for(Booking booking : currentBooking){
-            response.add( new BookingResponseDto(booking));
+            response.add( new BookingResponseDTO(booking));
         }
         return response;
     }
@@ -112,36 +116,49 @@ public class BookingService implements BorrowerOps, GopOps{
         return membershipRepository.findAll();
     }
 
-    public CorporatePass reportLost(String corporatePassNumber){
+    public CorporatePass reportLost(String corporatePassID) {
         return null;
     }
 
-    public List<BookingResponseDto> getCurrentBooking(String email){
-        List<BookingResponseDto> response = new ArrayList<>();
+    public List<BookingResponseDTO> getCurrentBooking(String email){
+        List<BookingResponseDTO> response = new ArrayList<>();
         List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "confirmed");
         for(Booking booking : currentBooking){
-            response.add( new BookingResponseDto(booking));
+            response.add( new BookingResponseDTO(booking));
         }
         return response;
     }
 
-    public List<BookingResponseDto> getPastBooking(String email){
-        List<BookingResponseDto> response = new ArrayList<>();
+    public List<BookingResponseDTO> getPastBooking(String email){
+        List<BookingResponseDTO> response = new ArrayList<>();
         List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "returned");
         for(Booking booking : currentBooking){
-            response.add( new BookingResponseDto(booking));
+            response.add( new BookingResponseDTO(booking));
         }
         return response;
     }
 
-    public List<CorporatePass> getAllPasses(){
+    public List<Membership> getAllMemberships() {
+        return membershipRepository.findAll();
+    }
+
+    public Membership getMembershipByName(String membershipName) {
+        return membershipRepository.findByMembershipName(membershipName);
+    }
+
+    public List<CorporatePass> getAllPasses() {
         return corporatePassRepository.findAll();
     }
 
-    public boolean collectCard(Long cardId){
+    public List<CorporatePass> getAllPassesByMembership(Membership membership) {
+        return corporatePassRepository.findByMembership(membership);
+    }
+
+    public boolean collectCard(Long cardId) {
         // update Card where id equal to card id, set is available to false
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);;
-        corporatePass.setStatus("collected");
+        CorporatePass corporatePass = corporatePassRepository.findById(cardId)
+                .orElseThrow(EntityNotFoundException::new);
+        corporatePass.setStatus(Status.LOANED);
         corporatePassRepository.save(corporatePass);
         return true;
     };
@@ -154,7 +171,7 @@ public class BookingService implements BorrowerOps, GopOps{
             booking.setStatus("returned");
             bookingRepository.save(booking);
             CorporatePass corporatePass = booking.getCorporatePass();
-            corporatePass.setStatus("available");
+            corporatePass.setStatus(Status.AVAILABLE);
             corporatePassRepository.save(corporatePass);
             return 0.0;
         }
@@ -168,13 +185,11 @@ public class BookingService implements BorrowerOps, GopOps{
             booking.setStatus("settlingDues");
             bookingRepository.save(booking);
             CorporatePass corporatePass = booking.getCorporatePass();
-            corporatePass.setStatus("lost");
+            corporatePass.setStatus(Status.LOST);
             corporatePassRepository.save(corporatePass);
             return 0.0;
         }
         return 0.0;
         // return corporatePass.getMembershipType().getFees();
     }
-
-
 }

@@ -41,9 +41,9 @@ public class EmailTemplate extends Template implements TemplateResources {
         VelocityContext context = new VelocityContext();
 
         context.put("borrower_name", bookings.get(0).getBorrower().getName());
-        context.put("attraction_name", bookings.get(0).getCorporatePass().getMembershipType().getMembershipType());
+        context.put("attraction_name", bookings.get(0).getCorporatePass().getMembership().getMembershipName());
         context.put("visit_date", bookings.get(0).getBorrowDate());
-        context.put("corp_pass_number", bookings.stream().map(booking -> booking.getCorporatePass().getNumber())
+        context.put("corp_pass_number", bookings.stream().map(booking -> booking.getCorporatePass().getPassID())
                 .reduce("", (p1, p2)-> p1 + " , " + p2).substring(2));
 
         return context;

@@ -1,13 +1,13 @@
 package com.is442project.cpa.booking;
 
-public class BookingResponseDto {
+public class BookingResponseDTO {
     private String bookingId;
     private CorporatePass corpPass;
 
-    public BookingResponseDto() {
+    public BookingResponseDTO() {
     }
 
-    public BookingResponseDto(Booking booking) {
+    public BookingResponseDTO(Booking booking) {
         bookingId = ""+booking.getBookingId();
         corpPass = booking.getCorporatePass();
     }

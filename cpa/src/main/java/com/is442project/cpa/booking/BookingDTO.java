@@ -5,8 +5,8 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 @Data
-public class BookingDto {
-    private LocalDate date;
+public class BookingDTO {
+    private LocalDate Date;
     private String email;
 
     private String membershipId;
@@ -14,18 +14,18 @@ public class BookingDto {
     private int qty;
 
 
-    public BookingDto() {
+    public BookingDTO() {
     }
 
-    public BookingDto(LocalDate date, String email, String membershipId, int qty) {
-        this.date = date;
+    public BookingDTO(LocalDate date, String email, String membershipId, int qty) {
+        Date = date;
         this.email = email;
         this.membershipId = membershipId;
         this.qty = qty;
     }
 
     public LocalDate getDate(){
-        return date;
+        return Date;
     }
 
     public String getEmail(){
@@ -43,7 +43,7 @@ public class BookingDto {
     @Override
     public String toString() {
         return "BookingDto{" +
-                "Date=" + date +
+                "Date=" + Date +
                 ", email='" + email + '\'' +
                 '}';
     }

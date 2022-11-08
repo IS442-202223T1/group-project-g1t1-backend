@@ -20,8 +20,8 @@ public class BorrowerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addBooking(@RequestBody BookingDto bookingDto){
-        return borrowerOps.bookPass(bookingDto);
+    public ResponseEntity addBooking(@RequestBody BookingDTO bookingDTO){
+        return borrowerOps.bookPass(bookingDTO);
     }
 
 }

@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MembershipRepository extends JpaRepository<Membership, String> {
+  Membership findByMembershipName(String membershipName);
 }
