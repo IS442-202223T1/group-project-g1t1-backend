@@ -29,17 +29,11 @@ public class Membership {
     @NotNull
     boolean isElectronicPass;
 
-    @NotNull
     String description;
 
     String imageUrl;
 
     public Membership() {
-    }
-
-    public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
-            boolean isElectronicPass, String description) {
-        this(membershipName, emailTemplate, attachmentTemplate, replacementFee, isElectronicPass, description, null);
     }
 
     public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
@@ -49,8 +43,8 @@ public class Membership {
         this.attachmentTemplate = attachmentTemplate;
         this.replacementFee = replacementFee;
         this.isElectronicPass = isElectronicPass;
-        this.imageUrl = imageUrl;
         this.description = description;
+        this.imageUrl = imageUrl;
     }
 
     public String getMembershipName() {
