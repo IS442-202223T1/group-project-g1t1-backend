@@ -29,6 +29,8 @@ public class UserAccount {
 
     private String contactNumber;
 
+    private boolean isActive;
+
     @ElementCollection(fetch=FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
 
@@ -47,6 +49,7 @@ public class UserAccount {
         this.password = bCryptPasswordEncoder.encode(password);
         this.contactNumber = contactNumber;
         this.roles = roles;
+        this.isActive = true;
     }
 
     public String getEmail() {
@@ -86,11 +89,27 @@ public class UserAccount {
         this.contactNumber = contactNumber;
     }
 
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
     }
 }

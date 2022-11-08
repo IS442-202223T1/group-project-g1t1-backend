@@ -35,7 +35,7 @@ public class Role {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof Role)) return false;
         Role role = (Role) o;
         return isDisabled == role.isDisabled && Objects.equals(label, role.label);
     }
