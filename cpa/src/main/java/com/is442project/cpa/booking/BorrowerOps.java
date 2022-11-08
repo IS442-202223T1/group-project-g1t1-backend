@@ -12,4 +12,6 @@ public interface BorrowerOps {
     public abstract  List<BookingResponseDTO> getAllBooking(String userID);
 
     public abstract CorporatePass reportLost(String corporatePassID);
+
+    public abstract List<Membership> getAllAttractions();
 }
