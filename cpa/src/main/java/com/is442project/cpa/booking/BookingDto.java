@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 @Data
-public class BookingDto {
+public class BookingDTO {
     private LocalDate Date;
     private String email;
 
@@ -14,10 +14,10 @@ public class BookingDto {
     private int qty;
 
 
-    public BookingDto() {
+    public BookingDTO() {
     }
 
-    public BookingDto(LocalDate date, String email, String membershipId, int qty) {
+    public BookingDTO(LocalDate date, String email, String membershipId, int qty) {
         Date = date;
         this.email = email;
         this.membershipId = membershipId;
