@@ -3,6 +3,8 @@ package com.is442project.cpa.booking;
 import com.is442project.cpa.common.template.Template;
 import lombok.Data;
 
+import java.lang.reflect.Member;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -27,28 +29,28 @@ public class Membership {
     @NotNull
     boolean isElectronicPass;
 
+    @NotNull
+    String description;
+
     String imageUrl;
 
-    public Membership(){}
-
-    public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
-            boolean isElectronicPass) {
-        this.membershipName = membershipName;
-        this.emailTemplate = emailTemplate;
-        this.attachmentTemplate = attachmentTemplate;
-        this.replacementFee = replacementFee;
-        this.isElectronicPass = isElectronicPass;
-        this.imageUrl = null;
+    public Membership() {
     }
 
     public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
-            boolean isElectronicPass, String imageUrl) {
+            boolean isElectronicPass, String description) {
+        this(membershipName, emailTemplate, attachmentTemplate, replacementFee, isElectronicPass, description, null);
+    }
+
+    public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
+            boolean isElectronicPass, String description, String imageUrl) {
         this.membershipName = membershipName;
         this.emailTemplate = emailTemplate;
         this.attachmentTemplate = attachmentTemplate;
         this.replacementFee = replacementFee;
         this.isElectronicPass = isElectronicPass;
         this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public String getMembershipName() {
@@ -75,7 +77,15 @@ public class Membership {
         this.isElectronicPass = isElectronicPass;
     }
 
-    public String imageUrl() {
+    public String getDecription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
         return imageUrl;
     }
 

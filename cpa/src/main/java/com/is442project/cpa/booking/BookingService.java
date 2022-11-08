@@ -85,6 +85,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return null;
     }
 
+    public List<Membership> getAllMemberships() {
+        return membershipRepository.findAll();
+    }
+
     public Membership getMembershipByName(String membershipName) {
         return membershipRepository.findByMembershipName(membershipName);
     }

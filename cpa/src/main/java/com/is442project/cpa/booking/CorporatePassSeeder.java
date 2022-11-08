@@ -25,6 +25,8 @@ public class CorporatePassSeeder {
     public void insertTestData() {
         Membership membership1 =  membershipRepository.findById("Mandai Wildlife Reserve").get();
         Membership membership2 =  membershipRepository.findById("Universal Studios").get();
+        Membership membership3 =  membershipRepository.findById("Zoo").get();
+        Membership membership4 =  membershipRepository.findById("SEA Aquarium").get();
 
         CorporatePass pass1 = new CorporatePass(membership1, "CARD0001", Status.AVAILABLE, 4);
         CorporatePass pass2 = new CorporatePass(membership1, "CARD0002", Status.LOANED, 4);
@@ -33,8 +35,10 @@ public class CorporatePassSeeder {
         CorporatePass pass5 = new CorporatePass(membership2, "CARD0005", Status.AVAILABLE, 4);
         CorporatePass pass6 = new CorporatePass(membership2, "CARD0006", Status.LOST, 4);
         CorporatePass pass7 = new CorporatePass(membership2, "CARD0007", Status.LOANED, 4);
+        CorporatePass pass8 = new CorporatePass(membership3, "CARD0008", Status.LOANED, 2);
+        CorporatePass pass9 = new CorporatePass(membership4, "CARD0009", Status.LOANED, 2);
 
-        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7));
+        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7, pass8, pass9));
 
         System.out.println("======TEST CORPORATE PASS INSERTED======");
     }
