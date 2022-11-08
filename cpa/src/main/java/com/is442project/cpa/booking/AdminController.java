@@ -1,16 +1,16 @@
 package com.is442project.cpa.booking;
 
-import java.util.List;
-import java.util.ArrayList;
+import org.modelmapper.ModelMapper;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -21,12 +21,21 @@ public class AdminController {
     adminOps = bookingService;
   }
 
-  @GetMapping({ "/membership/{membershipType}" })
+  @GetMapping({ "/membership/{membershipName}" })
   @ResponseStatus(code = HttpStatus.OK)
-  public ResponseEntity<List<CorporatePass>> getMembershipTypeDetails(
-    @PathVariable("membershipType") String membershipType
-  ) {
-    List<CorporatePass> result = adminOps.getAllPassesByMembershipType(membershipType);
-    return new ResponseEntity<>(result, HttpStatus.OK);
+  public ResponseEntity<MembershipDTO> getMembershipTypeDetails(
+      @PathVariable("membershipName") String membershipName) {
+    Membership membership = adminOps.getMembershipByName(membershipName);
+    List<CorporatePass> passes = adminOps.getAllPassesByMembership(membership);
+    MembershipDTO membershipDTO = this.convertToMembershipDTO(membership, passes);
+    return new ResponseEntity<>(membershipDTO, HttpStatus.OK);
+  }
+
+  private MembershipDTO convertToMembershipDTO(Membership membership, List<CorporatePass> passes) {
+    ModelMapper mapper = new ModelMapper();
+    MembershipDTO membershipDTO = mapper.map(membership, MembershipDTO.class);
+
+    membershipDTO.setCorporatePasses(passes);
+    return membershipDTO;
   }
 }

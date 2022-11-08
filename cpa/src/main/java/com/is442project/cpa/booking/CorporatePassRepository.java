@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.List;
 @Repository
 public interface CorporatePassRepository extends JpaRepository<CorporatePass, Long> {
-    Optional<CorporatePass> findByNumber(String cardID);
+    Optional<CorporatePass> findByPassID(String passID);
 
-    List<CorporatePass> findByMembershipType(String membershipType);
+    List<CorporatePass> findByMembership(Membership membership);
 }

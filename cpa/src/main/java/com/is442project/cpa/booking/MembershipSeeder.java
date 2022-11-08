@@ -23,11 +23,10 @@ public class MembershipSeeder {
         Template attachmentTemplate = new Template();
         physicalEmailTemplate.setTemplateContent(buildSamplePhysicalPassEmailTemplate());
         attachmentTemplate.setTemplateContent("test");
-        Membership membership = new Membership("Jalan Besar Stadium", physicalEmailTemplate, attachmentTemplate);
-        Membership membership2 = new Membership("Bedok Stadium", physicalEmailTemplate, attachmentTemplate);
-        Membership membership3 = new Membership("Temasek Junior College", physicalEmailTemplate, attachmentTemplate);
-        Membership membership4 = new Membership("S.E.A Aquarium", new Template(), attachmentTemplate);
-        membership4.setElectronicPass(true);
+        Membership membership = new Membership("Mandai Wildlife Reserve", physicalEmailTemplate, attachmentTemplate, 53.50, true, "https://images.unsplash.com/photo-1665006518423-b81a193b4100?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
+        Membership membership2 = new Membership("Universal Studios", physicalEmailTemplate, attachmentTemplate, 87.00, false, "https://images.unsplash.com/photo-1601930113377-729966035f34?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+        Membership membership3 = new Membership("Zoo", physicalEmailTemplate, attachmentTemplate, 19.00, true);
+        Membership membership4 = new Membership("SEA Aquarium", new Template(), attachmentTemplate, 20.50, false);
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3, membership4));
 

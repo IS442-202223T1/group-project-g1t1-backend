@@ -15,32 +15,33 @@ public class CorporatePass {
     Long id;
 
     @NotNull
-    String number;
+    String passID;
+
+    @ManyToOne
+    @JoinColumn(name = "membership")
+    Membership membership;
+
     @NotNull
-    String membershipType;
-
     Status status;
-    int maxPersonsAdmitted;
-    String passType;
 
-    public CorporatePass(String membershipType, String number, Status status, int maxPersonsAdmitted, String passType) {
-        this.membershipType = membershipType;
-        this.number = number;
+    @NotNull
+    int maxPersonsAdmitted;
+
+    public CorporatePass(){}
+
+    public CorporatePass(Membership membership, String passID, Status status, int maxPersonsAdmitted) {
+        this.membership = membership;
+        this.passID = passID;
         this.status = status;
         this.maxPersonsAdmitted = maxPersonsAdmitted;
-        this.passType = passType;
     }
 
-    public CorporatePass() {
-
+    public Membership getMembership() {
+        return membership;
     }
 
-    public String getMembershipType() {
-        return membershipType;
-    }
-
-    public void setMembershipType(String membershipType) {
-        this.membershipType = membershipType;
+    public void setMembership(Membership membership) {
+        this.membership = membership;
     }
 
     public Long getId() {
@@ -51,12 +52,12 @@ public class CorporatePass {
         this.id = id;
     }
 
-    public String getNumber() {
-        return number;
+    public String getPassID() {
+        return passID;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPassID(String passID) {
+        this.passID = passID;
     }
 
     public int getMaxPersonsAdmitted() {
@@ -73,21 +74,5 @@ public class CorporatePass {
 
     public void setStatus(Status status){
         this.status = status;
-    }
-
-    public int getNumberAdmitted() {
-        return maxPersonsAdmitted;
-    }
-
-    public void setNumberAdmitted(int maxPersonsAdmitted) {
-        this.maxPersonsAdmitted = maxPersonsAdmitted;
-    }
-
-    public String getPassType() {
-        return passType;
-    }
-
-    public void setPassType(String passType) {
-        this.passType = passType;
     }
 }

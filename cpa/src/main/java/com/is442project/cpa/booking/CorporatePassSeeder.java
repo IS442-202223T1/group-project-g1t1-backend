@@ -23,12 +23,18 @@ public class CorporatePassSeeder {
     }
 
     public void insertTestData() {
-        CorporatePass pass1 = new CorporatePass("Mandai Wildlife Reserve", "CARD0001", Status.AVAILABLE, 4, "Physical");
-        CorporatePass pass2 = new CorporatePass("Mandai Wildlife Reserve", "CARD0002", Status.LOANED, 4, "Physical");
-        CorporatePass pass3 = new CorporatePass("Mandai Wildlife Reserve", "CARD0003", Status.AVAILABLE, 4, "Digital");
-        CorporatePass pass4 = new CorporatePass("Mandai Wildlife Reserve", "CARD0004", Status.LOST, 4, "Physical");
+        Membership membership1 =  membershipRepository.findById("Mandai Wildlife Reserve").get();
+        Membership membership2 =  membershipRepository.findById("Universal Studios").get();
 
-        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4));
+        CorporatePass pass1 = new CorporatePass(membership1, "CARD0001", Status.AVAILABLE, 4);
+        CorporatePass pass2 = new CorporatePass(membership1, "CARD0002", Status.LOANED, 4);
+        CorporatePass pass3 = new CorporatePass(membership1, "CARD0003", Status.AVAILABLE, 4);
+        CorporatePass pass4 = new CorporatePass(membership1, "CARD0004", Status.LOST, 4);
+        CorporatePass pass5 = new CorporatePass(membership2, "CARD0005", Status.AVAILABLE, 4);
+        CorporatePass pass6 = new CorporatePass(membership2, "CARD0006", Status.LOST, 4);
+        CorporatePass pass7 = new CorporatePass(membership2, "CARD0007", Status.LOANED, 4);
+
+        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7));
 
         System.out.println("======TEST CORPORATE PASS INSERTED======");
     }
