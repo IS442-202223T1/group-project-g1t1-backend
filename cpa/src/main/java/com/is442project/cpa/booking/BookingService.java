@@ -71,8 +71,9 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         List<Booking> bookedPasses = new ArrayList<>();
         for(int i = 0; i<bookingDTO.getQty(); i++){
             CorporatePass assignedPass = availPasses.get(i);
-            collectCard(assignedPass.getId());
             Booking newBooking = new Booking(LocalDate.now(), borrowerObject, assignedPass);
+            assignedPass.setStatus(Status.LOANED);
+            corporatePassRepository.save(assignedPass);
             bookedPasses.add(newBooking);
             bookingRepository.save(newBooking);
         }
@@ -167,13 +168,19 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return corporatePassRepository.findByMembership(membership);
     }
 
-    public boolean collectCard(Long cardId) {
+    public boolean collectCard(int bookingID) {
         // update Card where id equal to card id, set is available to false
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId)
-                .orElseThrow(EntityNotFoundException::new);
-        corporatePass.setStatus(Status.LOANED);
-        corporatePassRepository.save(corporatePass);
-        return true;
+        Optional<Booking> response = bookingRepository.findById(bookingID);
+        if(response.isPresent()){
+            Booking booking  = response.get();
+            booking.setStatus("collected");
+            bookingRepository.save(booking);
+            CorporatePass corporatePass = booking.getCorporatePass();
+            corporatePass.setStatus(Status.LOANED);
+            corporatePassRepository.save(corporatePass);
+            return true;
+        }
+        return false;
     };
 
     public double returnCard(int bookingID){
@@ -181,9 +188,13 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         Optional<Booking> response = bookingRepository.findById(bookingID);
         if(response.isPresent()){
             Booking booking  = response.get();
-            booking.setStatus("returned");
-            bookingRepository.save(booking);
             CorporatePass corporatePass = booking.getCorporatePass();
+            List<Booking> earlierBookings = bookingRepository.findBookingsWithCorporatePassIDBeforeDate(corporatePass.getId(), booking.getBorrowDate());
+            for(int i = 0; i<earlierBookings.size(); i++){
+                Booking bookingToSave = earlierBookings.get(i);
+                bookingToSave.setStatus("returned");
+                bookingRepository.save(bookingToSave);
+            }
             corporatePass.setStatus(Status.AVAILABLE);
             corporatePassRepository.save(corporatePass);
             return 0.0;
@@ -195,12 +206,13 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         Optional<Booking> response = bookingRepository.findById(bookingID);
         if(response.isPresent()){
             Booking booking  = response.get();
-            booking.setStatus("settlingDues");
-            bookingRepository.save(booking);
+            booking.setStatus("duesOwed");
             CorporatePass corporatePass = booking.getCorporatePass();
+            booking.setFeesDue(corporatePass.getLostFees());
             corporatePass.setStatus(Status.LOST);
             corporatePassRepository.save(corporatePass);
-            return 0.0;
+            bookingRepository.save(booking);
+            return corporatePass.getLostFees();
         }
         return 0.0;
         // return corporatePass.getMembershipType().getFees();

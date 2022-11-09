@@ -22,20 +22,20 @@ public class GopController {
     }
 
     @PutMapping("collectCard")
-    public ResponseEntity collectCard(@RequestBody CardOpsData cardOpsData){
-        gopOps.collectCard(Long.parseLong(cardOpsData.getCardID()));
+    public ResponseEntity collectCard(@RequestBody BookingIDDTO bookingIDDTO){
+        gopOps.collectCard(bookingIDDTO.getBookingID());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("returnCard")
-    public ResponseEntity returnCard(@RequestBody CardOpsData cardOpsData){
-        gopOps.returnCard(Integer.parseInt(cardOpsData.getCardID()));
+    public ResponseEntity returnCard(@RequestBody BookingIDDTO bookingIDDTO){
+        gopOps.returnCard(bookingIDDTO.getBookingID());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("markLost")
-    public ResponseEntity markLost(@RequestBody CardOpsData cardOpsData){
-        gopOps.markLost(Integer.parseInt(cardOpsData.getCardID()));
+    public ResponseEntity markLost(@RequestBody BookingIDDTO bookingIDDTO){
+        gopOps.markLost(bookingIDDTO.getBookingID());
         return ResponseEntity.ok().build();
     }
 

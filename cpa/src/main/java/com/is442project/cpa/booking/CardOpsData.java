@@ -5,13 +5,13 @@ import lombok.Data;
 @Data
 
 public class CardOpsData {
-    private String cardID;
+    private Long cardID;
 
-    public CardOpsData(String cardID){
+    public CardOpsData(Long cardID){
         this.cardID = cardID;
     }
 
-    public String getCardID(){
+    public Long getCardID(){
         return cardID;
     }
 }

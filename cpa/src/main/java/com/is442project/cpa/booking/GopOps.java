@@ -7,7 +7,7 @@ interface GopOps {
 
 //    public abstract List<BookingDto> getPastBooking();
 
-    public abstract boolean collectCard(Long cardId);
+    public abstract boolean collectCard(int bookingID);
 
     public abstract double returnCard(int bookingID);
 

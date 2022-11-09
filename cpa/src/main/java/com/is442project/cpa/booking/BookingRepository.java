@@ -1,5 +1,6 @@
 package com.is442project.cpa.booking;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
     List<Booking> findByEmailAndStatus(String email, String status);
 
     List<Booking> findByStatus(String status);
+
+    @Query(value = "SELECT * FROM BOOKING b WHERE b.CORPORATE_PASS_ID = ?1 AND b.BORROW_DATE<=?2", nativeQuery = true)
+    List<Booking> findBookingsWithCorporatePassIDBeforeDate(Long corporatePassID, LocalDate date);
 }
