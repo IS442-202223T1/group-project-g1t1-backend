@@ -14,4 +14,6 @@ public interface BorrowerOps {
     public abstract CorporatePass reportLost(String corporatePassID);
 
     public abstract List<Membership> getAllAttractions();
+
+    public abstract List<Booking> getAvailableBookingByUser(String email);
 }

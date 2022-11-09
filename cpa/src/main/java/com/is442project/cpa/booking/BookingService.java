@@ -91,6 +91,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return ResponseEntity.ok(new BookingResponseDTO(bookedPasses.get(0)));
     }
 
+    public List<Booking> getAvailableBookingByUser(String email){
+        return bookingRepository.findByEmailAndStatus(email, "confirmed");
+    }
+
     public BookingResponseDTO cancelBooking(BookingIDDTO bookingIDDTO){
         Optional<Booking> response = bookingRepository.findById(bookingIDDTO.getBookingID());
         if(response.isPresent()){

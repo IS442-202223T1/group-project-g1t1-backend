@@ -19,6 +19,11 @@ public class BorrowerController {
         return borrowerOps.getAllAttractions();
     }
 
+    @GetMapping("/availableBooking/{email}")
+    public List<Booking> getAvailableBookingsByUser(@PathVariable("email") String email){
+        return borrowerOps.getAvailableBookingByUser(email);
+    }
+
     @PostMapping("/add")
     public ResponseEntity addBooking(@RequestBody BookingDTO bookingDTO){
         return borrowerOps.bookPass(bookingDTO);
