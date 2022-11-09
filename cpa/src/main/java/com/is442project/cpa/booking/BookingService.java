@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -35,8 +36,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     public ResponseEntity<BookingResponseDTO> bookPass(BookingDTO bookingDTO) {
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
-        Membership membership = membershipRepository.findById(bookingDTO.getMembershipId())
-                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipId()));
+        Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
+                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipName()));
 
         // todo implement code to check availability of passes, to write some query on
         // the repo
@@ -56,7 +57,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
                 templateEngine.getContent());
 
-        if (!membership.isElectronicPass) {
+        if (!membership.getIsElectronicPass()) {
             // todo attach authorisation form
         } else {
             // todo attach ePasses
@@ -90,7 +91,9 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     }
 
     public Membership getMembershipByName(String membershipName) {
-        return membershipRepository.findByMembershipName(membershipName);
+        Membership membership = membershipRepository.findByMembershipName(membershipName)
+            .orElseThrow(() -> new MembershipNotFoundException(membershipName));
+        return membership;
     }
 
     public List<CorporatePass> getAllPasses() {
@@ -117,7 +120,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         }
 
         if (updatedMembership.getReplacementFee() != 0.0) {
-            currentMembership.replacementFee = updatedMembership.replacementFee;
+            currentMembership.setReplacementFee(updatedMembership.getReplacementFee());
         }
         
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());

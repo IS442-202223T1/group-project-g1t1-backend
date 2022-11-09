@@ -13,7 +13,11 @@ import javax.validation.constraints.NotNull;
 public class Membership {
 
     @Id
-    String membershipName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    private String membershipName;
 
     @AttributeOverride(name = "templateContent", column = @Column(name = "EMAIL_TEMPLATE_CONTENT"))
     @Embedded
@@ -24,14 +28,14 @@ public class Membership {
     private Template attachmentTemplate;
 
     @NotNull
-    double replacementFee;
+    private double replacementFee;
 
     @NotNull
-    boolean isElectronicPass;
+    private boolean isElectronicPass;
 
-    String description;
+    private String description;
 
-    String imageUrl;
+    private String imageUrl;
 
     public Membership() {
     }
@@ -50,6 +54,14 @@ public class Membership {
         this.isElectronicPass = isElectronicPass;
         this.description = description;
         this.imageUrl = imageUrl;
+    }
+
+    public long getMembershipId() {
+        return id;
+    }
+
+    public void setMembershipId(long membershipId) {
+        this.id = membershipId;
     }
 
     public String getMembershipName() {
