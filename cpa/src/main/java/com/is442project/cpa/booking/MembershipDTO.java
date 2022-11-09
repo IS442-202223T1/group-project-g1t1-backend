@@ -15,6 +15,8 @@ public class MembershipDTO {
 
   private boolean isElectronicPass;
 
+  private String description;
+
   private String imageUrl;
 
   private List<CorporatePass> corporatePasses;
@@ -41,6 +43,14 @@ public class MembershipDTO {
 
   public void setIsElectronicPass(boolean isElectronicPass) {
     this.isElectronicPass = isElectronicPass;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public String getImageUrl() {
