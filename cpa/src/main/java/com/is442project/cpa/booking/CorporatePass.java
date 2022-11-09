@@ -79,7 +79,7 @@ public class CorporatePass {
     }
 
     public double getLostFees(){
-        // return membershipType.lostFees;
-        return 0.0;
+        return membership.getReplacementFee();
+        // return 0.0;
     }
 }
