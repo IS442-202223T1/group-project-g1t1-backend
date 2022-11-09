@@ -3,32 +3,29 @@ package com.is442project.cpa.booking;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
+
 @Data
 public class BookingDTO {
-    private LocalDate Date;
+    private LocalDate date;
     private String email;
-
-    private String membershipId;
-
-    private int qty;
+    private String membershipName;
+    private int quantity;
 
 
     public BookingDTO() {
     }
 
-    public BookingDTO(LocalDate date, String email, String membershipId, int qty) {
-        Date = date;
+    public BookingDTO(LocalDate date, String email, String membershipName, int quantity) {
+        this.date = date;
         this.email = email;
-        this.membershipId = membershipId;
-        this.qty = qty;
+        this.membershipName = membershipName;
+        this.quantity = quantity;
     }
 
     @Override
     public String toString() {
-        return "BookingDto{" +
-                "Date=" + Date +
-                ", email='" + email + '\'' +
-                '}';
+        return "BookingDTO [date=" + date + ", email=" + email + ", membershipName=" + membershipName + ", quantity=" + quantity
+                + "]";
     }
+
 }

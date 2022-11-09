@@ -1,23 +1,27 @@
 package com.is442project.cpa.booking;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.is442project.cpa.account.Borrower;
 import com.is442project.cpa.account.UserAccount;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "booking")
 public class Booking {
+
+    public enum BookingStatus {
+        CONFIRMED, COLLECTED, CANCELLED, RETURNED, DUESOWED, DUESPAID
+    }
     
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int bookingId;
 
     @ManyToOne
+    @JoinColumn(name = "CP_ID")
     private CorporatePass corporatePass;
 
     @JsonFormat(pattern="yyyy-MM-dd")
@@ -27,9 +31,10 @@ public class Booking {
     @JoinColumn(name = "email")
     private UserAccount borrower;
 
-    private boolean isCollected;
-    private boolean isReturned;
-    private boolean isLost;
+    @NotNull
+    @Column(length = 32, columnDefinition = "varchar(255) default 'CONFIRMED'")
+    @Enumerated(EnumType.STRING)
+    private BookingStatus bookingStatus = BookingStatus.CONFIRMED;
 
     public int getBookingId() {
         return bookingId;
@@ -48,6 +53,13 @@ public class Booking {
         this.corporatePass = corporatePass;
     }
 
+    public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass, BookingStatus bookingStatus) {
+        this.borrowDate = borrowDate;
+        this.borrower = borrower;
+        this.corporatePass = corporatePass;
+        this.bookingStatus = bookingStatus;
+    }
+
     public LocalDate getBorrowDate() {
         return borrowDate;
     }
@@ -64,30 +76,6 @@ public class Booking {
         this.borrower = borrower;
     }
 
-    public boolean isIssued() {
-        return isCollected;
-    }
-
-    public void setIssued(boolean issued) {
-        isCollected = issued;
-    }
-
-    public boolean isReturned() {
-        return isReturned;
-    }
-
-    public void setReturned(boolean returned) {
-        isReturned = returned;
-    }
-
-    public boolean isLost() {
-        return isLost;
-    }
-
-    public void setLost(boolean lost) {
-        isLost = lost;
-    }
-
     public CorporatePass getCorporatePass() {
         return corporatePass;
     }
@@ -96,24 +84,11 @@ public class Booking {
         this.corporatePass = corporatePass;
     }
 
-    public boolean isCollected() {
-        return isCollected;
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
     }
 
-    public void setCollected(boolean collected) {
-        isCollected = collected;
-    }
-
-    public List<Booking> bookPass(LocalDate borrowDate, UserAccount borrower, List<CorporatePass> availPasses, int qty, BookingRepository bookingRepository){
-        //todo business logic to check user have exceed booking limit
-        //todo business logic to check user have any outstanding dues
-
-        List<Booking> toBookPasses = new ArrayList<>();
-        for (int i = 0; i < qty; i++) {
-            Booking booking = new Booking(LocalDate.now(), borrower, availPasses.get(i));
-            toBookPasses.add(booking);
-        }
-
-        return bookingRepository.saveAllAndFlush(toBookPasses);
+    public void setBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 }
