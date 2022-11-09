@@ -9,5 +9,7 @@ public interface AdminOps {
 
   public abstract List<CorporatePass> getAllPassesByMembership(Membership membership);
 
-  public abstract Membership createMembership(Membership membership);
+  public abstract Membership createMembership(Membership newMembership);
+
+  public abstract Membership updateMembership(String membershipName, Membership updatedMembership);
 }

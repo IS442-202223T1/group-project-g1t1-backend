@@ -23,10 +23,10 @@ public class CorporatePassSeeder {
     }
 
     public void insertTestData() {
-        Membership membership1 =  membershipRepository.findById("Mandai Wildlife Reserve").get();
-        Membership membership2 =  membershipRepository.findById("Universal Studios").get();
-        Membership membership3 =  membershipRepository.findById("Zoo").get();
-        Membership membership4 =  membershipRepository.findById("SEA Aquarium").get();
+        Membership membership1 =  membershipRepository.findById(Long.valueOf(1)).get();
+        Membership membership2 =  membershipRepository.findById(Long.valueOf(2)).get();
+        Membership membership3 =  membershipRepository.findById(Long.valueOf(3)).get();
+        Membership membership4 =  membershipRepository.findById(Long.valueOf(4)).get();
 
         CorporatePass pass1 = new CorporatePass(membership1, "CARD0001", Status.AVAILABLE, 4);
         CorporatePass pass2 = new CorporatePass(membership1, "CARD0002", Status.LOANED, 4);

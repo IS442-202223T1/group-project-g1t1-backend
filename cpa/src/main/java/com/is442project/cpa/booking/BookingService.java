@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -35,8 +36,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     public ResponseEntity<BookingResponseDTO> bookPass(BookingDTO bookingDTO) {
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
-        Membership membership = membershipRepository.findById(bookingDTO.getMembershipId())
-                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipId()));
+        Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
+                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipName()));
 
         // todo implement code to check availability of passes, to write some query on
         // the repo
@@ -56,7 +57,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
                 templateEngine.getContent());
 
-        if (!membership.isElectronicPass) {
+        if (!membership.getIsElectronicPass()) {
             // todo attach authorisation form
         } else {
             // todo attach ePasses
@@ -90,19 +91,41 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     }
 
     public Membership getMembershipByName(String membershipName) {
-        return membershipRepository.findByMembershipName(membershipName);
+        Membership membership = membershipRepository.findByMembershipName(membershipName)
+            .orElseThrow(() -> new MembershipNotFoundException(membershipName));
+        return membership;
     }
 
     public List<CorporatePass> getAllPasses() {
         return corporatePassRepository.findAll();
     }
 
-    public List<CorporatePass> getAllPassesByMembership(Membership membership) {
-        return corporatePassRepository.findByMembership(membership);
+    public List<CorporatePass> getAllPassesByMembership(Membership newMembership) {
+        return corporatePassRepository.findByMembership(newMembership);
     }
 
     public Membership createMembership(Membership membership) {
         return membershipRepository.saveAndFlush(membership);
+    }
+
+    public Membership updateMembership(String membershipName, Membership updatedMembership) {
+        Membership currentMembership = this.getMembershipByName(membershipName);
+
+        if (updatedMembership.getMembershipName() != null) {
+            currentMembership.setMembershipName(updatedMembership.getMembershipName());
+        }
+
+        if (updatedMembership.getDescription() != null) {
+            currentMembership.setDescription(updatedMembership.getDescription());
+        }
+
+        if (updatedMembership.getReplacementFee() != 0.0) {
+            currentMembership.setReplacementFee(updatedMembership.getReplacementFee());
+        }
+        
+        currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
+
+        return membershipRepository.saveAndFlush(currentMembership);
     }
 
     public boolean collectCard(Long cardId) {

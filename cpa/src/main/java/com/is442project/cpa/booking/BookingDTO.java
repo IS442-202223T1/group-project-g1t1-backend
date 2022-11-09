@@ -9,7 +9,7 @@ public class BookingDTO {
     private LocalDate Date;
     private String email;
 
-    private String membershipId;
+    private String membershipName;
 
     private int qty;
 
@@ -20,7 +20,7 @@ public class BookingDTO {
     public BookingDTO(LocalDate date, String email, String membershipId, int qty) {
         Date = date;
         this.email = email;
-        this.membershipId = membershipId;
+        this.membershipName = membershipName;
         this.qty = qty;
     }
 
