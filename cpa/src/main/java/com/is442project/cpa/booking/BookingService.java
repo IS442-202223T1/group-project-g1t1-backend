@@ -97,12 +97,32 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return corporatePassRepository.findAll();
     }
 
-    public List<CorporatePass> getAllPassesByMembership(Membership membership) {
-        return corporatePassRepository.findByMembership(membership);
+    public List<CorporatePass> getAllPassesByMembership(Membership newMembership) {
+        return corporatePassRepository.findByMembership(newMembership);
     }
 
     public Membership createMembership(Membership membership) {
         return membershipRepository.saveAndFlush(membership);
+    }
+
+    public Membership updateMembership(String membershipName, Membership updatedMembership) {
+        Membership currentMembership = this.getMembershipByName(membershipName);
+
+        if (updatedMembership.getMembershipName() != null) {
+            currentMembership.setMembershipName(updatedMembership.getMembershipName());
+        }
+
+        if (updatedMembership.getDescription() != null) {
+            currentMembership.setDescription(updatedMembership.getDescription());
+        }
+
+        if (updatedMembership.getReplacementFee() != 0.0) {
+            currentMembership.replacementFee = updatedMembership.replacementFee;
+        }
+        
+        currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
+
+        return membershipRepository.saveAndFlush(currentMembership);
     }
 
     public boolean collectCard(Long cardId) {
