@@ -67,7 +67,7 @@ class CorporatePassApplicationTests {
 	@Test
 	public void GenerateEmailContent_usingTemplateEngine_shouldGenerateContent() {
 		//arrange
-		Membership sampleMemberShip = membershipRepository.findById("Mandai Wildlife Reserve").get();
+		Membership sampleMemberShip = membershipRepository.findByMembershipName("Mandai Wildlife Reserve").get();
 
 
 		Booking booking = bookingRepository.findById(1).get();

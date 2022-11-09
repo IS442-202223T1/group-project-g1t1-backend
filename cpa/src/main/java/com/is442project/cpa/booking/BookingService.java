@@ -65,7 +65,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             CorporatePass assignedPass = availPasses.get(i);
             Booking newBooking = new Booking(bookingDTO.getDate(), borrowerObject, assignedPass);
             // if membership is epass then booking status is set to collected
-            if (membership.isElectronicPass){
+            if (membership.getIsElectronicPass()){
                 newBooking.setBookingStatus(BookingStatus.COLLECTED);
             }
             Booking bookingResult = bookingRepository.save(newBooking);
