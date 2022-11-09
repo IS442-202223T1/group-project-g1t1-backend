@@ -43,4 +43,9 @@ public class GopController {
     public List<CorporatePass> getAllPasses(){
         return gopOps.getAllPasses();
     }
+
+    @GetMapping("getAllBookings")
+    public List<Booking> getAllBookings(){
+        return gopOps.getAllBookings();
+    }
 }

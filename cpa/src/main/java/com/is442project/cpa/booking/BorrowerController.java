@@ -24,4 +24,9 @@ public class BorrowerController {
         return borrowerOps.bookPass(bookingDTO);
     }
 
+    @PutMapping("cancelBooking")
+    public ResponseEntity cancelBooking(@RequestBody BookingIDDTO bookingIDDTO){
+        return ResponseEntity.ok(borrowerOps.cancelBooking(bookingIDDTO));
+    }
+
 }

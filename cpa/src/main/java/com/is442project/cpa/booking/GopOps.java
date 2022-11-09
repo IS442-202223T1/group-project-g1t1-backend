@@ -14,4 +14,6 @@ interface GopOps {
     public abstract double markLost(int bookingID);
 
     public abstract List<CorporatePass> getAllPasses();
+
+    public abstract List<Booking> getAllBookings();
 }

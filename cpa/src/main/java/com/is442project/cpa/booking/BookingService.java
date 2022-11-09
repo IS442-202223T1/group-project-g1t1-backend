@@ -41,7 +41,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         //todo implement code to check availability of passes, to write some query on the repo
         //List<CorporatePass> availPasses = corporatePassRepository.findAvailblePasses(bookingDto.getMembershipId(), bookingDto.getDate());
-        List<Booking> bookingsInMonth = bookingRepository.getAllBookingsByUserInAMonth(bookingDTO.getDate().getYear(), bookingDTO.getDate().getMonthValue(), bookingDTO.getEmail());
+        List<Booking> bookingsInMonth = bookingRepository.findByStatus("active");
+        //  bookingRepository.getAllBookingsByUserInAMonth(bookingDTO.getDate().getYear(), bookingDTO.getDate().getMonthValue(), bookingDTO.getEmail());
         if(bookingsInMonth.size()>2){
             // throw error
         }
@@ -58,7 +59,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             // throw error;
         }
 
-        List<CorporatePass> availPasses = corporatePassRepository.getAvailablePassesForBooking(bookingDTO.getDate().getMonth(), bookingDTO.getMembershipType()); //fake implementation, can remove once above is done.
+        // List<CorporatePass> availPasses = corporatePassRepository.getAvailablePassesForBooking(bookingDTO.getDate().getMonth(), bookingDTO.getMembershipType()); //fake implementation, can remove once above is done.
+        List<CorporatePass> availPasses = corporatePassRepository.findAll();
         if(availPasses.size() < bookingDTO.getQty()){
             // throw error
         }
@@ -89,8 +91,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return ResponseEntity.ok(new BookingResponseDTO(bookedPasses.get(0)));
     }
 
-    public BookingResponseDTO cancelBooking(int bookingID){
-        Optional<Booking> response = bookingRepository.findById(bookingID);
+    public BookingResponseDTO cancelBooking(BookingIDDTO bookingIDDTO){
+        Optional<Booking> response = bookingRepository.findById(bookingIDDTO.getBookingID());
         if(response.isPresent()){
             Booking booking  = response.get();
             booking.setStatus("cancelled");
@@ -112,6 +114,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return response;
     }
 
+    public List<Booking> getAllBookings(){
+        // return bookingRepository.findByStatus("active");
+        return bookingRepository.findAll();
+    }
+
     public List<Membership> getAllAttractions() {
         return membershipRepository.findAll();
     }
@@ -122,7 +129,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     public List<BookingResponseDTO> getCurrentBooking(String email){
         List<BookingResponseDTO> response = new ArrayList<>();
-        List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "confirmed");
+        // List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "confirmed");
+        List<Booking> currentBooking = bookingRepository.findByStatus("confirmed");
         for(Booking booking : currentBooking){
             response.add( new BookingResponseDTO(booking));
         }
@@ -131,7 +139,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     public List<BookingResponseDTO> getPastBooking(String email){
         List<BookingResponseDTO> response = new ArrayList<>();
-        List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "returned");
+        // List<Booking> currentBooking = bookingRepository.findByEmailAndStatus(email, "returned");
+        List<Booking> currentBooking = bookingRepository.findByStatus("confirmed");
         for(Booking booking : currentBooking){
             response.add( new BookingResponseDTO(booking));
         }
