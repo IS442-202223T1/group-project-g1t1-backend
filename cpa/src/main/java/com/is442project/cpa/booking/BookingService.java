@@ -3,16 +3,21 @@ package com.is442project.cpa.booking;
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.exception.MembershipNotFoundException;
+import com.is442project.cpa.booking.Booking.BookingStatus;
 import com.is442project.cpa.booking.CorporatePass.Status;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -33,26 +38,41 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         this.emailService = emailService;
     }
 
-    public ResponseEntity<BookingResponseDTO> bookPass(BookingDTO bookingDTO) {
+    public List<Booking> bookPass(BookingDTO bookingDTO) throws RuntimeException {
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
         Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
                 .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipName()));
 
-        // todo implement code to check availability of passes, to write some query on
-        // the repo
-        // List<CorporatePass> availPasses =
-        // corporatePassRepository.findAvailblePasses(bookingDto.getMembershipId(),
-        // bookingDto.getDate());
-        List<CorporatePass> availPasses = corporatePassRepository.findAll(); // fake implementation, can remove once
-                                                                             // above is done.
+        // check if user exceed 2 loans a month
+        if (checkExceedMonthlyLimit(bookingDTO)){
+            throw new RuntimeException("Exceed 2 Loans in a month");
+        }
+        // check if user exceeds 2 bookings in the desired day
+        if (checkExceedDailyLimit(bookingDTO)){
+            throw new RuntimeException("Exceed 2 Bookings in a day");
+        }
 
-        // todo implement bookpass, currently is a fake implementation.
-        Booking newBooking = new Booking();
-        List<Booking> bookedpasses = newBooking.bookPass(bookingDTO.getDate(), borrowerObject, availPasses,
-                bookingDTO.getQty(), bookingRepository);
+        List<CorporatePass> availPasses =corporatePassRepository.findAvailablePassesForDay(bookingDTO.getMembershipName(),bookingDTO.getDate());
+        // check if there is enough passes for the day 
+        if(availPasses.size() < bookingDTO.getQuantity()){
+            throw new RuntimeException("Insufficient Passes");
+        }
 
-        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookedpasses);
+        // add booking to db
+        List<Booking> bookingResults = new ArrayList<>();
+        for (int i = 0; i < bookingDTO.getQuantity(); i++) {
+            CorporatePass assignedPass = availPasses.get(i);
+            Booking newBooking = new Booking(bookingDTO.getDate(), borrowerObject, assignedPass);
+            // if membership is epass then booking status is set to collected
+            if (membership.isElectronicPass){
+                newBooking.setBookingStatus(BookingStatus.COLLECTED);
+            }
+            Booking bookingResult = bookingRepository.save(newBooking);
+            bookingResults.add(bookingResult);
+        }
+
+        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingResults);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
         emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
                 templateEngine.getContent());
@@ -63,7 +83,37 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             // todo attach ePasses
         }
 
-        return ResponseEntity.ok(new BookingResponseDTO(bookedpasses.get(0)));
+        return bookingResults;
+    }
+
+    public boolean checkExceedMonthlyLimit(BookingDTO bookingDto){
+        int Year = bookingDto.getDate().getYear();
+        int Month = bookingDto.getDate().getMonthValue();
+        String Email = bookingDto.getEmail();
+        List<Booking> userBookings = bookingRepository.getConfirmedAndCollectedLoansForMonthByUser(Year, Month, Email); 
+
+        Set<String> userBookingsSet = new HashSet<>();
+        for(Booking booking : userBookings){
+            String key = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembership().getMembershipName();
+            userBookingsSet.add(key);
+        }
+
+        userBookingsSet.add(bookingDto.getDate().toString() + bookingDto.getMembershipName());
+
+        return userBookingsSet.size() > 2;
+    }
+
+    public boolean checkExceedDailyLimit(BookingDTO bookingDto){
+        LocalDate date = bookingDto.getDate();
+        String Email = bookingDto.getEmail();
+        int qty = bookingDto.getQuantity();
+        int numUserBookingsInDay = bookingRepository.countBookingsForDayByUser(date, Email);
+        
+        return numUserBookingsInDay + qty > 2;
+    }
+
+    public List<Booking> getBookingsByDayAndMembership(BookingDTO bookingDTO) {
+        return bookingRepository.getBookingsByDayAndMembership(bookingDTO.getDate(), bookingDTO.getMembershipName());
     }
 
     public BookingResponseDTO cancelBooking(String bookingID) {
