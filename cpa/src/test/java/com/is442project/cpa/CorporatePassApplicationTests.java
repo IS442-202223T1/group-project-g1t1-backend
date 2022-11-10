@@ -9,13 +9,12 @@ import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
 import com.is442project.cpa.common.pdf.PdfFactory;
-import com.is442project.cpa.common.template.AuthLetterTemplate;
+import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.parameters.P;
 
 import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
@@ -57,7 +56,7 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(5).get();
 
-		AuthLetterTemplate attachmentTemplate = new AuthLetterTemplate(sb.toString(), Arrays.asList(booking));
+		AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(sb.toString(), Arrays.asList(booking));
 		AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
 		PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 		try {
@@ -97,8 +96,8 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(5).get();
 
-		AuthLetterTemplate authLetterTemplate = new AuthLetterTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
-		AuthorizationLetter letter = new AuthorizationLetter(authLetterTemplate);
+		AuthorizationLetterTemplate authorizationLetterTemplate = new AuthorizationLetterTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
+		AuthorizationLetter letter = new AuthorizationLetter(authorizationLetterTemplate);
 
 		PdfFactory pdfFactory = new PdfFactory(letter);
 

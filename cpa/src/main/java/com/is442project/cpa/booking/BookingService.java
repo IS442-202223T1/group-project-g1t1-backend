@@ -3,13 +3,18 @@ package com.is442project.cpa.booking;
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.exception.MembershipNotFoundException;
+import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
+import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.PdfFactory;
+import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -45,7 +50,13 @@ public class BookingService implements BorrowerOps, GopOps{
 
         EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookedpasses);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
-        emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation", templateEngine.getContent());
+
+        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookedpasses);
+        AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+        PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
+
+        emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                templateEngine.getContent(), Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
 
         if(!membership.isElectronicPass) {
             //todo attach authorisation form
