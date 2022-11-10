@@ -22,11 +22,11 @@ public class MembershipSeeder {
         Template physicalEmailTemplate = new Template();
         Template attachmentTemplate = new Template();
         physicalEmailTemplate.setTemplateContent(buildSamplePhysicalPassEmailTemplate());
-        attachmentTemplate.setTemplateContent("test");
-        Membership membership = new Membership("Jalan Besar Stadium", physicalEmailTemplate, attachmentTemplate);
-        Membership membership2 = new Membership("Bedok Stadium", physicalEmailTemplate, attachmentTemplate);
-        Membership membership3 = new Membership("Temasek Junior College", physicalEmailTemplate, attachmentTemplate);
-        Membership membership4 = new Membership("S.E.A Aquarium", new Template(), attachmentTemplate);
+        attachmentTemplate.setTemplateContent(buildSamplePhysicalPassAuthLetterTemplate());
+        Membership membership = new Membership("Jalan Besar Stadium", physicalEmailTemplate, attachmentTemplate, "Membership Address");
+        Membership membership2 = new Membership("Bedok Stadium", physicalEmailTemplate, attachmentTemplate, "Membership Address");
+        Membership membership3 = new Membership("Temasek Junior College", physicalEmailTemplate, attachmentTemplate, "Membership Address");
+        Membership membership4 = new Membership("S.E.A Aquarium", new Template(), attachmentTemplate, "Membership Address");
         membership4.setElectronicPass(true);
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3, membership4));
@@ -36,7 +36,6 @@ public class MembershipSeeder {
 
     public String buildSamplePhysicalPassEmailTemplate() {
         StringBuilder sb = new StringBuilder();
-
         sb.append("Dear {{borrower_name}},");
         sb.append("<br><br>");
         sb.append(" We are pleased to inform that your booking to {{attraction name}} is confirmed as follows:");
@@ -100,6 +99,31 @@ public class MembershipSeeder {
         sb.append("Warm regards");
         sb.append("<br>");
         sb.append("HR Department");
+
+        return sb.toString();
+    }
+
+    public String buildSamplePhysicalPassAuthLetterTemplate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Date: {{current_date}},");
+        sb.append("<br><br>");
+        sb.append("{{membership_address}}");
+        sb.append("<br><br><br>");
+        sb.append("Dear Sir/Madam");
+        sb.append("<br><br>");
+        sb.append("AUTHORISATION LETTER - {{attraction_name}}");
+        sb.append("<br><br>");
+        sb.append("Singapore Sports School hereby authorise our employee identified below, to utilise our {{corp_pass_number}} on the date as indicated.");
+        sb.append("<br><br><br>");
+        sb.append("Date of Visit: {{visit_date}}");
+        sb.append("<br><br>");
+        sb.append("Name of Employee: {{borrower_name}}");
+        sb.append("<br><br><br>");
+        sb.append("Thank you.");
+        sb.append("<br><br><br>");
+        sb.append("Human Resource Department");
+        sb.append("<br>");
+        sb.append("(This is a system generated letter.)");
 
         return sb.toString();
     }

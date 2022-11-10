@@ -14,6 +14,9 @@ public class Membership {
     @Id
     private String membershipType;
 
+    @NotNull
+    private String membershipAddress;
+
     @AttributeOverride(name="templateContent", column=@Column(name="EMAIL_TEMPLATE_CONTENT"))
     @Embedded
     private Template emailTemplate;
@@ -27,6 +30,13 @@ public class Membership {
 
     public Membership(){}
 
+    public Membership(String membershipType, Template emailTemplate, Template attachmentTemplate, String membershipAddress ) {
+        this.membershipType = membershipType;
+        this.emailTemplate = emailTemplate;
+        this.attachmentTemplate = attachmentTemplate;
+        this.membershipAddress = membershipAddress;
+    }
+
     public String getMembershipType(){
         return membershipType;
     }
@@ -35,9 +45,5 @@ public class Membership {
         this.membershipType = membershipType;
     }
 
-    public Membership(String membershipType, Template emailTemplate, Template attachmentTemplate ) {
-        this.membershipType = membershipType;
-        this.emailTemplate = emailTemplate;
-        this.attachmentTemplate = attachmentTemplate;
-    }
+
 }

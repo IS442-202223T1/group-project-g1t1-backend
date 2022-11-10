@@ -9,13 +9,19 @@ import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
 import com.is442project.cpa.common.pdf.PdfFactory;
-import com.is442project.cpa.common.template.AttachmentTemplate;
+import com.is442project.cpa.common.template.AuthLetterTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.parameters.P;
 
+import javax.mail.util.ByteArrayDataSource;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,7 +55,9 @@ class CorporatePassApplicationTests {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("Date: <current_date>%n%n"));
 
-		AttachmentTemplate attachmentTemplate = new AttachmentTemplate(sb.toString());
+		Booking booking = bookingRepository.findById(5).get();
+
+		AuthLetterTemplate attachmentTemplate = new AuthLetterTemplate(sb.toString(), Arrays.asList(booking));
 		AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
 		PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 		try {
@@ -70,7 +78,7 @@ class CorporatePassApplicationTests {
 		Membership sampleMemberShip = membershipRepository.findById("Jalan Besar Stadium").get();
 
 
-		Booking booking = bookingRepository.findById(1).get();
+		Booking booking = bookingRepository.findById(5).get();
 
 		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
 
@@ -79,6 +87,30 @@ class CorporatePassApplicationTests {
 
 		//act
 		System.out.println(templateEngine.getContent());
+	}
+
+	@Test
+	public void GenerateLetterPDF() {
+		//arrange
+		Membership sampleMemberShip = membershipRepository.findById("Jalan Besar Stadium").get();
+
+
+		Booking booking = bookingRepository.findById(5).get();
+
+		AuthLetterTemplate authLetterTemplate = new AuthLetterTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
+		AuthorizationLetter letter = new AuthorizationLetter(authLetterTemplate);
+
+		PdfFactory pdfFactory = new PdfFactory(letter);
+
+		ByteArrayDataSource bads = pdfFactory.generatePdfFile();
+
+		//act
+		try {
+			Path path = Paths.get("letter.pdf");
+			Files.write(path, bads.getInputStream().readAllBytes());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
