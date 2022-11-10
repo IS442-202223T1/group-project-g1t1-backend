@@ -2,6 +2,8 @@ package com.is442project.cpa.booking;
 
 import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
+import com.is442project.cpa.booking.Booking.BookingStatus;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
@@ -34,12 +36,17 @@ public class BookingSeeder {
         UserAccount borrower1 = accountService.readUserByEmail("joshua.zhangzy@gmail.com");
         CorporatePass corporatePass1 = corporatePassRepository.findById(Long.parseLong("1")).get();
 
-        Booking booking1 = new Booking();
-        booking1.setBorrower(borrower1);
-        booking1.setBorrowDate(LocalDate.of(2022, 11, 16));
-        booking1.setCorporatePass(corporatePass1);
+        UserAccount borrower2 = accountService.readUserByEmail("mary@nysi.org.sg");
+        CorporatePass corporatePass2 = corporatePassRepository.findById(Long.parseLong("2")).get();
+        
+        Booking booking1 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass1);
+        Booking booking2 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass2);
+        Booking booking3 = new Booking(LocalDate.of(2022, 11, 17), borrower1, corporatePass2, BookingStatus.COLLECTED);
+        Booking booking4 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass1);
+        Booking booking5 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass2);
+        Booking booking6 = new Booking(LocalDate.of(2022, 10, 19), borrower2, corporatePass2);
 
-        bookingRepository.saveAllAndFlush(Arrays.asList(booking1));
+        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6));
 
         System.out.println("======TEST BOOKING INSERTED======");
     }

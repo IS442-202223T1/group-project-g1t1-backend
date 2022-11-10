@@ -1,5 +1,9 @@
 package com.is442project.cpa.booking;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +20,25 @@ public class BorrowerController {
     }
 
     @PostMapping("/booking/create-booking")
-    public ResponseEntity createBooking(@RequestBody BookingDTO bookingDTO){
-        return borrowerOps.bookPass(bookingDTO);
-    }
+    public ResponseEntity addBooking(@RequestBody BookingDTO bookingDto){
+        try {
+            boolean newBookings = borrowerOps.bookPass(bookingDto);
+            return ResponseEntity.ok(newBookings);
+        } catch (RuntimeException e) {
+            if(e.getMessage() == "Insufficient Passes") {
+                List<Booking> currentBookings = borrowerOps.getBookingsByDayAndMembership(bookingDto.getDate(), bookingDto.getMembershipName());
 
+                List<BookingDetailsResponseDTO> responseList = new ArrayList<>();
+                for (Booking booking:currentBookings){
+                    BookingDetailsResponseDTO responseDto = new BookingDetailsResponseDTO(booking.getBorrower().getName(), booking.getBorrower().getContactNumber(), booking.getCorporatePass().getPassID());
+                    responseList.add(responseDto);
+                }
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(responseList);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+            
+        }
+    }
 }
