@@ -3,8 +3,6 @@ package com.is442project.cpa.booking;
 import com.is442project.cpa.common.template.Template;
 import lombok.Data;
 
-import java.lang.reflect.Member;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -88,7 +86,7 @@ public class Membership {
         this.isElectronicPass = isElectronicPass;
     }
 
-    public String getDecription() {
+    public String getDescription() {
         return description;
     }
 
