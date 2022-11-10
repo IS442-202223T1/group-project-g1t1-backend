@@ -1,5 +1,6 @@
 package com.is442project.cpa.booking;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -18,24 +19,26 @@ public class BorrowerController {
         this.borrowerOps = bookingService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> addBooking(@RequestBody BookingDTO bookingDto){
         try {
-            List<Booking> newBookings = borrowerOps.bookPass(bookingDto);
+            boolean newBookings = borrowerOps.bookPass(bookingDto);
             return ResponseEntity.ok(newBookings);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            if(e.getMessage() == "Insufficient Passes") {
+                List<Booking> currentBookings = borrowerOps.getBookingsByDayAndMembership(bookingDto.getDate(), bookingDto.getMembershipName());
+
+                List<BookingDetailsResponseDTO> responseList = new ArrayList<>();
+                for (Booking booking:currentBookings){
+                    BookingDetailsResponseDTO responseDto = new BookingDetailsResponseDTO(booking.getBorrower().getName(), booking.getBorrower().getContactNumber(), booking.getCorporatePass().getPassID());
+                    responseList.add(responseDto);
+                }
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(responseList);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+            
         }
     }
-
-    @PostMapping("/bookers_details")
-    public ResponseEntity<?> getBookerDetails(@RequestBody BookingDTO bookingDto){
-        try {
-            List<Booking> currentBookings = borrowerOps.getBookingsByDayAndMembership(bookingDto);
-            return ResponseEntity.ok(currentBookings);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
 }

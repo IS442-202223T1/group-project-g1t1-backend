@@ -44,8 +44,9 @@ public class BookingSeeder {
         Booking booking3 = new Booking(LocalDate.of(2022, 11, 17), borrower1, corporatePass2, BookingStatus.COLLECTED);
         Booking booking4 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass1);
         Booking booking5 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass2);
+        Booking booking6 = new Booking(LocalDate.of(2022, 10, 19), borrower2, corporatePass2);
 
-        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5));
+        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6));
 
         System.out.println("======TEST BOOKING INSERTED======");
     }

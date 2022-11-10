@@ -38,32 +38,33 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         this.emailService = emailService;
     }
 
-    public List<Booking> bookPass(BookingDTO bookingDTO) throws RuntimeException {
-        UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
+    public boolean bookPass(BookingDTO bookingDto) throws RuntimeException {
+        UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.getEmail());
 
-        Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
-                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipName()));
+        Membership membership = membershipRepository.findByMembershipName(bookingDto.getMembershipName())
+                .orElseThrow(() -> new MembershipNotFoundException(bookingDto.getMembershipName()));
 
         // check if user exceed 2 loans a month
-        if (checkExceedMonthlyLimit(bookingDTO)){
-            throw new RuntimeException("Exceed 2 Loans in a month");
+        if (checkExceedMonthlyLimit(bookingDto)){
+            throw new RuntimeException("Exceed 2 loans in a month");
         }
-        // check if user exceeds 2 bookings in the desired day
-        if (checkExceedDailyLimit(bookingDTO)){
-            throw new RuntimeException("Exceed 2 Bookings in a day");
+        
+        // check if user exceed 2 bookings in the desired day
+        if (checkExceedDailyLimit(bookingDto)){
+            throw new RuntimeException("Exceed maximum bookings in a day");
         }
 
-        List<CorporatePass> availPasses =corporatePassRepository.findAvailablePassesForDay(bookingDTO.getMembershipName(),bookingDTO.getDate());
+        List<CorporatePass> availPasses = getAvailablePasses(bookingDto.getDate(), bookingDto.getMembershipName());
         // check if there is enough passes for the day 
-        if(availPasses.size() < bookingDTO.getQuantity()){
+        if(availPasses.size() < bookingDto.getQuantity()){
             throw new RuntimeException("Insufficient Passes");
         }
 
         // add booking to db
         List<Booking> bookingResults = new ArrayList<>();
-        for (int i = 0; i < bookingDTO.getQuantity(); i++) {
+        for (int i = 0; i < bookingDto.getQuantity(); i++) {
             CorporatePass assignedPass = availPasses.get(i);
-            Booking newBooking = new Booking(bookingDTO.getDate(), borrowerObject, assignedPass);
+            Booking newBooking = new Booking(bookingDto.getDate(), borrowerObject, assignedPass);
             // if membership is epass then booking status is set to collected
             if (membership.getIsElectronicPass()){
                 newBooking.setBookingStatus(BookingStatus.COLLECTED);
@@ -83,19 +84,24 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             // todo attach ePasses
         }
 
-        return bookingResults;
+        return true;
     }
 
     public boolean checkExceedMonthlyLimit(BookingDTO bookingDto){
-        int Year = bookingDto.getDate().getYear();
-        int Month = bookingDto.getDate().getMonthValue();
-        String Email = bookingDto.getEmail();
-        List<Booking> userBookings = bookingRepository.getConfirmedAndCollectedLoansForMonthByUser(Year, Month, Email); 
+        int year = bookingDto.getDate().getYear();
+        int month = bookingDto.getDate().getMonthValue();
+        String email = bookingDto.getEmail();
+        List<Booking> userBookings = bookingRepository.findByBorrowerEmail(email);
 
         Set<String> userBookingsSet = new HashSet<>();
-        for(Booking booking : userBookings){
-            String key = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembership().getMembershipName();
-            userBookingsSet.add(key);
+
+        for (Booking booking : userBookings) {
+            if (checkBookingStatusEqualsConfirmedOrCollected(booking)){
+                if (booking.getBorrowDate().getYear() == year && booking.getBorrowDate().getMonthValue() == month){
+                    String key = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembership().getMembershipName();
+                    userBookingsSet.add(key);
+                }
+            }
         }
 
         userBookingsSet.add(bookingDto.getDate().toString() + bookingDto.getMembershipName());
@@ -105,15 +111,61 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     public boolean checkExceedDailyLimit(BookingDTO bookingDto){
         LocalDate date = bookingDto.getDate();
-        String Email = bookingDto.getEmail();
+        String email = bookingDto.getEmail();
         int qty = bookingDto.getQuantity();
-        int numUserBookingsInDay = bookingRepository.countBookingsForDayByUser(date, Email);
+        List<Booking> userBookingsInDay = bookingRepository.findByBorrowDateAndBorrowerEmail(date, email);
+
+        Set<String> distinctLocationSet = new HashSet<>();
+
+        for (Booking booking:userBookingsInDay){
+            distinctLocationSet.add(booking.getCorporatePass().getMembership().getMembershipName());
+        }
+
+        distinctLocationSet.add(bookingDto.getMembershipName());
         
-        return numUserBookingsInDay + qty > 2;
+        return (userBookingsInDay.size() + qty > 2) || (distinctLocationSet.size() > 1);
     }
 
-    public List<Booking> getBookingsByDayAndMembership(BookingDTO bookingDTO) {
-        return bookingRepository.getBookingsByDayAndMembership(bookingDTO.getDate(), bookingDTO.getMembershipName());
+    public boolean checkBookingStatusEqualsConfirmedOrCollected(Booking booking) {
+        return booking.getBookingStatus() == BookingStatus.CONFIRMED || booking.getBookingStatus() == BookingStatus.COLLECTED;
+    }
+
+    public List<CorporatePass> getAvailablePasses(LocalDate date, String membershipName){
+        Membership membership = membershipRepository.findByMembershipName(membershipName)
+                .orElseThrow(() -> new MembershipNotFoundException(membershipName));
+
+        List<CorporatePass> activeCorpPassList = corporatePassRepository.findByStatusNotAndMembership(Status.LOST, membership);
+        List<Booking> bookingsOnDateAndMembership = getBookingsByDayAndMembership(date, membershipName);
+
+        List<CorporatePass> availableCorpPassList = new ArrayList<>();
+
+        List<Long> bookedCorpPassIdList = new ArrayList<>();
+        for (Booking booking:bookingsOnDateAndMembership){
+            bookedCorpPassIdList.add(booking.getCorporatePass().getId());
+        }
+
+        for (CorporatePass corpPass : activeCorpPassList) {
+            if (!bookedCorpPassIdList.contains(corpPass.getId())){
+                availableCorpPassList.add(corpPass);
+            }
+        }
+
+        return availableCorpPassList;
+    }
+
+    public List<Booking> getBookingsByDayAndMembership(LocalDate date, String membershipName) {
+        List<Booking> bookingsOnDate = bookingRepository.findByBorrowDate(date);
+        List<Booking> bookingsOnDateAndMembership = new ArrayList<>();
+
+        for (Booking booking : bookingsOnDate) {
+            if (booking.getCorporatePass().getMembership().getMembershipName().equals(membershipName)) {
+                if (checkBookingStatusEqualsConfirmedOrCollected(booking)){
+                    bookingsOnDateAndMembership.add(booking);
+                }
+            }
+        }
+
+        return bookingsOnDateAndMembership;
     }
 
     public BookingResponseDTO cancelBooking(String bookingID) {

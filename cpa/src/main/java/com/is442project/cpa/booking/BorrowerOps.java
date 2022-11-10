@@ -1,9 +1,10 @@
 package com.is442project.cpa.booking;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BorrowerOps {
-    public abstract List<Booking> bookPass(BookingDTO bookingDTO);
+    public abstract boolean bookPass(BookingDTO bookingDTO);
 
     public abstract BookingResponseDTO cancelBooking(String bookingID);
 
@@ -11,5 +12,5 @@ public interface BorrowerOps {
 
     public abstract CorporatePass reportLost(String corporatePassID);
 
-    public abstract List<Booking> getBookingsByDayAndMembership(BookingDTO bookingDTO);
+    public abstract List<Booking> getBookingsByDayAndMembership(LocalDate date, String membershipName);
 }
