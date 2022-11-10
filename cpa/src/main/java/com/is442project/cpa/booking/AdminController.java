@@ -50,7 +50,7 @@ public class AdminController {
 
   @PatchMapping({"/membership/update-membership/{membershipName}"})
   @ResponseStatus(code = HttpStatus.OK)
-  public ResponseEntity<Membership> restaurantUpdate(
+  public ResponseEntity<Membership> updateMembership(
     @PathVariable("membershipName") String membershipName,
     @RequestBody Membership updatedMembership) {
     Membership result = adminOps.updateMembership(membershipName, updatedMembership);

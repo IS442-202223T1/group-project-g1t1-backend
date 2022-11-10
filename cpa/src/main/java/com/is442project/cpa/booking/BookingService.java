@@ -224,7 +224,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         if (updatedMembership.getReplacementFee() != 0.0) {
             currentMembership.setReplacementFee(updatedMembership.getReplacementFee());
         }
-        
+
+        if (updatedMembership.getEmailTemplate() != null) {
+            currentMembership.setEmailTemplate(updatedMembership.getEmailTemplate());
+        }
+
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
 
         return membershipRepository.saveAndFlush(currentMembership);
