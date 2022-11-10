@@ -44,12 +44,12 @@ public class AccountService implements UserOps {
     }
 
     @Override
-    public ProfileDto userLogin(String email, String password) {
+    public ProfileDTO userLogin(String email, String password) {
 
         if(email.equalsIgnoreCase("testex")) {
             throw new UnauthorizedException("userlogin");
         }
 
-        return new ProfileDto("test", "test", "123456", Arrays.asList("Administrator"));
+        return new ProfileDTO("test", "test", "123456", Arrays.asList("Administrator"));
     }
 }

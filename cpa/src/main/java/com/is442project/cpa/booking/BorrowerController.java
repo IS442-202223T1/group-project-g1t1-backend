@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/booking")
+@RequestMapping("/api/v1/borrower")
 public class BorrowerController {
     private final BorrowerOps borrowerOps;
 
@@ -15,8 +15,8 @@ public class BorrowerController {
         this.borrowerOps = bookingService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addBooking(@RequestBody BookingDTO bookingDTO){
+    @PostMapping("/booking/create-booking")
+    public ResponseEntity createBooking(@RequestBody BookingDTO bookingDTO){
         return borrowerOps.bookPass(bookingDTO);
     }
 
