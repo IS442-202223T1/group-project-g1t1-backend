@@ -21,13 +21,11 @@ public class DashboardService {
         
         LocalDate start = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
         LocalDate end = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month) + 1, 1);
-        System.out.println(start);
+
         end.minusDays(1);
-        System.out.println(end);
             List<Booking> bookings = bookingRepository.findByBorrowDateBetween(start, end);
             Map<String, String> uniqueBookings = new HashMap<>();
             Map<String, String> uniqueBorrowers  = new HashMap<>();
-            System.out.println(bookings);
             for(Booking booking : bookings){
                 String borrowDate = booking.getBorrowDate().toString();
                 String borrowerID = booking.getBorrower().getEmail();
@@ -40,8 +38,6 @@ public class DashboardService {
                     uniqueBorrowers.put(borrowerID, "present");
                 }
             }
-            System.out.println(uniqueBookings);
-            System.out.println(uniqueBorrowers);
 
             return new MonthlyReportDTO(uniqueBookings.size(), uniqueBorrowers.size());
     }
@@ -58,8 +54,6 @@ public class DashboardService {
         else{
             start = start.minusYears(1);
         }
-        System.out.println(end);
-        System.out.println(start);
         List<Booking> bookings = bookingRepository.findByBorrowDateBetween(start, end);
 
         Map<String, String> uniqueBookings = new HashMap<>();
