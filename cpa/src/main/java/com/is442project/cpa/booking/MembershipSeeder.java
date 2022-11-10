@@ -110,15 +110,15 @@ public class MembershipSeeder {
 
     public String buildSamplePhysicalPassAuthLetterTemplate() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Date: {{current_date}},");
+        sb.append("Date: {{current_date}}");
         sb.append("<br><br>");
         sb.append("{{membership_address}}");
         sb.append("<br><br><br>");
-        sb.append("Dear Sir/Madam");
+        sb.append("Dear Sir/Madam,");
         sb.append("<br><br>");
         sb.append("AUTHORISATION LETTER - {{attraction_name}}");
         sb.append("<br><br>");
-        sb.append("Singapore Sports School hereby authorise our employee identified below, to utilise our {{corp_pass_number}} on the date as indicated.");
+        sb.append("Singapore Sports School hereby authorise our employee identified below, to utilise our {{corp_pass_number}} pass(s) on the date as indicated.");
         sb.append("<br><br><br>");
         sb.append("Date of Visit: {{visit_date}}");
         sb.append("<br><br>");

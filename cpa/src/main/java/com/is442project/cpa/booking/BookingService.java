@@ -5,7 +5,11 @@ import com.is442project.cpa.account.UserAccount;
 import com.is442project.cpa.booking.exception.MembershipNotFoundException;
 import com.is442project.cpa.booking.Booking.BookingStatus;
 import com.is442project.cpa.booking.CorporatePass.Status;
+import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
+import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.PdfFactory;
+import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 
@@ -16,6 +20,7 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -48,14 +53,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         if (checkExceedMonthlyLimit(bookingDto)){
             throw new RuntimeException("Exceed 2 loans in a month");
         }
-        
+
         // check if user exceed 2 bookings in the desired day
         if (checkExceedDailyLimit(bookingDto)){
             throw new RuntimeException("Exceed maximum bookings in a day");
         }
 
         List<CorporatePass> availPasses = getAvailablePasses(bookingDto.getDate(), bookingDto.getMembershipName());
-        // check if there is enough passes for the day 
+        // check if there is enough passes for the day
         if(availPasses.size() < bookingDto.getQuantity()){
             throw new RuntimeException("Insufficient Passes");
         }
@@ -77,6 +82,13 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
         emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
                 templateEngine.getContent());
+
+        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookedpasses);
+        AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+        PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
+
+        emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                templateEngine.getContent(), Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
 
         if (!membership.getIsElectronicPass()) {
             // todo attach authorisation form
@@ -122,7 +134,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         }
 
         distinctLocationSet.add(bookingDto.getMembershipName());
-        
+
         return (userBookingsInDay.size() + qty > 2) || (distinctLocationSet.size() > 1);
     }
 
