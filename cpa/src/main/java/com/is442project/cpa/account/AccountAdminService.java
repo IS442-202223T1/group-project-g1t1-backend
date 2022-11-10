@@ -2,7 +2,7 @@ package com.is442project.cpa.account;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class AccountAdminService implements AccountAdminOps {
@@ -58,6 +58,11 @@ public class AccountAdminService implements AccountAdminOps {
         user.addRole(role);
         userAccountRepository.save(user);
         return true;
+    }
+
+    public List<UserAccount> getAllUser (){
+        List<UserAccount> allUsers = userAccountRepository.findAll();
+        return allUsers;
     }
 
     public boolean revokeRole(String email, String roleName) {

@@ -7,5 +7,5 @@ public interface AccountAdminOps {
     boolean deleteEmployee(String email);
     boolean grantRole(String email, String roleName);
     boolean revokeRole(String email, String roleName);
-    List<UserAccount> getAllEmployees(String roleName);
+    List<UserAccount> getAllByRole();
 }
