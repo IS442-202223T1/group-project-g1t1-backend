@@ -2,7 +2,8 @@ package com.is442project.cpa.account;
 
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class AccountAdminService implements AccountAdminOps {
@@ -60,7 +61,7 @@ public class AccountAdminService implements AccountAdminOps {
         return true;
     }
 
-    public List<UserAccount> getAllUser (){
+    public List<UserAccount> getAllByRole (){
         List<UserAccount> allUsers = userAccountRepository.findAll();
         return allUsers;
     }
