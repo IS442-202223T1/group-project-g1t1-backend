@@ -67,7 +67,7 @@ class CorporatePassApplicationTests {
 	@Test
 	public void GenerateEmailContent_usingTemplateEngine_shouldGenerateContent() {
 		//arrange
-		Membership sampleMemberShip = membershipRepository.findById("Jalan Besar Stadium").get();
+		Membership sampleMemberShip = membershipRepository.findById(Long.valueOf(1)).get();
 
 
 		Booking booking = bookingRepository.findById(1).get();
