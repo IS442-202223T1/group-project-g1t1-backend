@@ -61,4 +61,15 @@ public class AccountAdminController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/get_all_employees/{roleName}")
+    public ResponseEntity getAllEmployees (@PathVariable String roleName) {
+        try {
+            accountAdminOps.getAllEmployees(roleName);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
 }
