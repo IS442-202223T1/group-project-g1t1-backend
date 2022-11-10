@@ -27,10 +27,15 @@ public class AuthorizationLetter implements PdfTemplate{
         document.addPage(page);
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
             contentStream.beginText();
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.newLineAtOffset(25, 500);
+
             contentStream.showText(templateEngine.getContent().replaceAll("\n", "").replaceAll("\r",""));
+//            contentStream.showText("some sample content");
             contentStream.endText();
+
+
             contentStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

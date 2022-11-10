@@ -41,7 +41,6 @@ public class MembershipSeeder {
 
     public String buildSamplePhysicalPassEmailTemplate() {
         StringBuilder sb = new StringBuilder();
-
         sb.append("Dear {{borrower_name}},");
         sb.append("<br><br>");
         sb.append(" We are pleased to inform that your booking to {{attraction name}} is confirmed as follows:");
@@ -105,6 +104,31 @@ public class MembershipSeeder {
         sb.append("Warm regards");
         sb.append("<br>");
         sb.append("HR Department");
+
+        return sb.toString();
+    }
+
+    public String buildSamplePhysicalPassAuthLetterTemplate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Date: {{current_date}},");
+        sb.append("<br><br>");
+        sb.append("{{membership_address}}");
+        sb.append("<br><br><br>");
+        sb.append("Dear Sir/Madam");
+        sb.append("<br><br>");
+        sb.append("AUTHORISATION LETTER - {{attraction_name}}");
+        sb.append("<br><br>");
+        sb.append("Singapore Sports School hereby authorise our employee identified below, to utilise our {{corp_pass_number}} on the date as indicated.");
+        sb.append("<br><br><br>");
+        sb.append("Date of Visit: {{visit_date}}");
+        sb.append("<br><br>");
+        sb.append("Name of Employee: {{borrower_name}}");
+        sb.append("<br><br><br>");
+        sb.append("Thank you.");
+        sb.append("<br><br><br>");
+        sb.append("Human Resource Department");
+        sb.append("<br>");
+        sb.append("(This is a system generated letter.)");
 
         return sb.toString();
     }
