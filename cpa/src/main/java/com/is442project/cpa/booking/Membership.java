@@ -56,6 +56,7 @@ public class Membership {
         this.isElectronicPass = isElectronicPass;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.membershipAddress = membershipName + "Address";
     }
 
     public long getMembershipId() {

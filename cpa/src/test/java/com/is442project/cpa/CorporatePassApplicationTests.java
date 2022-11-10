@@ -91,7 +91,7 @@ class CorporatePassApplicationTests {
 	@Test
 	public void GenerateLetterPDF() {
 		//arrange
-		Membership sampleMemberShip = membershipRepository.findById("Jalan Besar Stadium").get();
+		Membership sampleMemberShip = membershipRepository.findById(1L).get();
 
 
 		Booking booking = bookingRepository.findById(5).get();
@@ -104,12 +104,12 @@ class CorporatePassApplicationTests {
 		ByteArrayDataSource bads = pdfFactory.generatePdfFile();
 
 		//act
-		try {
-			Path path = Paths.get("letter.pdf");
-			Files.write(path, bads.getInputStream().readAllBytes());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+//		try {
+//			Path path = Paths.get("letter.pdf");
+//			Files.write(path, bads.getInputStream().readAllBytes());
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
 	}
 
 }

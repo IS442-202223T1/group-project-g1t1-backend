@@ -22,7 +22,7 @@ public class MembershipSeeder {
         Template physicalEmailTemplate = new Template();
         Template attachmentTemplate = new Template();
         physicalEmailTemplate.setTemplateContent(buildSamplePhysicalPassEmailTemplate());
-        attachmentTemplate.setTemplateContent("test");
+        attachmentTemplate.setTemplateContent(buildSamplePhysicalPassAuthLetterTemplate());
         Membership membership = new Membership("Mandai Wildlife Reserve", physicalEmailTemplate, attachmentTemplate,
                 53.50, true,
                 "Visit Singapore's best wildlife parks at the Mandai Wildlife Reserve.",

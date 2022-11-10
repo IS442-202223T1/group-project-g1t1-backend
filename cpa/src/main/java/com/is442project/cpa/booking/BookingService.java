@@ -83,7 +83,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
                 templateEngine.getContent());
 
-        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookedpasses);
+        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingResults);
         AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
         PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 

@@ -46,9 +46,9 @@ public class AuthorizationLetterTemplate extends Template implements TemplateRes
         context.put("current_date", LocalDate.now());
         context.put("visit_date", LocalDate.now().toString());
         context.put("borrower_name", booking.getBorrower().getName());
-        context.put("attraction_name", booking.getCorporatePass().getMembershipType().getMembershipType().toUpperCase());
-        context.put("membership_address", booking.getCorporatePass().getMembershipType().getMembershipAddress());
-        context.put("corp_pass_number", bookings.stream().map(b -> b.getCorporatePass().getNumber())
+        context.put("attraction_name", booking.getCorporatePass().getMembership().getMembershipName().toUpperCase());
+        context.put("membership_address", booking.getCorporatePass().getMembership().getMembershipAddress());
+        context.put("corp_pass_number", bookings.stream().map(b -> b.getCorporatePass().getPassID())
                 .reduce("", (p1, p2)-> p1 + " , " + p2).substring(2));
 
         return context;
