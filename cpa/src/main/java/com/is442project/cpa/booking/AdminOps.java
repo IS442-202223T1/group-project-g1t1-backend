@@ -12,4 +12,8 @@ public interface AdminOps {
   public abstract Membership createMembership(Membership newMembership);
 
   public abstract Membership updateMembership(String membershipName, Membership updatedMembership);
+
+  public abstract BookingConfigDTO getBookingConfiguration();
+
+  public abstract BookingConfigDTO updateBookingConfiguration(BookingConfigDTO bookingConfigDTO);
 }

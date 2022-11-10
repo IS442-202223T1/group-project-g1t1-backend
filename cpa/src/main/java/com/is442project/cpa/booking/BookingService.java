@@ -178,6 +178,16 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return membershipRepository.saveAndFlush(currentMembership);
     }
 
+    @Override
+    public BookingConfigDTO getBookingConfiguration() {
+        return null;
+    }
+
+    @Override
+    public BookingConfigDTO updateBookingConfiguration(BookingConfigDTO bookingConfigDTO) {
+        return null;
+    }
+
     public boolean collectCard(Long cardId) {
         // update Card where id equal to card id, set is available to false
         CorporatePass corporatePass = corporatePassRepository.findById(cardId)
