@@ -18,6 +18,10 @@ public class Membership {
     private String membershipName;
 
     @AttributeOverride(name = "templateContent", column = @Column(name = "EMAIL_TEMPLATE_CONTENT"))
+    @NotNull
+    private String membershipAddress;
+
+    @AttributeOverride(name="templateContent", column=@Column(name="EMAIL_TEMPLATE_CONTENT"))
     @Embedded
     private Template emailTemplate;
 
@@ -52,6 +56,7 @@ public class Membership {
         this.isElectronicPass = isElectronicPass;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.membershipAddress = membershipName + "Address";
     }
 
     public long getMembershipId() {
