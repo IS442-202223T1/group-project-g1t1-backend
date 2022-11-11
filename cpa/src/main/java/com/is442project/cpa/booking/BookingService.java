@@ -18,11 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityNotFoundException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -199,10 +195,6 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return null;
     }
 
-    public CorporatePass reportLost(String corporatePassID) {
-        return null;
-    }
-
     public List<BookingResponseDTO> getCurrentBooking() {
         return null;
     }
@@ -257,31 +249,55 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return membershipRepository.saveAndFlush(currentMembership);
     }
 
-    public boolean collectCard(Long cardId) {
-        // update Card where id equal to card id, set is available to false
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId)
-                .orElseThrow(EntityNotFoundException::new);
-        corporatePass.setStatus(Status.LOANED);
-        corporatePassRepository.save(corporatePass);
-        return true;
-    };
+    public boolean updateBookingStatus(int bookingID, String actionToPerform){
+        Map<String, Status> nextCorporatePassStatus = new HashMap<>();
+        nextCorporatePassStatus.put("collect", Status.LOANED);
+        nextCorporatePassStatus.put("return", Status.AVAILABLE);
+        nextCorporatePassStatus.put("markLost", Status.LOST);
 
-    public boolean returnCard(Long cardId) {
-        // update Card where id equal to card id, set is available to true
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId)
-                .orElseThrow(EntityNotFoundException::new);
-        ;
-        corporatePass.setStatus(Status.AVAILABLE);
-        corporatePassRepository.save(corporatePass);
-        return true;
+        Optional<Booking> bookingResult = bookingRepository.findById(bookingID);
+        if(bookingResult.isPresent()){
+            Booking booking = bookingResult.get();
+            commitBookingToDatabase(booking, actionToPerform);
+
+            CorporatePass corporatePass = booking.getCorporatePass();
+            corporatePass.setStatus(nextCorporatePassStatus.get(actionToPerform));
+        }
+        return false;
     }
 
-    public boolean markLost(Long cardId) {
-        CorporatePass corporatePass = corporatePassRepository.findById(cardId)
-                .orElseThrow(EntityNotFoundException::new);
-        ;
-        corporatePass.setStatus(Status.LOST);
-        corporatePassRepository.save(corporatePass);
-        return true;
+    public void commitBookingToDatabase(Booking currentBooking, String actionToPerform){
+        Map<String, BookingStatus> nextBookingStatus = new HashMap<>();
+        nextBookingStatus.put("collect", BookingStatus.COLLECTED);
+        nextBookingStatus.put("return", BookingStatus.RETURNED);
+        nextBookingStatus.put("markLost", BookingStatus.DUESOWED);
+
+        currentBooking.setBookingStatus(nextBookingStatus.get(actionToPerform));
+        // if return, mark all those bookings with the same corporate pass that happened before this date as returned
+        if(actionToPerform.equals("return")){
+            List<Booking> bookings = bookingRepository.findAll();
+            for(Booking booking : bookings){
+                if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) && booking.getBorrowDate().isBefore(currentBooking.getBorrowDate()) && booking.getBookingStatus().equals(BookingStatus.COLLECTED)){
+                    booking.setBookingStatus(BookingStatus.RETURNED);
+                    bookingRepository.save(booking);
+                }
+            }
+        }
+        // if lost, mark all subsequent bookings as cancelled
+        // and add fees to this booking
+        if(actionToPerform.equals("markLost")){
+            List<Booking> bookings = bookingRepository.findAll();
+            for(Booking booking : bookings){
+                if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) && booking.getBorrowDate().isAfter(currentBooking.getBorrowDate()) && booking.getBookingStatus().equals(BookingStatus.CONFIRMED)){
+                    booking.setBookingStatus(BookingStatus.CANCELLED);
+                    bookingRepository.save(booking);
+                }
+            }
+
+            currentBooking.setFeesOwed(currentBooking.getCorporatePass().getMembership().getReplacementFee());
+        }
+
+        bookingRepository.save(currentBooking);
+       
     }
 }
