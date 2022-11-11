@@ -14,4 +14,6 @@ interface GopOps {
     public abstract boolean markLost(Long cardId);
 
     public abstract List<CorporatePass> getAllPasses();
+
+    public abstract List<Booking> getAllConfirmedBookings();
 }

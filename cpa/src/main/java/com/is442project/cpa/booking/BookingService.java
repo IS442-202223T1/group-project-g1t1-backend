@@ -99,6 +99,17 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return true;
     }
 
+    public List<Booking> getAllConfirmedBookings(){
+        List<Booking> allBookings = bookingRepository.findAll();
+        List<Booking> confirmedBookings = new ArrayList<>();
+        for(Booking booking : allBookings){
+            if(booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED){
+                confirmedBookings.add(booking);
+            }
+        }
+        return confirmedBookings;
+    }
+
     public boolean checkExceedMonthlyLimit(BookingDTO bookingDto){
         int year = bookingDto.getDate().getYear();
         int month = bookingDto.getDate().getMonthValue();
