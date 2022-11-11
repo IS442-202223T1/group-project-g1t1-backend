@@ -275,6 +275,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         nextCorporatePassStatus.put("collect", Status.LOANED);
         nextCorporatePassStatus.put("return", Status.AVAILABLE);
         nextCorporatePassStatus.put("markLost", Status.LOST);
+        nextCorporatePassStatus.put("clearDues", Status.LOST);
 
         Optional<Booking> bookingResult = bookingRepository.findById(bookingID);
         if(bookingResult.isPresent()){
@@ -292,6 +293,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         nextBookingStatus.put("collect", BookingStatus.COLLECTED);
         nextBookingStatus.put("return", BookingStatus.RETURNED);
         nextBookingStatus.put("markLost", BookingStatus.DUESOWED);
+        nextBookingStatus.put("clearDues", BookingStatus.DUESPAID);
 
         currentBooking.setBookingStatus(nextBookingStatus.get(actionToPerform));
         // if return, mark all those bookings with the same corporate pass that happened before this date as returned
@@ -306,7 +308,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         }
         // if lost, mark all subsequent bookings as cancelled
         // and add fees to this booking
-        if(actionToPerform.equals("markLost")){
+        else if(actionToPerform.equals("markLost")){
             List<Booking> bookings = bookingRepository.findAll();
             for(Booking booking : bookings){
                 if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) && booking.getBorrowDate().isAfter(currentBooking.getBorrowDate()) && booking.getBookingStatus().equals(BookingStatus.CONFIRMED)){
@@ -316,6 +318,9 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             }
 
             currentBooking.setFeesOwed(currentBooking.getCorporatePass().getMembership().getReplacementFee());
+        }
+        else if(actionToPerform.equals("clearDues")){
+            currentBooking.setFeesOwed(0);
         }
 
         bookingRepository.save(currentBooking);
