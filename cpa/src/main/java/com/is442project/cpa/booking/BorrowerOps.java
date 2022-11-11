@@ -6,7 +6,7 @@ import java.util.List;
 public interface BorrowerOps {
     public abstract boolean bookPass(BookingDTO bookingDTO);
 
-    public abstract BookingResponseDTO cancelBooking(String bookingID);
+    public abstract boolean cancelBooking(int bookingID);
 
     public abstract  List<BookingResponseDTO> getAllBooking(String userID);
 

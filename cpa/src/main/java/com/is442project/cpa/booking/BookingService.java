@@ -95,16 +95,6 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return true;
     }
 
-    public List<Booking> getAllConfirmedBookings(){
-        List<Booking> allBookings = bookingRepository.findAll();
-        List<Booking> confirmedBookings = new ArrayList<>();
-        for(Booking booking : allBookings){
-            if(booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED){
-                confirmedBookings.add(booking);
-            }
-        }
-        return confirmedBookings;
-    }
 
     public boolean checkExceedMonthlyLimit(BookingDTO bookingDto){
         int year = bookingDto.getDate().getYear();
@@ -187,8 +177,28 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return bookingsOnDateAndMembership;
     }
 
-    public BookingResponseDTO cancelBooking(String bookingID) {
-        return null;
+    public boolean cancelBooking(int bookingID) {
+        Optional<Booking> response = bookingRepository.findById(bookingID);
+        if(response.isPresent()){
+            LocalDate today = LocalDate.now();
+            // check if cancellation is made one day before
+            
+            Booking booking  = response.get();
+            if((booking.getBorrowDate().minusDays(1)).isAfter(today)){
+                BookingStatus bookingStatus = booking.getBookingStatus();
+                booking.setBookingStatus(BookingStatus.CANCELLED);
+                bookingRepository.save(booking);
+                CorporatePass corporatePass = booking.getCorporatePass();
+                if(corporatePass.getStatus().equals(Status.LOANED) && bookingStatus.equals(BookingStatus.COLLECTED)){
+                    corporatePass.setStatus(Status.AVAILABLE);
+                    corporatePassRepository.save(corporatePass);
+                }
+                return true;
+            }
+            // should return based on whether or not the operation was succcessful
+            return false;
+        }
+        return false;
     }
 
     public List<BookingResponseDTO> getAllBooking(String userID) {
@@ -247,6 +257,17 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
 
         return membershipRepository.saveAndFlush(currentMembership);
+    }
+
+    public List<Booking> getAllConfirmedBookings(){
+        List<Booking> allBookings = bookingRepository.findAll();
+        List<Booking> confirmedBookings = new ArrayList<>();
+        for(Booking booking : allBookings){
+            if(booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED){
+                confirmedBookings.add(booking);
+            }
+        }
+        return confirmedBookings;
     }
 
     public boolean updateBookingStatus(int bookingID, String actionToPerform){
