@@ -300,7 +300,9 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         if(actionToPerform.equals("return")){
             List<Booking> bookings = bookingRepository.findAll();
             for(Booking booking : bookings){
-                if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) && booking.getBorrowDate().isBefore(currentBooking.getBorrowDate()) && booking.getBookingStatus().equals(BookingStatus.COLLECTED)){
+                if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) &&
+                        booking.getBorrowDate().isBefore(currentBooking.getBorrowDate()) &&
+                        booking.getBookingStatus().equals(BookingStatus.COLLECTED)){
                     booking.setBookingStatus(BookingStatus.RETURNED);
                     bookingRepository.save(booking);
                 }
@@ -311,7 +313,9 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         else if(actionToPerform.equals("markLost")){
             List<Booking> bookings = bookingRepository.findAll();
             for(Booking booking : bookings){
-                if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) && booking.getBorrowDate().isAfter(currentBooking.getBorrowDate()) && booking.getBookingStatus().equals(BookingStatus.CONFIRMED)){
+                if(booking.getCorporatePass().equals(currentBooking.getCorporatePass()) &&
+                        booking.getBorrowDate().isAfter(currentBooking.getBorrowDate()) &&
+                        booking.getBookingStatus().equals(BookingStatus.CONFIRMED)){
                     booking.setBookingStatus(BookingStatus.CANCELLED);
                     bookingRepository.save(booking);
                 }
