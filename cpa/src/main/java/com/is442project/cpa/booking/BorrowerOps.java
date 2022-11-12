@@ -10,6 +10,8 @@ public interface BorrowerOps {
 
     public abstract  List<BookingResponseDTO> getAllBooking(String userID);
 
+    public abstract Membership getMembershipByName(String membershipName);
+
     public abstract List<Booking> getBookingsByDayAndMembership(LocalDate date, String membershipName);
 
     public abstract List<Membership> getAllMemberships();
