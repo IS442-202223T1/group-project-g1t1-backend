@@ -259,6 +259,30 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return membershipRepository.saveAndFlush(currentMembership);
     }
 
+    public List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatedPasses) {
+        Membership membership = this.getMembershipByName(membershipName);
+        List<CorporatePass> currentPasses = corporatePassRepository.findByMembership(membership);
+
+        for (CorporatePass updatedPass : updatedPasses) {
+            for (CorporatePass currentPass : currentPasses) {
+                if (currentPass.getId() == updatedPass.getId()) {
+                    if (updatedPass.getPassID() != null) {
+                        currentPass.setPassID(updatedPass.getPassID());
+                    }
+
+                    if (updatedPass.getMaxPersonsAdmitted() != 0) {
+                        currentPass.setMaxPersonsAdmitted(updatedPass.getMaxPersonsAdmitted());
+                    }
+
+                    corporatePassRepository.saveAndFlush(currentPass);
+                    continue;
+                }
+            }
+        }
+
+        return corporatePassRepository.findByMembership(membership);
+    }
+
     public List<Booking> getAllConfirmedBookings(){
         List<Booking> allBookings = bookingRepository.findAll();
         List<Booking> confirmedBookings = new ArrayList<>();
