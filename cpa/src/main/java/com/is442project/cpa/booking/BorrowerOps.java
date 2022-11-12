@@ -13,4 +13,6 @@ public interface BorrowerOps {
     public abstract List<Booking> getBookingsByDayAndMembership(LocalDate date, String membershipName);
 
     public abstract List<Membership> getAllMemberships();
+
+    public abstract List<BookingResponseDTO> getUpcomingBookings(String email);
 }
