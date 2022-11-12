@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 
-public class BookingOpsData {
+public class PassStatusUpdateDTO {
     private String bookingID;
     private String actionToPerform;
 
-    public BookingOpsData(String bookingID, String actionToPerform){
+    public PassStatusUpdateDTO(String bookingID, String actionToPerform){
         this.bookingID = bookingID;
         this.actionToPerform = actionToPerform;
     }

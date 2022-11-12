@@ -23,7 +23,7 @@ public class GopController {
     }
 
     @PatchMapping("/corporate-pass/update-pass-status")
-    public ResponseEntity updatePassStatus(@RequestBody BookingOpsData bookingOpsData) {
+    public ResponseEntity updatePassStatus(@RequestBody PassStatusUpdateDTO bookingOpsData) {
         // TODO: rename card to correct entity
         gopOps.updateBookingStatus(Integer.parseInt(bookingOpsData.getBookingID()), bookingOpsData.getActionToPerform());
         return ResponseEntity.ok().build();
