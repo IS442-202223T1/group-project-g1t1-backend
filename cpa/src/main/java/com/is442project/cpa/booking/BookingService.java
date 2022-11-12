@@ -221,24 +221,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
 
                 if (booking.getBorrowDate().getDayOfWeek() == DayOfWeek.SUNDAY){
-                    bookingResponseDTO.setSunday(true);
                     BookerDetailsResponseDTO bookerDetailsResponseDTO = getPreviousDayBoookingDetails(booking.getBorrowDate(), booking.getCorporatePass().getId());
 
                     if (bookerDetailsResponseDTO != null){
                         bookingResponseDTO.setPreviousBookingDate(booking.getBorrowDate().minusDays(1));
                         bookingResponseDTO.setPreviousBookerName(bookerDetailsResponseDTO.getBookerName());
                         bookingResponseDTO.setPreviousBookerContactNumber(bookerDetailsResponseDTO.getContactNumber());
-                    } else {
-                        bookingResponseDTO.setPreviousBookingDate(null);
-                        bookingResponseDTO.setPreviousBookerName(null);
-                        bookingResponseDTO.setPreviousBookerContactNumber(null);
-                    }
-                } else {
-                    bookingResponseDTO.setPreviousBookingDate(null);
-                    bookingResponseDTO.setPreviousBookerName(null);
-                    bookingResponseDTO.setPreviousBookerContactNumber(null);
-                }
-
+                    } 
+                } 
                 upcomingBookings.add(bookingResponseDTO);
             }
         }
@@ -247,13 +237,24 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     }
 
-    public List<BookingResponseDTO> getPastBooking() {
-        return null;
+    public List<BookingResponseDTO> getPastBookings(String email) {
+
+        List<Booking> bookings = bookingRepository.findByBorrowerEmail(email);
+        List<BookingResponseDTO> pastBookings = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        for (Booking booking:bookings){
+            if (booking.getBorrowDate().isBefore(today)){
+                BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
+                pastBookings.add(bookingResponseDTO);
+            }
+        }
+
+        return pastBookings;
     }
 
     public BookerDetailsResponseDTO getPreviousDayBoookingDetails(LocalDate date, Long cpid){
         LocalDate previousDate = date.minusDays(1);
-        // Booking previousDayBooking = bookingRepository.findFirstByBorrowDateAndCPID(previousDate, cpid);
         List<Booking> previousDayBookings = bookingRepository.findByBorrowDate(previousDate);
 
         for (Booking booking:previousDayBookings){
@@ -389,7 +390,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         BookingResponseDTO bookingResponseDTO = mapper.map(booking, BookingResponseDTO.class);
- 
+
+        bookingResponseDTO.setPreviousBookingDate(null);
+        bookingResponseDTO.setPreviousBookerName(null);
+        bookingResponseDTO.setPreviousBookerContactNumber(null);
+
         return bookingResponseDTO;
       }
 }

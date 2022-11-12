@@ -67,4 +67,10 @@ public class BorrowerController {
         List<BookingResponseDTO> bookingList = borrowerOps.getUpcomingBookings(getBookingsDTO.getEmail());
         return ResponseEntity.ok(bookingList);
     }
+
+    @PostMapping("/past-bookings")
+    public ResponseEntity pastBookings(@RequestBody GetBookingsDTO getBookingsDTO){
+        List<BookingResponseDTO> bookingList = borrowerOps.getPastBookings(getBookingsDTO.getEmail());
+        return ResponseEntity.ok(bookingList);
+    }
 }
