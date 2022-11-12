@@ -23,14 +23,19 @@ public class GopController {
     }
 
     @PatchMapping("/corporate-pass/update-pass-status")
-    public ResponseEntity updatePassStatus(@RequestBody CardOpsData cardOpsData) {
+    public ResponseEntity updatePassStatus(@RequestBody PassStatusUpdateDTO bookingOpsData) {
         // TODO: rename card to correct entity
-        gopOps.collectCard(Long.parseLong(cardOpsData.getCardID()));
+        gopOps.updateBookingStatus(Integer.parseInt(bookingOpsData.getBookingID()), bookingOpsData.getActionToPerform());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/corporate-pass/get-all")
     public List<CorporatePass> getAllPasses() {
         return gopOps.getAllPasses();
+    }
+
+    @GetMapping("/bookings/confirmed")
+    public List<Booking> getAllConfirmedBookings() {
+        return gopOps.getAllConfirmedBookings();
     }
 }

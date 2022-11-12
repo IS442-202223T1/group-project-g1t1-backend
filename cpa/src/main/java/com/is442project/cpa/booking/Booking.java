@@ -36,6 +36,8 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus = BookingStatus.CONFIRMED;
 
+    private double feesOwed;
+
     public int getBookingId() {
         return bookingId;
     }
@@ -58,6 +60,15 @@ public class Booking {
         this.borrower = borrower;
         this.corporatePass = corporatePass;
         this.bookingStatus = bookingStatus;
+        this.feesOwed = 0;
+    }
+
+    public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass, BookingStatus bookingStatus, Double feesOwed) {
+        this.borrowDate = borrowDate;
+        this.borrower = borrower;
+        this.corporatePass = corporatePass;
+        this.bookingStatus = bookingStatus;
+        this.feesOwed = feesOwed;
     }
 
     public LocalDate getBorrowDate() {
@@ -90,5 +101,13 @@ public class Booking {
 
     public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public double getFeesOwed(){
+        return feesOwed;
+    }
+
+    public void setFeesOwed(double feesOwed){
+        this.feesOwed = feesOwed;
     }
 }
