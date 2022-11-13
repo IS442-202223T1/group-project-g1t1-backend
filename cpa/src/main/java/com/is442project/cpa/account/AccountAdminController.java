@@ -1,5 +1,7 @@
 package com.is442project.cpa.account;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,4 +63,15 @@ public class AccountAdminController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/get_all_by_role")
+    public ResponseEntity<?> getAllByRole () {
+        try {
+            List<UserAccount> allUsers= accountAdminOps.getAllByRole();
+            return ResponseEntity.ok(allUsers);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
