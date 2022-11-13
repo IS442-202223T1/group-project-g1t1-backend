@@ -13,7 +13,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
 
     List<Booking> findByBorrowDate(LocalDate date);
 
-    List<Booking> findByBorrowDateAndBorrowerEmail(LocalDate date,String email);
+    List<Booking> findByBorrowDateAndBorrowerEmailAndBookingStatusNot(LocalDate date,String email, Booking.BookingStatus bookingStatus);
 
     List<Booking> findByBorrowDateBetween(LocalDate start, LocalDate end);
 }
