@@ -7,6 +7,7 @@ import com.is442project.cpa.booking.Booking.BookingStatus;
 import com.is442project.cpa.booking.CorporatePass.Status;
 import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
+import com.is442project.cpa.common.email.EmailHelper;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
@@ -419,6 +420,9 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                         booking.getBookingStatus().equals(BookingStatus.CONFIRMED)){
                     booking.setBookingStatus(BookingStatus.CANCELLED);
                     bookingRepository.save(booking);
+
+                    emailService.sendHtmlMessage(booking.getBorrower().getEmail(),
+                            EmailHelper.EMAIL_SUBJECT_CANCELLED, EmailHelper.EMAIL_CONTENT_CANCELLED(booking));
                 }
             }
 
