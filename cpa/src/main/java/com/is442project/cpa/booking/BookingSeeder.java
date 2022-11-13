@@ -1,7 +1,7 @@
 package com.is442project.cpa.booking;
 
-import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
+import com.is442project.cpa.account.UserAccountRepository;
 import com.is442project.cpa.booking.Booking.BookingStatus;
 
 import org.springframework.context.annotation.Configuration;
@@ -20,19 +20,18 @@ public class BookingSeeder {
 
     private BookingRepository bookingRepository;
 
-    private final AccountService accountService;
-
-    public BookingSeeder(CorporatePassRepository corporatePassRepository, BookingRepository bookingRepository, AccountService accountService) {
+    private UserAccountRepository accountRepository;
+    public BookingSeeder(CorporatePassRepository corporatePassRepository, BookingRepository bookingRepository, UserAccountRepository accountRepository) {
         this.corporatePassRepository = corporatePassRepository;
         this.bookingRepository = bookingRepository;
-        this.accountService = accountService;
+        this.accountRepository = accountRepository;
         insertTestBooking();
     }
 
     private void insertTestBooking(){
-        UserAccount borrower1 = accountService.readUserByEmail("joshua.zhangzy@gmail.com");
-        UserAccount borrower2 = accountService.readUserByEmail("mary@nysi.org.sg");
-        UserAccount borrower3 = accountService.readUserByEmail("david@sportsschool.edu.sg");
+        UserAccount borrower1 = accountRepository.getReferenceById("joshua.zhangzy@gmail.com");
+        UserAccount borrower2 = accountRepository.getReferenceById("mary@nysi.org.sg");
+        UserAccount borrower3 = accountRepository.getReferenceById("david@sportsschool.edu.sg");
 
         CorporatePass corporatePass1 = corporatePassRepository.findById(Long.parseLong("1")).get();
         CorporatePass corporatePass2 = corporatePassRepository.findById(Long.parseLong("2")).get();
