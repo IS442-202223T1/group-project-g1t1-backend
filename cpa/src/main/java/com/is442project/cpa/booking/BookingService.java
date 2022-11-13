@@ -106,7 +106,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         Set<String> userBookingsSet = new HashSet<>();
 
         for (Booking booking : userBookings) {
-            if (checkBookingStatusEqualsConfirmedOrCollected(booking)){
+            if (booking.getBookingStatus() != BookingStatus.CANCELLED){
                 if (booking.getBorrowDate().getYear() == year && booking.getBorrowDate().getMonthValue() == month){
                     String key = booking.getBorrowDate().toString() + booking.getCorporatePass().getMembership().getMembershipName();
                     userBookingsSet.add(key);
@@ -123,7 +123,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         LocalDate date = bookingDto.getDate();
         String email = bookingDto.getEmail();
         int qty = bookingDto.getQuantity();
-        List<Booking> userBookingsInDay = bookingRepository.findByBorrowDateAndBorrowerEmail(date, email);
+        List<Booking> userBookingsInDay = bookingRepository.findByBorrowDateAndBorrowerEmailAndBookingStatusNot(date, email, BookingStatus.CANCELLED);
 
         Set<String> distinctLocationSet = new HashSet<>();
 
@@ -134,10 +134,6 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         distinctLocationSet.add(bookingDto.getMembershipName());
 
         return (userBookingsInDay.size() + qty > 2) || (distinctLocationSet.size() > 1);
-    }
-
-    public boolean checkBookingStatusEqualsConfirmedOrCollected(Booking booking) {
-        return booking.getBookingStatus() == BookingStatus.CONFIRMED || booking.getBookingStatus() == BookingStatus.COLLECTED;
     }
 
     public List<CorporatePass> getAvailablePasses(LocalDate date, String membershipName){
@@ -169,7 +165,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         for (Booking booking : bookingsOnDate) {
             if (booking.getCorporatePass().getMembership().getMembershipName().equals(membershipName)) {
-                if (checkBookingStatusEqualsConfirmedOrCollected(booking)){
+                if (booking.getBookingStatus() != BookingStatus.CANCELLED){
                     bookingsOnDateAndMembership.add(booking);
                 }
             }
@@ -182,22 +178,25 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         Optional<Booking> response = bookingRepository.findById(bookingID);
         if(response.isPresent()){
             LocalDate today = LocalDate.now();
-            // check if cancellation is made one day before
-            
             Booking booking  = response.get();
-            if((booking.getBorrowDate().minusDays(1)).isAfter(today)){
-                BookingStatus bookingStatus = booking.getBookingStatus();
-                booking.setBookingStatus(BookingStatus.CANCELLED);
-                bookingRepository.save(booking);
-                CorporatePass corporatePass = booking.getCorporatePass();
-                if(corporatePass.getStatus().equals(Status.LOANED) && bookingStatus.equals(BookingStatus.COLLECTED)){
-                    corporatePass.setStatus(Status.AVAILABLE);
-                    corporatePassRepository.save(corporatePass);
+            
+            // if pass is an epass, booking can be cancelled as long as it is 1 day before booking date
+            if (booking.getCorporatePass().getMembership().getIsElectronicPass()){
+                // check if cancellation is made one day before
+                if(booking.getBorrowDate().isAfter(today)){
+                    booking.setBookingStatus(BookingStatus.CANCELLED);
+                    bookingRepository.save(booking);
+                    return true;
                 }
-                return true;
+            } 
+            // else, booking can be cancelled only if it is 1 day before booking date and borrower have not collected pass
+            else {
+                if (booking.getBorrowDate().isAfter(today) && booking.getBookingStatus() != BookingStatus.COLLECTED){
+                    booking.setBookingStatus(BookingStatus.CANCELLED);
+                    bookingRepository.save(booking);
+                    return true;
+                }
             }
-            // should return based on whether or not the operation was succcessful
-            return false;
         }
         return false;
     }
@@ -220,7 +219,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             if (booking.getBorrowDate().isAfter(yesterday)){
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
 
-                if (booking.getBorrowDate().getDayOfWeek() == DayOfWeek.SUNDAY){
+                if (booking.getBorrowDate().getDayOfWeek() == DayOfWeek.SUNDAY && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
                     BookerDetailsResponseDTO bookerDetailsResponseDTO = getPreviousDayBoookingDetails(booking.getBorrowDate(), booking.getCorporatePass().getId());
 
                     if (bookerDetailsResponseDTO != null){
@@ -312,6 +311,53 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
 
         return membershipRepository.saveAndFlush(currentMembership);
+    }
+
+    public CorporatePass createPass(Membership membership, CorporatePass pass) {
+        pass.setMembership(membership);
+        return corporatePassRepository.saveAndFlush(pass);
+    }
+
+    public void removePass(CorporatePass pass) {
+        corporatePassRepository.delete(pass);
+        corporatePassRepository.flush();
+    }
+
+    public List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatedPasses) {
+        Membership membership = this.getMembershipByName(membershipName);
+        List<CorporatePass> currentPasses = corporatePassRepository.findByMembership(membership);
+
+        for (CorporatePass currentPass : currentPasses) {
+            boolean isPassPresent = false;
+
+            for (CorporatePass updatedPass : updatedPasses) {
+                if (currentPass.getId() == updatedPass.getId()) {
+                    if (updatedPass.getPassID() != null) {
+                        currentPass.setPassID(updatedPass.getPassID());
+                    }
+
+                    if (updatedPass.getMaxPersonsAdmitted() != 0) {
+                        currentPass.setMaxPersonsAdmitted(updatedPass.getMaxPersonsAdmitted());
+                    }
+
+                    corporatePassRepository.saveAndFlush(currentPass);
+                    isPassPresent = true;
+                    continue;
+                }
+            }
+
+            if (!isPassPresent){
+                this.removePass(currentPass);
+            }
+        }
+
+        for (CorporatePass updatedPass : updatedPasses) {
+            if (updatedPass.getId() == null) {
+                this.createPass(membership, updatedPass);
+            }
+        }
+
+        return corporatePassRepository.findByMembership(membership);
     }
 
     public List<Booking> getAllOpenBookings(){
