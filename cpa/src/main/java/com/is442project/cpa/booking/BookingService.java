@@ -13,10 +13,11 @@ import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityNotFoundException;
-
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -209,9 +210,63 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return null;
     }
 
-    public List<BookingResponseDTO> getPastBooking() {
+    public List<BookingResponseDTO> getUpcomingBookings(String email){
+        List<Booking> bookings = bookingRepository.findByBorrowerEmail(email);
+        List<BookingResponseDTO> upcomingBookings = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+
+        for (Booking booking:bookings){
+            if (booking.getBorrowDate().isAfter(yesterday)){
+                BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
+
+                if (booking.getBorrowDate().getDayOfWeek() == DayOfWeek.SUNDAY){
+                    BookerDetailsResponseDTO bookerDetailsResponseDTO = getPreviousDayBoookingDetails(booking.getBorrowDate(), booking.getCorporatePass().getId());
+
+                    if (bookerDetailsResponseDTO != null){
+                        bookingResponseDTO.setPreviousBookingDate(booking.getBorrowDate().minusDays(1));
+                        bookingResponseDTO.setPreviousBookerName(bookerDetailsResponseDTO.getBookerName());
+                        bookingResponseDTO.setPreviousBookerContactNumber(bookerDetailsResponseDTO.getContactNumber());
+                    } 
+                } 
+                upcomingBookings.add(bookingResponseDTO);
+            }
+        }
+
+        return upcomingBookings;
+
+    }
+
+    public List<BookingResponseDTO> getPastBookings(String email) {
+
+        List<Booking> bookings = bookingRepository.findByBorrowerEmail(email);
+        List<BookingResponseDTO> pastBookings = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        for (Booking booking:bookings){
+            if (booking.getBorrowDate().isBefore(today)){
+                BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
+                pastBookings.add(bookingResponseDTO);
+            }
+        }
+
+        return pastBookings;
+    }
+
+    public BookerDetailsResponseDTO getPreviousDayBoookingDetails(LocalDate date, Long cpid){
+        LocalDate previousDate = date.minusDays(1);
+        List<Booking> previousDayBookings = bookingRepository.findByBorrowDate(previousDate);
+
+        for (Booking booking:previousDayBookings){
+            if (booking.getCorporatePass().getId().equals(cpid)){
+                BookerDetailsResponseDTO bookerDetailsResponseDTO = new BookerDetailsResponseDTO(booking.getBorrower().getName(), booking.getBorrower().getContactNumber(), booking.getCorporatePass().getPassID());
+                return bookerDetailsResponseDTO;
+            }
+        }
+
         return null;
     }
+    
 
     public List<Membership> getAllMemberships() {
         return membershipRepository.findAll();
@@ -330,4 +385,16 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         bookingRepository.save(currentBooking);
        
     }
+
+    private BookingResponseDTO convertToBookingResponseDTO(Booking booking) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        BookingResponseDTO bookingResponseDTO = mapper.map(booking, BookingResponseDTO.class);
+
+        bookingResponseDTO.setPreviousBookingDate(null);
+        bookingResponseDTO.setPreviousBookerName(null);
+        bookingResponseDTO.setPreviousBookerContactNumber(null);
+
+        return bookingResponseDTO;
+      }
 }

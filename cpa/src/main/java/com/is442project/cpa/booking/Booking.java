@@ -21,7 +21,7 @@ public class Booking {
     private int bookingId;
 
     @ManyToOne
-    @JoinColumn(name = "CP_ID")
+    @JoinColumn(name = "CPID")
     private CorporatePass corporatePass;
 
     @JsonFormat(pattern="yyyy-MM-dd")
