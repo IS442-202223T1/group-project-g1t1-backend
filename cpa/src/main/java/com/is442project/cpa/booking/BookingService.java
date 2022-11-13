@@ -314,11 +314,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return membershipRepository.saveAndFlush(currentMembership);
     }
 
-    public List<Booking> getAllConfirmedBookings(){
+    public List<Booking> getAllOpenBookings(){
         List<Booking> allBookings = bookingRepository.findAll();
         List<Booking> confirmedBookings = new ArrayList<>();
         for(Booking booking : allBookings){
-            if(booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED){
+            if(booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED){
                 confirmedBookings.add(booking);
             }
         }

@@ -30,8 +30,8 @@ public class GopController {
         return gopOps.getAllPasses();
     }
 
-    @GetMapping("/bookings/confirmed")
-    public List<Booking> getAllConfirmedBookings() {
-        return gopOps.getAllConfirmedBookings();
+    @GetMapping("/bookings/open")
+    public List<Booking> getAllOpenBookings() {
+        return gopOps.getAllOpenBookings();
     }
 }
