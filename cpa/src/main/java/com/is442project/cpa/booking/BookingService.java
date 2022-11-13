@@ -266,6 +266,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     public void removePass(CorporatePass pass) {
         corporatePassRepository.delete(pass);
+        corporatePassRepository.flush();
     }
 
     public List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatedPasses) {
