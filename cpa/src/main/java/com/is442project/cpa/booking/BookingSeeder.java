@@ -50,8 +50,9 @@ public class BookingSeeder {
         Booking booking9 = new Booking(LocalDate.of(2022, 11, 11), borrower2, corporatePass7, BookingStatus.CONFIRMED);
         Booking booking10 = new Booking(LocalDate.of(2022, 11, 13), borrower3, corporatePass5, BookingStatus.COLLECTED);
         Booking booking11 = new Booking(LocalDate.of(2022, 11, 15), borrower3, corporatePass5, BookingStatus.COLLECTED);
+        Booking booking100 = new Booking(LocalDate.of(2022, 12, 16), borrower1, corporatePass1, BookingStatus.CONFIRMED);
 
-        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6, booking7, booking8, booking9, booking10, booking11));
+        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6, booking7, booking8, booking9, booking10, booking11, booking100));
 
         System.out.println("======TEST BOOKING INSERTED======");
     }
