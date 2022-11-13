@@ -12,4 +12,6 @@ public interface AdminOps {
   public abstract Membership createMembership(Membership newMembership);
 
   public abstract Membership updateMembership(String membershipName, Membership updatedMembership);
+
+  public abstract List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatePasses);
 }
