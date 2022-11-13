@@ -48,15 +48,16 @@ public class AdminController {
     return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
-  @PatchMapping({"/membership/update-membership/{membershipName}"})
+  @PostMapping({"/membership/update-membership/{membershipName}"})
   @ResponseStatus(code = HttpStatus.OK)
   public ResponseEntity<MembershipDTO> updateMembershipDTO(
     @PathVariable("membershipName") String membershipName,
     @RequestBody MembershipDTO updatedMembershipDTO) {
-    Membership updatedMembership = convertToMembershipEntity(updatedMembershipDTO);
-    updatedMembership = adminOps.updateMembership(membershipName, updatedMembership);
     List<CorporatePass> updatedPasses = updatedMembershipDTO.getCorporatePasses();
     updatedPasses = adminOps.updatePasses(membershipName, updatedPasses);
+
+    Membership updatedMembership = convertToMembershipEntity(updatedMembershipDTO);
+    updatedMembership = adminOps.updateMembership(membershipName, updatedMembership);
 
     MembershipDTO result = this.convertToMembershipDTO(updatedMembership, updatedPasses);
     return new ResponseEntity<>(result, HttpStatus.OK);

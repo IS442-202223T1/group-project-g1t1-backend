@@ -17,8 +17,8 @@ public class CorporatePass {
     @NotNull
     String passID;
 
-    @ManyToOne
-    @JoinColumn(name = "membership")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "membershipName")
     Membership membership;
 
     @NotNull

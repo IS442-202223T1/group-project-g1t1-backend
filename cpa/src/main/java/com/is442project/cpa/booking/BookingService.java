@@ -259,12 +259,23 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return membershipRepository.saveAndFlush(currentMembership);
     }
 
+    public CorporatePass createPass(Membership membership, CorporatePass pass) {
+        pass.setMembership(membership);
+        return corporatePassRepository.saveAndFlush(pass);
+    }
+
+    public void removePass(CorporatePass pass) {
+        corporatePassRepository.delete(pass);
+    }
+
     public List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatedPasses) {
         Membership membership = this.getMembershipByName(membershipName);
         List<CorporatePass> currentPasses = corporatePassRepository.findByMembership(membership);
 
-        for (CorporatePass updatedPass : updatedPasses) {
-            for (CorporatePass currentPass : currentPasses) {
+        for (CorporatePass currentPass : currentPasses) {
+            boolean isPassPresent = false;
+
+            for (CorporatePass updatedPass : updatedPasses) {
                 if (currentPass.getId() == updatedPass.getId()) {
                     if (updatedPass.getPassID() != null) {
                         currentPass.setPassID(updatedPass.getPassID());
@@ -275,8 +286,19 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                     }
 
                     corporatePassRepository.saveAndFlush(currentPass);
+                    isPassPresent = true;
                     continue;
                 }
+            }
+
+            if (!isPassPresent){
+                this.removePass(currentPass);
+            }
+        }
+
+        for (CorporatePass updatedPass : updatedPasses) {
+            if (updatedPass.getId() == null) {
+                this.createPass(membership, updatedPass);
             }
         }
 
