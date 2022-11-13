@@ -364,7 +364,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         List<Booking> allBookings = bookingRepository.findAll();
         List<Booking> confirmedBookings = new ArrayList<>();
         for(Booking booking : allBookings){
-            if(booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED){
+            if((booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
                 confirmedBookings.add(booking);
             }
         }
