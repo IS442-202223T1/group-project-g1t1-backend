@@ -3,9 +3,11 @@ package com.is442project.cpa.booking;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +55,15 @@ public class BorrowerController {
         }
     }
 
+    @GetMapping({ "/membership/{membershipName}" })
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<MembershipForBorrowerResponseDTO> getMembershipDetails(
+        @PathVariable("membershipName") String membershipName) {
+      Membership membership = borrowerOps.getMembershipByName(membershipName);
+      MembershipForBorrowerResponseDTO membershipDTO = this.convertToMembershipForBorrowerResponseDTO(membership);
+      return new ResponseEntity<>(membershipDTO, HttpStatus.OK);
+    }
+
     @PutMapping("/cancelBooking")
     public ResponseEntity cancelBooking(@RequestBody BookingIDDTO bookingIDDTO){
         boolean cancelled = borrowerOps.cancelBooking(bookingIDDTO.getBookingID());
@@ -62,6 +73,12 @@ public class BorrowerController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to cancel booking");
     }
 
+    private MembershipForBorrowerResponseDTO convertToMembershipForBorrowerResponseDTO(Membership membership) {
+        ModelMapper mapper = new ModelMapper();
+        MembershipForBorrowerResponseDTO membershipForBorrowerResponseDTO = mapper.map(membership, MembershipForBorrowerResponseDTO.class);
+
+        return membershipForBorrowerResponseDTO;
+      }
     @PostMapping("/upcoming-bookings")
     public ResponseEntity upcomingBookings(@RequestBody GetBookingsDTO getBookingsDTO){
         List<BookingResponseDTO> bookingList = borrowerOps.getUpcomingBookings(getBookingsDTO.getEmail());
