@@ -39,9 +39,9 @@ public class BorrowerController {
             if(e.getMessage() == "Insufficient Passes") {
                 List<Booking> currentBookings = borrowerOps.getBookingsByDayAndMembership(bookingDto.getDate(), bookingDto.getMembershipName());
 
-                List<BookingDetailsResponseDTO> responseList = new ArrayList<>();
+                List<BookerDetailsResponseDTO> responseList = new ArrayList<>();
                 for (Booking booking:currentBookings){
-                    BookingDetailsResponseDTO responseDto = new BookingDetailsResponseDTO(booking.getBorrower().getName(), booking.getBorrower().getContactNumber(), booking.getCorporatePass().getPassID());
+                    BookerDetailsResponseDTO responseDto = new BookerDetailsResponseDTO(booking.getBorrower().getName(), booking.getBorrower().getContactNumber(), booking.getCorporatePass().getPassID());
                     responseList.add(responseDto);
                 }
 
@@ -60,5 +60,17 @@ public class BorrowerController {
             return ResponseEntity.ok(cancelled);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to cancel booking");
+    }
+
+    @PostMapping("/upcoming-bookings")
+    public ResponseEntity upcomingBookings(@RequestBody GetBookingsDTO getBookingsDTO){
+        List<BookingResponseDTO> bookingList = borrowerOps.getUpcomingBookings(getBookingsDTO.getEmail());
+        return ResponseEntity.ok(bookingList);
+    }
+
+    @PostMapping("/past-bookings")
+    public ResponseEntity pastBookings(@RequestBody GetBookingsDTO getBookingsDTO){
+        List<BookingResponseDTO> bookingList = borrowerOps.getPastBookings(getBookingsDTO.getEmail());
+        return ResponseEntity.ok(bookingList);
     }
 }
