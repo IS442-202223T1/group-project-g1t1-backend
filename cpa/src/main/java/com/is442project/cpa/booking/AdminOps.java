@@ -13,6 +13,8 @@ public interface AdminOps {
 
   public abstract Membership updateMembership(String membershipName, Membership updatedMembership);
 
+  public abstract List<CorporatePass> createPasses(Membership membership, List<CorporatePass> updatePasses);
+
   public abstract List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatePasses);
 
   public abstract void deleteBookingsByBorrower(String email);
