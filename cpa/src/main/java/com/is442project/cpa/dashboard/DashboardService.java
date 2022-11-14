@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -59,14 +60,23 @@ public class DashboardService implements DashboardOps {
 
     public List<EmployeeReportDTO> getEmployeeUsageReport(String duration, List<UserAccount> allUsers){
 
+        LocalDate now = LocalDate.now();
         LocalDate end = LocalDate.now();
         LocalDate start = LocalDate.now();
         if(duration.equals("month")){
-            start = start.minusMonths(1);
+            start = now.withDayOfMonth(1);
+            end = now.withDayOfMonth(now.getMonth().length(now.isLeapYear()));
         } else if(duration.equals("biannual")){
-            start = start.minusMonths(6);
+            if(now.getMonthValue() <= 6){
+                start = now.withMonth(1).withDayOfMonth(1);
+                end = now.withMonth(6).withDayOfMonth(30);
+            } else {
+                start = now.withMonth(7).withDayOfMonth(1);
+                end = now.withMonth(12).withDayOfMonth(31);
+            }
         } else if(duration.equals("annual")){
-            start = start.minusYears(1);
+            start = now.with(TemporalAdjusters.firstDayOfYear());
+            end = now.with(TemporalAdjusters.lastDayOfYear());
         } else {
             throw new EntityNotFoundException("Invalid duration");
         }
