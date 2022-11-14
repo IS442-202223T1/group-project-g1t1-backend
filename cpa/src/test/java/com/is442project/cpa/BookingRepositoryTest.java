@@ -54,9 +54,10 @@ public class BookingRepositoryTest {
         //arrange
 //        UserAccount user = userAccountRepository.findById("testAdmin@gmail.com").orElse(null);
 
-        List<Booking> bookingList = bookingRepository.findByBorrowDateAfter(LocalDate.now());
+        List<Booking> bookingList = bookingRepository.findAll();
 
         //action
+        bookingList.forEach(booking -> System.out.println(booking.getBookingDate().toString()));
 
         //assert
         assertThat(bookingList).extracting(booking -> booking.getBorrowDate().isAfter(LocalDate.now())).contains(true);
