@@ -20,19 +20,27 @@ public class MembershipSeeder {
 
     public void insertTestData() {
         Template physicalEmailTemplate = new Template();
-        Template attachmentTemplate = new Template();
         physicalEmailTemplate.setTemplateContent(buildSamplePhysicalPassEmailTemplate());
-        attachmentTemplate.setTemplateContent(buildSamplePhysicalPassAuthLetterTemplate());
-        Membership membership = new Membership("Mandai Wildlife Reserve", physicalEmailTemplate, attachmentTemplate,
+
+        Template authorizationLetterAttachmentTemplate = new Template();
+        authorizationLetterAttachmentTemplate.setTemplateContent(buildSamplePhysicalPassAuthLetterTemplate());
+
+        Template ePassEmailTemplate = new Template();
+        ePassEmailTemplate.setTemplateContent(buildSampleElectronicPassEmailTemplate());
+
+        Template ePassAttachmentTemplate = new Template();
+        ePassAttachmentTemplate.setTemplateContent(buildSampleEPassAttachmentTemplate());
+
+        Membership membership = new Membership("Mandai Wildlife Reserve", physicalEmailTemplate, authorizationLetterAttachmentTemplate,
                 53.50, false,
                 "Visit Singapore's best wildlife parks at the Mandai Wildlife Reserve.",
                 "https://images.unsplash.com/photo-1665006518423-b81a193b4100?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
-        Membership membership2 = new Membership("Universal Studios", physicalEmailTemplate, attachmentTemplate, 87.00,
+        Membership membership2 = new Membership("Universal Studios", physicalEmailTemplate, authorizationLetterAttachmentTemplate, 87.00,
                 false,
                 "Universal Studios Singapore is a theme park located within the Resorts World Sentosa at Sentosa, Singapore.",
                 "https://images.unsplash.com/photo-1601930113377-729966035f34?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
-        Membership membership3 = new Membership("Zoo", physicalEmailTemplate, attachmentTemplate, 19.00, true, "");
-        Membership membership4 = new Membership("SEA Aquarium", new Template(), attachmentTemplate, 20.50, true, "");
+        Membership membership3 = new Membership("Zoo", physicalEmailTemplate, authorizationLetterAttachmentTemplate, 19.00, true, "");
+        Membership membership4 = new Membership("SEA Aquarium", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "");
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3, membership4));
 
@@ -129,6 +137,69 @@ public class MembershipSeeder {
         sb.append("Human Resource Department");
         sb.append("<br>");
         sb.append("(This is a system generated letter.)");
+
+        return sb.toString();
+    }
+
+    public String buildSampleEPassAttachmentTemplate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Date: {{booking_date}}");
+        sb.append("<br><br>");
+        sb.append("CORPORATE LETTER");
+        sb.append("<br>");
+        sb.append("attraction_name");
+        sb.append("<br><br><br><br>");
+        sb.append("This is to certify that the following employee is authorised to visit Singapore Zoo & River Wonders under your Company's Corporate Membership number {{corp_pass_number}}");
+        sb.append("<br><br>");
+        sb.append("Employee: {{borrower_name}}");
+        sb.append("<br><br>");
+        sb.append("Date of Visit: {{visit_date}}");
+        sb.append("<br><br>");
+        sb.append("Present this letter to enjoy up to 20% discount at selected Retail and F&B outlets.");
+        sb.append("<br><br>");
+        sb.append("Terms and Conditions");
+        sb.append("<br><br>");
+        sb.append("<ul>");
+        sb.append("<li>");
+        sb.append("All corporate members must secure a time slot via https://managebooking.mandai.com/ and comply " +
+                " to MWR Safe Management Measures for your safety and well-being, otherwise entry is not allowed." +
+                "Time slot bookings are subject to availability, on a first come, first served basis.");
+        sb.append("</li>");
+        sb.append("<br><br>");
+        sb.append("<li>");
+        sb.append("Each letter allows complimentary admission to Singapore Zoo & River Wonders for up to four (4) " +
+                "persons, one of whom must be an employee of the corporate member named above. The employee" +
+                "must be present and produce valid staff pass or NRIC along with the signed letter for benefit to apply.");
+        sb.append("</li>");
+        sb.append("<br><br>");
+        sb.append("<li>");
+        sb.append("Each letter can only be used ONCE a day.");
+        sb.append("<br><br>");
+        sb.append("</li>");
+        sb.append("<li>");
+        sb.append("In the event of unauthorized use or copy of the letter, Singapore Zoo & River Wonders will deny entry " +
+                "and verification will be done with the company which will take appropriate action for any wilful" +
+                "violation.");
+        sb.append("</li>");
+        sb.append("<br><br>");
+        sb.append("<li>");
+        sb.append("In the event that the letter is detected to be presented more than once on the same day; the employee " +
+                "will be liable for the additional entry at Singapore Zoo & River Wonders prevailing walk-in rate " +
+                "accordingly.");
+        sb.append("</li>");
+        sb.append("<br><br>");
+        sb.append("<li>");
+        sb.append("Your existing Corporate Membership will expire once the validity period is over.");
+        sb.append("</li>");
+        sb.append("<br><br>");
+        sb.append("</li>");
+        sb.append("</ul>");
+        sb.append("In addition, you shall adhere to the Membership terms and conditions stated " +
+                "https://www.mandai.com/en/memberships/corporate-membership.html during your visit.");
+        sb.append("<br><br>");
+        sb.append("Best Regards,");
+        sb.append("<br><br><br>");
+        sb.append("Manager, Human Resource");
 
         return sb.toString();
     }

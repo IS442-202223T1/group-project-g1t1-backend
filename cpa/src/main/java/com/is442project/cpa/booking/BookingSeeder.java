@@ -37,10 +37,15 @@ public class BookingSeeder {
         CorporatePass corporatePass2 = corporatePassRepository.findById(Long.parseLong("2")).get();
         CorporatePass corporatePass5 = corporatePassRepository.findById(Long.parseLong("5")).get();
         CorporatePass corporatePass7 = corporatePassRepository.findById(Long.parseLong("7")).get();
-        
-        Booking booking1 = new Booking(LocalDate.of(2022, 11, 12), borrower1, corporatePass1, BookingStatus.COLLECTED);
-        Booking booking2 = new Booking(LocalDate.of(2022, 11, 14), borrower1, corporatePass2, BookingStatus.CONFIRMED);
-        Booking booking3 = new Booking(LocalDate.of(2022, 11, 17), borrower1, corporatePass2, BookingStatus.COLLECTED);
+
+        CorporatePass corporatePass9 = corporatePassRepository.findById(Long.parseLong("9")).get();
+        CorporatePass corporatePass10 = corporatePassRepository.findById(Long.parseLong("10")).get();
+        CorporatePass corporatePass11 = corporatePassRepository.findById(Long.parseLong("11")).get();
+
+
+        Booking booking1 = new Booking(LocalDate.of(2022, 8, 12), borrower1, corporatePass1, BookingStatus.COLLECTED);
+        Booking booking2 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass9, BookingStatus.CONFIRMED);
+        Booking booking3 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass10, BookingStatus.CONFIRMED);
         Booking booking4 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass1, BookingStatus.COLLECTED);
         Booking booking5 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass2, BookingStatus.COLLECTED);
         Booking booking6 = new Booking(LocalDate.of(2022, 10, 19), borrower2, corporatePass2, BookingStatus.COLLECTED);
@@ -50,6 +55,7 @@ public class BookingSeeder {
         Booking booking10 = new Booking(LocalDate.of(2022, 11, 13), borrower3, corporatePass5, BookingStatus.COLLECTED);
         Booking booking11 = new Booking(LocalDate.of(2022, 11, 15), borrower3, corporatePass5, BookingStatus.COLLECTED);
         Booking booking100 = new Booking(LocalDate.of(2022, 12, 16), borrower1, corporatePass1, BookingStatus.CONFIRMED);
+
 
         bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6, booking7, booking8, booking9, booking10, booking11, booking100));
 

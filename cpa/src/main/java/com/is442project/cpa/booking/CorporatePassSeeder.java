@@ -36,9 +36,13 @@ public class CorporatePassSeeder {
         CorporatePass pass6 = new CorporatePass(membership2, "CARD0006", Status.LOST, 4);
         CorporatePass pass7 = new CorporatePass(membership2, "CARD0007", Status.LOANED, 4);
         CorporatePass pass8 = new CorporatePass(membership3, "CARD0008", Status.LOANED, 2);
-        CorporatePass pass9 = new CorporatePass(membership4, "CARD0009", Status.LOANED, 2);
+        CorporatePass pass20 = new CorporatePass(membership4, "22401046113600009088", Status.LOANED, 2);
+        CorporatePass pass21 = new CorporatePass(membership4, "22401046113600009089", Status.LOANED, 2);
+        CorporatePass pass22 = new CorporatePass(membership4, "22401046113600009090", Status.AVAILABLE, 2);
+        CorporatePass pass23 = new CorporatePass(membership4, "22401046113600009091", Status.AVAILABLE, 2);
+        CorporatePass pass24 = new CorporatePass(membership4, "22401046113600009092", Status.AVAILABLE, 2);
 
-        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7, pass8, pass9));
+        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7, pass8, pass20, pass21, pass22, pass23, pass24));
 
         System.out.println("======TEST CORPORATE PASS INSERTED======");
     }
