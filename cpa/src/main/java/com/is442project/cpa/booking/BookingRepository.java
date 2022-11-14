@@ -18,4 +18,6 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
     List<Booking> findByBorrowDateBetweenAndBookingStatusNot(LocalDate start, LocalDate end, Booking.BookingStatus bookingStatus);
 
     Booking findTopByOrderByBorrowDateAsc();
+
+    List<Booking> findByBorrowDateAfter(LocalDate date);
 }
