@@ -65,7 +65,6 @@ public class AdminController {
 
   @DeleteMapping({"/booking-by-borrower/{borrowerEmail}"})
   public ResponseEntity<Boolean> deleteBookingByBorrower(@PathVariable("borrowerEmail") String borrowerEmail) {
-    System.out.println(borrowerEmail);
     adminOps.deleteBookingsByBorrower(borrowerEmail);
     return new ResponseEntity<>(HttpStatus.OK);
   }
