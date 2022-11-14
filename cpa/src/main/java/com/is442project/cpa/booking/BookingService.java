@@ -453,5 +453,6 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         for (Booking booking : bookings) {
             bookingRepository.delete(booking);
         }
+        bookingRepository.flush();
     }
 }
