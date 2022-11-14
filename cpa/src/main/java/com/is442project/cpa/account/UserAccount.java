@@ -112,4 +112,8 @@ public class UserAccount {
     public void removeRole(Role role) {
         this.roles.remove(role);
     }
+
+    public void clearRoles() {
+        this.roles.clear();
+    }
 }

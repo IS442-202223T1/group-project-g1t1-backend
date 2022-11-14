@@ -18,7 +18,7 @@ public class UserSeeder {
     }
 
     public void insertTestData() {
-        UserAccount admin = new UserAccount("testAdmin@gmail.com", "TestAdmin", "testadmin", null, Arrays.asList(new Administrator(), new Borrower()));
+        UserAccount admin = new UserAccount("testAdmin@gmail.com", "TestAdmin", "testadmin", null, Arrays.asList(new Administrator(), new Borrower(), new GeneralOfficePersonnel()));
 
         UserAccount user01 = new UserAccount("david@sportsschool.edu.sg", "David Tan", "davidtan", null, Arrays.asList(new Borrower()));
         UserAccount user02 = new UserAccount("mary@nysi.org.sg", "Mary Lim", "marylim", null, Arrays.asList(new Borrower()));

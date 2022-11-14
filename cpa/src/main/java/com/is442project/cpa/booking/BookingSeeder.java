@@ -1,7 +1,7 @@
 package com.is442project.cpa.booking;
 
-import com.is442project.cpa.account.AccountService;
 import com.is442project.cpa.account.UserAccount;
+import com.is442project.cpa.account.UserAccountRepository;
 import com.is442project.cpa.booking.Booking.BookingStatus;
 
 import org.springframework.context.annotation.Configuration;
@@ -20,27 +20,26 @@ public class BookingSeeder {
 
     private BookingRepository bookingRepository;
 
-    private final AccountService accountService;
-
-    public BookingSeeder(CorporatePassRepository corporatePassRepository, BookingRepository bookingRepository, AccountService accountService) {
+    private UserAccountRepository accountRepository;
+    public BookingSeeder(CorporatePassRepository corporatePassRepository, BookingRepository bookingRepository, UserAccountRepository accountRepository) {
         this.corporatePassRepository = corporatePassRepository;
         this.bookingRepository = bookingRepository;
-        this.accountService = accountService;
+        this.accountRepository = accountRepository;
         insertTestBooking();
     }
 
     private void insertTestBooking(){
-        UserAccount borrower1 = accountService.readUserByEmail("joshua.zhangzy@gmail.com");
-        UserAccount borrower2 = accountService.readUserByEmail("mary@nysi.org.sg");
-        UserAccount borrower3 = accountService.readUserByEmail("david@sportsschool.edu.sg");
+        UserAccount borrower1 = accountRepository.getReferenceById("joshua.zhangzy@gmail.com");
+        UserAccount borrower2 = accountRepository.getReferenceById("mary@nysi.org.sg");
+        UserAccount borrower3 = accountRepository.getReferenceById("david@sportsschool.edu.sg");
 
         CorporatePass corporatePass1 = corporatePassRepository.findById(Long.parseLong("1")).get();
         CorporatePass corporatePass2 = corporatePassRepository.findById(Long.parseLong("2")).get();
         CorporatePass corporatePass5 = corporatePassRepository.findById(Long.parseLong("5")).get();
         CorporatePass corporatePass7 = corporatePassRepository.findById(Long.parseLong("7")).get();
         
-        Booking booking1 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass1, BookingStatus.COLLECTED);
-        Booking booking2 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass2, BookingStatus.COLLECTED);
+        Booking booking1 = new Booking(LocalDate.of(2022, 11, 12), borrower1, corporatePass1, BookingStatus.COLLECTED);
+        Booking booking2 = new Booking(LocalDate.of(2022, 11, 14), borrower1, corporatePass2, BookingStatus.CONFIRMED);
         Booking booking3 = new Booking(LocalDate.of(2022, 11, 17), borrower1, corporatePass2, BookingStatus.COLLECTED);
         Booking booking4 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass1, BookingStatus.COLLECTED);
         Booking booking5 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass2, BookingStatus.COLLECTED);
@@ -50,8 +49,9 @@ public class BookingSeeder {
         Booking booking9 = new Booking(LocalDate.of(2022, 11, 11), borrower2, corporatePass7, BookingStatus.CONFIRMED);
         Booking booking10 = new Booking(LocalDate.of(2022, 11, 13), borrower3, corporatePass5, BookingStatus.COLLECTED);
         Booking booking11 = new Booking(LocalDate.of(2022, 11, 15), borrower3, corporatePass5, BookingStatus.COLLECTED);
+        Booking booking100 = new Booking(LocalDate.of(2022, 12, 16), borrower1, corporatePass1, BookingStatus.CONFIRMED);
 
-        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6, booking7, booking8, booking9, booking10, booking11));
+        bookingRepository.saveAllAndFlush(Arrays.asList(booking1, booking2, booking3, booking4, booking5, booking6, booking7, booking8, booking9, booking10, booking11, booking100));
 
         System.out.println("======TEST BOOKING INSERTED======");
     }

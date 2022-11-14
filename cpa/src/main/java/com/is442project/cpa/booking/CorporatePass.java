@@ -27,6 +27,9 @@ public class CorporatePass {
     @NotNull
     int maxPersonsAdmitted;
 
+    @NotNull
+    boolean isActive;
+
     public CorporatePass(){}
 
     public CorporatePass(Membership membership, String passID, Status status, int maxPersonsAdmitted) {
@@ -34,6 +37,7 @@ public class CorporatePass {
         this.passID = passID;
         this.status = status;
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+        this.isActive = true;
     }
 
     public Membership getMembership() {
@@ -74,5 +78,13 @@ public class CorporatePass {
 
     public void setStatus(Status status){
         this.status = status;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive){
+        this.isActive = isActive;
     }
 }

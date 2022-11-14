@@ -25,6 +25,8 @@ public class EmailService {
     @Value("${web.server.url}")
     private String WEB_SERVER_URL;
 
+
+
     public EmailService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
