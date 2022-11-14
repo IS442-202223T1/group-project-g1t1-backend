@@ -447,4 +447,29 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         return bookingResponseDTO;
       }
+
+    public void sendReturnCardReminderEmails(){
+        LocalDate today = LocalDate.now();
+        List<Booking> allBookings = bookingRepository.findAll();
+
+        for(Booking booking : allBookings){
+            if(booking.getBookingStatus() == BookingStatus.COLLECTED && booking.getBorrowDate().isBefore(today) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
+                emailService.sendHtmlMessage(booking.getBorrower().getEmail(),
+                        EmailHelper.EMAIL_SUBJECT_RETURN_REMINDER, EmailHelper.EMAIL_CONTENT_RETURN_REMINDER(booking));
+            }
+        }
+    }
+    public void sendCollectReminderEmails(){
+        LocalDate today = LocalDate.now();
+        today.plusDays(1);
+        List<Booking> bookings = bookingRepository.findAll();
+        ArrayList<String> emails = new ArrayList<>();
+        for(Booking booking : bookings){
+            if(booking.getBookingStatus() == BookingStatus.CONFIRMED && booking.getBorrowDate().equals(today) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
+                emailService.sendHtmlMessage(booking.getBorrower().getEmail(),
+                        EmailHelper.EMAIL_SUBJECT_COLLECT_REMINDER, EmailHelper.EMAIL_CONTENT_COLLECT_REMINDER(booking));
+            }
+        }
+    }
+
 }
