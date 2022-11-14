@@ -34,6 +34,17 @@ public class AccountAdminService implements AccountAdminOps {
         return true;
     }
 
+    public boolean enableEmployee(String email) {
+        Optional<UserAccount> existingUser = userAccountRepository.findByEmail(email);
+        if (!existingUser.isPresent()) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        UserAccount user = existingUser.get();
+        user.setIsActive(true);
+        userAccountRepository.save(user);
+        return true;
+    }
+
     public boolean grantRole(String email, String roleName) {
         Optional<UserAccount> existingUser = userAccountRepository.findByEmail(email);
         if (!existingUser.isPresent()) {

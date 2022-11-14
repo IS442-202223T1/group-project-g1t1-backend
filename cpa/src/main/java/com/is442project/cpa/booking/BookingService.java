@@ -449,7 +449,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
       }
 
     public void deleteBookingsByBorrower(String email) {
-        List<Booking> bookings = bookingRepository.findByBorrowerEmail(email);
+        List<Booking> bookings = bookingRepository.findByBorrowDateAfterAndBorrowerEmailAndBookingStatusNot(LocalDate.now(), email, BookingStatus.COLLECTED);
         for (Booking booking : bookings) {
             bookingRepository.delete(booking);
         }
