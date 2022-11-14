@@ -143,12 +143,12 @@ public class MembershipSeeder {
 
     public String buildSampleEPassAttachmentTemplate() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Date: {{booking_date}}");
+        sb.append("Date: {{ballot_date}}");
         sb.append("<br><br>");
         sb.append("CORPORATE LETTER");
         sb.append("<br>");
-        sb.append("attraction_name");
-        sb.append("<br><br><br><br>");
+        sb.append("{{attraction_name}}");
+        sb.append("<br><br><br><br><br><br><br>");
         sb.append("This is to certify that the following employee is authorised to visit Singapore Zoo & River Wonders under your Company's Corporate Membership number {{corp_pass_number}}");
         sb.append("<br><br>");
         sb.append("Employee: {{borrower_name}}");
@@ -162,36 +162,30 @@ public class MembershipSeeder {
         sb.append("<ul>");
         sb.append("<li>");
         sb.append("All corporate members must secure a time slot via https://managebooking.mandai.com/ and comply " +
-                " to MWR Safe Management Measures for your safety and well-being, otherwise entry is not allowed." +
+                "to MWR Safe Management Measures for your safety and well-being, otherwise entry is not allowed." +
                 "Time slot bookings are subject to availability, on a first come, first served basis.");
         sb.append("</li>");
-        sb.append("<br><br>");
         sb.append("<li>");
         sb.append("Each letter allows complimentary admission to Singapore Zoo & River Wonders for up to four (4) " +
-                "persons, one of whom must be an employee of the corporate member named above. The employee" +
+                "persons, one of whom must be an employee of the corporate member named above. The employee " +
                 "must be present and produce valid staff pass or NRIC along with the signed letter for benefit to apply.");
         sb.append("</li>");
-        sb.append("<br><br>");
         sb.append("<li>");
         sb.append("Each letter can only be used ONCE a day.");
-        sb.append("<br><br>");
         sb.append("</li>");
         sb.append("<li>");
         sb.append("In the event of unauthorized use or copy of the letter, Singapore Zoo & River Wonders will deny entry " +
-                "and verification will be done with the company which will take appropriate action for any wilful" +
+                "and verification will be done with the company which will take appropriate action for any wilful " +
                 "violation.");
         sb.append("</li>");
-        sb.append("<br><br>");
         sb.append("<li>");
         sb.append("In the event that the letter is detected to be presented more than once on the same day; the employee " +
                 "will be liable for the additional entry at Singapore Zoo & River Wonders prevailing walk-in rate " +
                 "accordingly.");
         sb.append("</li>");
-        sb.append("<br><br>");
         sb.append("<li>");
         sb.append("Your existing Corporate Membership will expire once the validity period is over.");
         sb.append("</li>");
-        sb.append("<br><br>");
         sb.append("</li>");
         sb.append("</ul>");
         sb.append("In addition, you shall adhere to the Membership terms and conditions stated " +

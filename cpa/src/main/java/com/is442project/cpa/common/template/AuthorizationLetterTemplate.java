@@ -16,7 +16,7 @@ public class AuthorizationLetterTemplate extends Template implements TemplateRes
 
     private AuthorizationLetterTemplate() {
         Map<String, String> placeholderMaps = new HashMap<>();
-        placeholderMaps.put("<current_date>", "$current_date");
+        placeholderMaps.put("<booking_date>", "$booking_date");
         placeholderMaps.put("<borrower_name>", "$borrower_name");
         placeholderMaps.put("<attraction_name>", "$attraction_name");
         placeholderMaps.put("<membership_address>", "$membership_address");
@@ -43,8 +43,8 @@ public class AuthorizationLetterTemplate extends Template implements TemplateRes
 
         Booking booking = bookings.get(0);
 
-        context.put("current_date", LocalDate.now());
-        context.put("visit_date", LocalDate.now().toString());
+        context.put("booking_date", booking.getBookingDate());
+        context.put("visit_date", booking.getBorrowDate());
         context.put("borrower_name", booking.getBorrower().getName());
         context.put("attraction_name", booking.getCorporatePass().getMembership().getMembershipName().toUpperCase());
         context.put("membership_address", booking.getCorporatePass().getMembership().getMembershipAddress());

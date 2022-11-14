@@ -13,7 +13,7 @@ import java.util.Map;
 @Embeddable
 public class ElectronicPassTemplate extends Template implements TemplateResources{
 
-    private List<Booking> bookings;
+    private Booking booking;
 
     private ElectronicPassTemplate() {
         Map<String, String> placeholderMaps = new HashMap<>();
@@ -28,14 +28,14 @@ public class ElectronicPassTemplate extends Template implements TemplateResource
         this.setPlaceHolders(placeholderMaps);
     }
 
-    public ElectronicPassTemplate(Template template, List<Booking> bookings) {
+    public ElectronicPassTemplate(Template template, Booking booking) {
         this();
-        this.bookings = bookings;
+        this.booking = booking;
         this.setTemplateContent(template.getTemplateContent());
     }
-    public ElectronicPassTemplate(String templateContent, List<Booking> bookings) {
+    public ElectronicPassTemplate(String templateContent, Booking booking) {
         this();
-        this.bookings = bookings;
+        this.booking = booking;
         this.setTemplateContent(templateContent);
     }
 
@@ -43,18 +43,14 @@ public class ElectronicPassTemplate extends Template implements TemplateResource
     public VelocityContext getTemplateContextMapper() {
         VelocityContext context = new VelocityContext();
 
-        Booking booking = bookings.get(0);
-
         context.put("corporate_member_name", PdfTemplate.CORPORATE_MEMBER_NAME);
-        context.put("ballot_date", LocalDate.now());
-        context.put("visit_date", LocalDate.now().toString());
+        context.put("ballot_date", booking.getBookingDate());
+        context.put("visit_date", booking.getBorrowDate());
         context.put("borrower_name", booking.getBorrower().getName());
         context.put("attraction_name", booking.getCorporatePass().getMembership().getMembershipName().toUpperCase());
         context.put("membership_address", booking.getCorporatePass().getMembership().getMembershipAddress());
-        context.put("corp_pass_number", bookings.stream().map(b -> b.getCorporatePass().getPassID())
-                .reduce("", (p1, p2)-> p1 + " , " + p2).substring(2));
+        context.put("corp_pass_number", booking.getCorporatePass().getPassID());
 
         return context;
     }
-
 }

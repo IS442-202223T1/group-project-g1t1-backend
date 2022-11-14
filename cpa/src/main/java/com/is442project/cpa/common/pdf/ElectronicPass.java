@@ -7,9 +7,17 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.krysalis.barcode4j.impl.code39.Code39Bean;
+import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ElectronicPass implements PdfTemplate {
 
@@ -32,14 +40,48 @@ public class ElectronicPass implements PdfTemplate {
         document.addPage(page);
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+            //add letter head
             PDImageXObject letterHeadImage = PDImageXObject.createFromFile(PdfTemplate.LETTER_HEAD_URL, document);
 
-            contentStream.drawImage(letterHeadImage, 0, page.getTrimBox().getHeight() - 120, page.getTrimBox().getWidth(), 110);
+            contentStream.drawImage(letterHeadImage, 0, page.getTrimBox().getHeight() - 120,
+                    letterHeadImage.getWidth(), letterHeadImage.getHeight());
+
+            //generate barcode
+            addBarcode(document, page, booking.getCorporatePass().getPassID(),
+                    page.getTrimBox().getWidth()-300, page.getTrimBox().getHeight()-190,
+                    200, 110);
+
+
+            //add attraction logo
+            float scale = 0.4f;
+            PDImageXObject attractionLogo = PDImageXObject.createFromFile("src/main/resources/images/cfoz_logo.jpg", document);
+
+            contentStream.drawImage(attractionLogo, 75, page.getTrimBox().getHeight() - 250,
+                    attractionLogo.getWidth()*scale, attractionLogo.getHeight()*scale);
+
 
             //PDFBox library showtext method cannot have String containing new line or carriage symbol
             //Lastly to split all html <br> tags to manually print newline in pdf.
             String[] pdfContents = templateEngine.getContent().replaceAll("\n", "")
                     .replaceAll("\r", "").split("<br>");
+
+            List<String> pdfContentsList = new ArrayList<>();
+
+            //process html <li> elements
+            for (String sentence : pdfContents) {
+                sentence = sentence.replaceAll("</li>", "").replaceAll("<ul>","").replaceAll("</ul>", "");
+
+                if(sentence.contains("<li>")) {
+                    String[] splitSentence = sentence.split("<li>");
+
+                    for (int i = 1; i < splitSentence.length; i++) {
+                            pdfContentsList.add("- " + splitSentence[i]);
+                            pdfContentsList.add("");
+                    }
+                } else {
+                    pdfContentsList.add(sentence);
+                }
+            }
 
             contentStream.beginText();
             contentStream.setLeading(12.0);
@@ -47,21 +89,23 @@ public class ElectronicPass implements PdfTemplate {
             contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
 
             //WordUtils.wrap not working so implement manual wrapping.
-            for (String pdfContent : pdfContents) {
+            int wrapLength = 100;
+            for (String pdfContent : pdfContentsList) {
                 if (!pdfContent.isEmpty()) {
                     String[] subContent = pdfContent.split(" ");
 
-                    int wrapLength = 100;
+                    int charQuota = wrapLength;
                     String perLine = "";
                     for (String s : subContent) {
-                        wrapLength -= s.length() + 1;
-                        if (wrapLength > 0) {
+                        charQuota -= s.length() + 1; //plus 1 to account for the space added at the end of the word
+                        if (charQuota > 0) {
                             perLine += s + " ";
                         } else {
-                            contentStream.showText(perLine.substring(0, perLine.length() - 1));
+                            contentStream.showText(perLine.substring(0, perLine.length() - 1)); //minus 1 to account for the additional space at the last word
                             contentStream.newLine();
-                            wrapLength = 200;
+                            charQuota = wrapLength;
                             perLine = s + " ";
+                            charQuota -= s.length()+1;
                         }
                     }
                     contentStream.showText(perLine.substring(0, perLine.length() - 1));
@@ -72,6 +116,8 @@ public class ElectronicPass implements PdfTemplate {
                     contentStream.newLine();
                 }
             }
+            contentStream.showText(PdfTemplate.CORPORATE_MEMBER_NAME);
+            contentStream.newLine();
 
             contentStream.endText();
 
@@ -80,5 +126,35 @@ public class ElectronicPass implements PdfTemplate {
         }
 
         return document;
+    }
+
+    private void addBarcode(PDDocument document, PDPage page, String text, float x, float y, int width, int height) {
+        try {
+            PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true);
+
+            int dpi = 300;
+            BitmapCanvasProvider canvas = new BitmapCanvasProvider(dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+            Code39Bean code39Bean = new Code39Bean();
+            code39Bean.generateBarcode(canvas, text.trim());
+            canvas.finish();
+            BufferedImage bImage = canvas.getBufferedImage();
+
+            float scale = 0.2f;
+            PDImageXObject image = JPEGFactory.createFromImage(document, bImage);
+            contentStream.drawImage(image, x, y, width, height*scale);
+
+            //draw border around the barcode image
+            contentStream.setStrokingColor(Color.black);
+            contentStream.addRect(x-10, y-8, width+20, height*scale+16);
+            contentStream.closeAndStroke();
+
+            contentStream.close();
+
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

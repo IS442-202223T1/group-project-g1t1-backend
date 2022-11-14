@@ -8,8 +8,10 @@ import com.is442project.cpa.booking.MembershipRepository;
 import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.ElectronicPass;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
+import com.is442project.cpa.common.template.ElectronicPassTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 import org.junit.jupiter.api.Test;
@@ -91,25 +93,25 @@ class CorporatePassApplicationTests {
 	@Test
 	public void GenerateLetterPDF() {
 		//arrange
-		Membership sampleMemberShip = membershipRepository.findById(1L).get();
+		Membership sampleMemberShip = membershipRepository.findById(4L).get();
 
 
-		Booking booking = bookingRepository.findById(5).get();
+		Booking booking = bookingRepository.findById(2).get();
 
-		AuthorizationLetterTemplate authorizationLetterTemplate = new AuthorizationLetterTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
-		AuthorizationLetter letter = new AuthorizationLetter(authorizationLetterTemplate);
+		ElectronicPassTemplate electronicPassTemplate = new ElectronicPassTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
+		ElectronicPass ePass = new ElectronicPass(electronicPassTemplate, booking);
 
-		PdfFactory pdfFactory = new PdfFactory(letter);
+		PdfFactory pdfFactory = new PdfFactory(ePass);
 
 		ByteArrayDataSource bads = pdfFactory.generatePdfFile();
 
 		//act
-//		try {
-//			Path path = Paths.get("letter.pdf");
-//			Files.write(path, bads.getInputStream().readAllBytes());
-//		} catch (IOException e) {
-//			throw new RuntimeException(e);
-//		}
+		try {
+			Path path = Paths.get("letter.pdf");
+			Files.write(path, bads.getInputStream().readAllBytes());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
