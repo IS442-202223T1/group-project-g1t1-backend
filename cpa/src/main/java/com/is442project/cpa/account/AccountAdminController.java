@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,10 +75,20 @@ public class AccountAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get-all-by-role")
-    public ResponseEntity<?> getAllByRole () {
+    @PutMapping("/update-roles/{email}")
+    public ResponseEntity updateRoles (@PathVariable String email, @RequestBody List<String> roleNames) {
         try {
-            List<UserAccount> allUsers= accountAdminOps.getAllByRole();
+            accountAdminOps.updateRoles(email, roleNames);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAll () {
+        try {
+            List<UserAccount> allUsers= accountAdminOps.getAll();
             return ResponseEntity.ok(allUsers);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
