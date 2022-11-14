@@ -61,7 +61,7 @@ public class AccountAdminService implements AccountAdminOps {
         return true;
     }
 
-    public List<UserAccount> getAllByRole (){
+    public List<UserAccount> getAll (){
         List<UserAccount> allUsers = userAccountRepository.findAll();
         return allUsers;
     }
