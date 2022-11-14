@@ -61,7 +61,7 @@ public class DashboardService implements DashboardOps {
 
         LocalDate end = LocalDate.now();
         LocalDate start = LocalDate.now();
-        if(duration.equals("monthly")){
+        if(duration.equals("month")){
             start = start.minusMonths(1);
         } else if(duration.equals("biannual")){
             start = start.minusMonths(6);
