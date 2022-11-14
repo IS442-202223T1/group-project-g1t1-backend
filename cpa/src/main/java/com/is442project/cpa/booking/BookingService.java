@@ -16,6 +16,8 @@ import com.is442project.cpa.common.template.TemplateEngine;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -24,6 +26,7 @@ import java.util.*;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
+    Logger logger = LoggerFactory.getLogger(BookingService.class);
 
     private MembershipRepository membershipRepository;
     private final BookingRepository bookingRepository;
@@ -456,6 +459,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             if(booking.getBookingStatus() == BookingStatus.COLLECTED && booking.getBorrowDate().isBefore(today) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
                 emailService.sendHtmlMessage(booking.getBorrower().getEmail(),
                         EmailHelper.EMAIL_SUBJECT_RETURN_REMINDER, EmailHelper.EMAIL_CONTENT_RETURN_REMINDER(booking));
+
+                logger.info("RETURN PASS reminder Email sent to: " + booking.getBorrower().getEmail());
             }
         }
     }
@@ -468,6 +473,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             if(booking.getBookingStatus() == BookingStatus.CONFIRMED && booking.getBorrowDate().equals(today) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
                 emailService.sendHtmlMessage(booking.getBorrower().getEmail(),
                         EmailHelper.EMAIL_SUBJECT_COLLECT_REMINDER, EmailHelper.EMAIL_CONTENT_COLLECT_REMINDER(booking));
+
+                logger.info("COLLECT PASS reminder email sent to: " + booking.getBorrower().getEmail());
             }
         }
     }

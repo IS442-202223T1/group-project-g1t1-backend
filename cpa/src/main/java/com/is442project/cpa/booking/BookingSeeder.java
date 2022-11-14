@@ -38,8 +38,8 @@ public class BookingSeeder {
         CorporatePass corporatePass5 = corporatePassRepository.findById(Long.parseLong("5")).get();
         CorporatePass corporatePass7 = corporatePassRepository.findById(Long.parseLong("7")).get();
         
-        Booking booking1 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass1, BookingStatus.COLLECTED);
-        Booking booking2 = new Booking(LocalDate.of(2022, 11, 16), borrower1, corporatePass2, BookingStatus.COLLECTED);
+        Booking booking1 = new Booking(LocalDate.of(2022, 11, 12), borrower1, corporatePass1, BookingStatus.COLLECTED);
+        Booking booking2 = new Booking(LocalDate.of(2022, 11, 14), borrower1, corporatePass2, BookingStatus.CONFIRMED);
         Booking booking3 = new Booking(LocalDate.of(2022, 11, 17), borrower1, corporatePass2, BookingStatus.COLLECTED);
         Booking booking4 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass1, BookingStatus.COLLECTED);
         Booking booking5 = new Booking(LocalDate.of(2022, 10, 18), borrower2, corporatePass2, BookingStatus.COLLECTED);
