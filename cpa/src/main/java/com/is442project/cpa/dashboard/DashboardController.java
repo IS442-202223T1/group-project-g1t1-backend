@@ -22,13 +22,6 @@ public class DashboardController {
         this.dashboardOps = dashboardService;
         this.accountAdminService = accountAdminService;
     }
-    // monthly expects month and year specified
-    // @GetMapping("/monthly-report/{year}/{month}")
-    // @ResponseStatus(code = HttpStatus.OK)
-    // public ResponseEntity<MonthlyReportDTO> getMonthlyReport(@PathVariable("year") String year, @PathVariable("month") String month){
-    //     MonthlyReportDTO monthlyReport = dashboardOps.getMonthlyReport(year, month);
-    //     return new ResponseEntity<>(monthlyReport, HttpStatus.OK);
-    // }
 
     @GetMapping("/monthly-report")
     @ResponseStatus(code = HttpStatus.OK)
