@@ -8,5 +8,5 @@ public interface AccountAdminOps {
     boolean grantRole(String email, String roleName);
     boolean revokeRole(String email, String roleName);
     boolean updateRoles(String email, List<String> roleNames);
-    List<UserAccount> getAllByRole();
+    List<UserAccount> getAll();
 }

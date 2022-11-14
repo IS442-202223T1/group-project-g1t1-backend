@@ -75,10 +75,10 @@ public class AccountAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get_all_by_role")
-    public ResponseEntity<?> getAllByRole () {
+    @GetMapping("/get_all")
+    public ResponseEntity<?> getAll () {
         try {
-            List<UserAccount> allUsers= accountAdminOps.getAllByRole();
+            List<UserAccount> allUsers= accountAdminOps.getAll();
             return ResponseEntity.ok(allUsers);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
