@@ -1,6 +1,8 @@
 package com.is442project.cpa.config;
 
 import com.is442project.cpa.booking.BookingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,6 +10,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @EnableScheduling
 public class ScheduledJobs {
+
+    Logger logger = LoggerFactory.getLogger(ScheduledJobs.class);
 
     private final BookingService bookingService;
 
@@ -22,12 +26,12 @@ public class ScheduledJobs {
     //0/5 * * ? * * --- every 5sec
 
     //0 0 1 * * MON,TUE,WED,THU,FRI - Only send reminder emails on Business Working Days at 1am
-    @Scheduled(cron = "0/5 * * ? * *")
+    @Scheduled(cron = "0 0 1 * * MON,TUE,WED,THU,FRI")
     public void scheduledJobToSendReminderEmails(){
 
         bookingService.sendCollectReminderEmails();
         bookingService.sendReturnCardReminderEmails();
 
-        System.out.println("Email Sent!");
+        logger.info("Scheduled Reminder emails sent!");
     }
 }
