@@ -9,8 +9,10 @@ import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.email.EmailHelper;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.ElectronicPass;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
+import com.is442project.cpa.common.template.ElectronicPassTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -82,17 +85,28 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingResults);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
 
-        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingResults);
-        AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
-        PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
-        emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
-                templateEngine.getContent(), Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
 
-        if (!membership.getIsElectronicPass()) {
-            // todo attach authorisation form
+        if (membership.getIsElectronicPass()) {
+
+            List<Attachment> ePassAttachmentList = bookingResults.stream().map(booking -> {
+                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), booking);
+                ElectronicPass ePass = new ElectronicPass(ePassTemplate, booking);
+                PdfFactory pdfFactory = new PdfFactory(ePass);
+
+                return new Attachment("ePass" + booking.getBookingId(), pdfFactory.generatePdfFile());
+            }).collect(Collectors.toList());
+
+            emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                    templateEngine.getContent(), ePassAttachmentList);
+
         } else {
-            // todo attach ePasses
+            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingResults);
+            AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+            PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
+
+            emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                    templateEngine.getContent(), Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
         }
 
         return true;
