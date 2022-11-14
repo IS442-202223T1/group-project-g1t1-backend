@@ -458,6 +458,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return bookingResponseDTO;
     }
 
+    public void deleteBookingsByBorrower(String email) {
+        List<Booking> bookings = bookingRepository.findByBorrowDateAfterAndBorrowerEmailAndBookingStatusNot(LocalDate.now(), email, BookingStatus.COLLECTED);
+        for (Booking booking : bookings) {
+            bookingRepository.delete(booking);
+        }
+        bookingRepository.flush();
+    }
+
     public void sendReturnCardReminderEmails() {
         LocalDate today = LocalDate.now();
         List<Booking> allBookings = bookingRepository.findAll();
@@ -491,5 +499,4 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             }
         }
     }
-
 }

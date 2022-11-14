@@ -25,7 +25,7 @@ public class AccountAdminController {
         return ResponseEntity.ok("Test Success!");
     }
 
-    @PutMapping("/disable_employee/{email}")
+    @PutMapping("/disable-employee/{email}")
     public ResponseEntity disableEmployee (@PathVariable String email) {
         try {
             accountAdminOps.disableEmployee(email);
@@ -35,7 +35,17 @@ public class AccountAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete_employee/{email}")
+    @PutMapping("/enable-employee/{email}")
+    public ResponseEntity enableEmployee (@PathVariable String email) {
+        try {
+            accountAdminOps.enableEmployee(email);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete-employee/{email}")
     public ResponseEntity deleteEmployee (@PathVariable String email) {
         try {
             accountAdminOps.deleteEmployee(email);
@@ -45,7 +55,7 @@ public class AccountAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/grant_role/{email}/{roleName}")
+    @PutMapping("/grant-role/{email}/{roleName}")
     public ResponseEntity grantRole (@PathVariable String email, @PathVariable String roleName) {
         try {
             accountAdminOps.grantRole(email, roleName);
@@ -55,7 +65,7 @@ public class AccountAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/revoke_role/{email}/{roleName}")
+    @PutMapping("/revoke-role/{email}/{roleName}")
     public ResponseEntity revokeRole (@PathVariable String email, @PathVariable String roleName) {
         try {
             accountAdminOps.revokeRole(email, roleName);
@@ -75,7 +85,7 @@ public class AccountAdminController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get_all")
+    @GetMapping("/get-all")
     public ResponseEntity<?> getAll () {
         try {
             List<UserAccount> allUsers= accountAdminOps.getAll();
