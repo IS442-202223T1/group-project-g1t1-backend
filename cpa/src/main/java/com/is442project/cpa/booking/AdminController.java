@@ -36,7 +36,7 @@ public class AdminController {
   public ResponseEntity<MembershipDTO> getMembershipDetails(
       @PathVariable("membershipName") String membershipName) {
     Membership membership = adminOps.getMembershipByName(membershipName);
-    List<CorporatePass> passes = adminOps.getAllPassesByMembership(membership);
+    List<CorporatePass> passes = adminOps.getActivePassesByMembership(membership);
     MembershipDTO membershipDTO = this.convertToMembershipDTO(membership, passes);
     return new ResponseEntity<>(membershipDTO, HttpStatus.OK);
   }

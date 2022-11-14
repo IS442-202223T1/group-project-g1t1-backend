@@ -12,7 +12,7 @@ import java.util.List;
 public interface CorporatePassRepository extends JpaRepository<CorporatePass, Long> {
     Optional<CorporatePass> findByPassID(String passID);
 
-    List<CorporatePass> findByMembership(Membership membership);
+    List<CorporatePass> findByMembershipAndIsActive(Membership membership, boolean isActive);
 
     List<CorporatePass> findByStatusNotAndMembership(Status status, Membership membership);
 }
