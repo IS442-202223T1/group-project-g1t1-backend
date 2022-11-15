@@ -52,17 +52,17 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         // check if user exceed 2 loans a month
         if (checkExceedMonthlyLimit(bookingDto)) {
-            throw new RuntimeException("Exceed 2 loans in a month");
+            throw new RuntimeException("You have exceeded 2 loans in a month");
         }
 
         // check if user exceed 2 bookings in the desired day
         if (checkExceedDailyLimit(bookingDto)) {
-            throw new RuntimeException("Exceed maximum bookings in a day");
+            throw new RuntimeException("You have exceeded the maximum bookings in a day");
         }
 
         // check if user has any outstanding dues
         if (checkForDuesOwed(bookingDto.getEmail())) {
-            throw new RuntimeException("Dues Owed");
+            throw new RuntimeException("You have outstanding dues to be paid");
         }
 
         List<CorporatePass> availPasses = getAvailablePasses(bookingDto.getDate(), bookingDto.getMembershipName());
