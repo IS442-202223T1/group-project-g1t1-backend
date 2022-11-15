@@ -16,6 +16,7 @@ import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +58,9 @@ public class ElectronicPass implements PdfTemplate {
                     barcodeWidth, 110);
 
             String [] barcodeDescription = new String[3];
-            barcodeDescription[0] = booking.getCorporatePass().getMembership().getMembershipGrade();
+            barcodeDescription[0] = booking.getCorporatePass().getMembership().getMembershipGrade() == null ? "Default" :booking.getCorporatePass().getMembership().getMembershipGrade() ;
             barcodeDescription[1] = String.format("(Booking #%d)", passSeq);
-            barcodeDescription[2] = booking.getCorporatePass().getExpiryDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            barcodeDescription[2] = booking.getCorporatePass().getExpiryDate() == null ? "Not Defined" : booking.getCorporatePass().getExpiryDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
             PDFont font = PDType1Font.TIMES_ROMAN;
             int fontSize = 12;

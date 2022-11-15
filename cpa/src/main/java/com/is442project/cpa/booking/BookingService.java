@@ -545,10 +545,23 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                 }
             }
 
+            List<UserAccount> admins = accountService.getAllAdmins();
+            admins.stream().forEach(admin -> {
+                emailService.sendHtmlMessage(admin.getEmail(),
+                    EmailHelper.EMAIL_SUBJECT_LOST_CARD, EmailHelper.EMAIL_CONTENT_LOST_CARD(currentBooking));
+
+                logger.info("Report Lost Email Sent to: " + admin.getEmail());
+            });
+
             currentBooking.setFeesOwed(currentBooking.getCorporatePass().getMembership().getReplacementFee());
 
         } else if (actionToPerform.equals("clearDues")) {
             currentBooking.setFeesOwed(0);
+
+        } else if (actionToPerform.equals("collect")) {
+            emailService.sendHtmlMessage(currentBooking.getBorrower().getEmail(),
+                    EmailHelper.EMAIL_SUBJECT_COLLECTED, EmailHelper.EMAIL_CONTENT_COLLECTED(currentBooking));
+
         }
 
         bookingRepository.save(currentBooking);
