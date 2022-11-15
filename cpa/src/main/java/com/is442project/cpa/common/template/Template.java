@@ -18,4 +18,5 @@ public class Template {
     private Map<String, String> placeHolders;
     public Template() {
     }
+    
 }

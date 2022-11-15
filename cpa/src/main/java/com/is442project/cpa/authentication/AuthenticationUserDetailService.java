@@ -6,14 +6,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.is442project.cpa.account.AccountService;
-import com.is442project.cpa.account.Role;
-import com.is442project.cpa.account.UserAccount;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+
+import com.is442project.cpa.account.model.Role;
+import com.is442project.cpa.account.model.UserAccount;
+import com.is442project.cpa.account.service.AccountService;
 
 @Service
 @RequiredArgsConstructor

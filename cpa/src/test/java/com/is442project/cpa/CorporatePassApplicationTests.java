@@ -1,10 +1,10 @@
 package com.is442project.cpa;
 
-import com.is442project.cpa.account.AccountService;
-import com.is442project.cpa.booking.Booking;
-import com.is442project.cpa.booking.BookingRepository;
-import com.is442project.cpa.booking.Membership;
-import com.is442project.cpa.booking.MembershipRepository;
+import com.is442project.cpa.account.service.AccountService;
+import com.is442project.cpa.booking.model.Booking;
+import com.is442project.cpa.booking.model.BookingRepository;
+import com.is442project.cpa.booking.model.Membership;
+import com.is442project.cpa.booking.model.MembershipRepository;
 import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
@@ -71,7 +71,6 @@ class CorporatePassApplicationTests {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	@Test
 	public void GenerateEmailContent_usingTemplateEngine_shouldGenerateContent() {

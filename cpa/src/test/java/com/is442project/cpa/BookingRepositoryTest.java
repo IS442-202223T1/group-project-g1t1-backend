@@ -1,9 +1,5 @@
 package com.is442project.cpa;
 
-
-import com.is442project.cpa.account.UserAccountRepository;
-import com.is442project.cpa.account.UserSeeder;
-import com.is442project.cpa.booking.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,6 +11,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import com.is442project.cpa.account.model.UserAccountRepository;
+import com.is442project.cpa.account.seeder.UserSeeder;
+import com.is442project.cpa.booking.model.Booking;
+import com.is442project.cpa.booking.model.BookingRepository;
+import com.is442project.cpa.booking.model.CorporatePassRepository;
+import com.is442project.cpa.booking.model.MembershipRepository;
+import com.is442project.cpa.booking.seeder.BookingSeeder;
+import com.is442project.cpa.booking.seeder.CorporatePassSeeder;
+import com.is442project.cpa.booking.seeder.MembershipSeeder;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest

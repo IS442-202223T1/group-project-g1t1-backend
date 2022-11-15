@@ -37,4 +37,5 @@ public class EmailController {
         boolean isEmailSent = emailService.sendHtmlTemplate(email, subject, templatePath);
         return isEmailSent ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
+    
 }

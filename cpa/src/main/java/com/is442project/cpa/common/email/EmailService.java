@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class EmailService {
+    
     private final JavaMailSender emailSender;
 
     @Value("${spring.mail.sender}")
@@ -24,8 +25,6 @@ public class EmailService {
 
     @Value("${web.server.url}")
     private String WEB_SERVER_URL;
-
-
 
     public EmailService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
@@ -92,10 +91,6 @@ public class EmailService {
         } catch (MessagingException ex) {
             ex.printStackTrace();
         }
-
     }
-
-
-
 
 }

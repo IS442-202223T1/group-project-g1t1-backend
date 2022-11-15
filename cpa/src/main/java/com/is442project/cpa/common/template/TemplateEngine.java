@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public class TemplateEngine {
+    
     StringWriter writer = new StringWriter();
 
     public TemplateEngine(TemplateResources templateResources) {
@@ -29,4 +30,5 @@ public class TemplateEngine {
     public String getContent() {
         return writer.toString();
     }
+
 }

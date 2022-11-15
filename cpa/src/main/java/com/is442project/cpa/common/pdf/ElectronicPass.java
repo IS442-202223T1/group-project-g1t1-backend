@@ -1,6 +1,6 @@
 package com.is442project.cpa.common.pdf;
 
-import com.is442project.cpa.booking.Booking;
+import com.is442project.cpa.booking.model.Booking;
 import com.is442project.cpa.common.template.TemplateEngine;
 import com.is442project.cpa.common.template.TemplateResources;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -13,7 +13,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +23,9 @@ import java.util.List;
 public class ElectronicPass implements PdfTemplate {
 
     private final PDDocument document = new PDDocument();
+
     private final TemplateResources templateResources;
+
     private final Booking booking;
 
     private final int passSeq;
@@ -33,7 +35,6 @@ public class ElectronicPass implements PdfTemplate {
         this.booking = booking;
         this.passSeq = passSeq;
     }
-
 
     @Override
     public PDDocument getPdfDocument() {
@@ -87,8 +88,6 @@ public class ElectronicPass implements PdfTemplate {
                     .replaceAll("\r", "").split("<br>");
 
             List<String> pdfContentsList = new ArrayList<>();
-
-
 
             //process html <li> elements
             for (String sentence : pdfContents) {
@@ -172,12 +171,10 @@ public class ElectronicPass implements PdfTemplate {
             contentStream.closeAndStroke();
 
             contentStream.close();
-
-
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
 }

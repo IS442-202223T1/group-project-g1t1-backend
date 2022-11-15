@@ -1,12 +1,15 @@
 package com.is442project.cpa.common.email;
 
-import com.is442project.cpa.booking.Booking;
+import com.is442project.cpa.booking.model.Booking;
 
 public class EmailHelper {
 
     public static final String EMAIL_SUBJECT_ORIGIN = "CPA - ";
+
     public static final String EMAIL_SUBJECT_CANCELLED = EMAIL_SUBJECT_ORIGIN + "Booking Confirmation Cancelled";
+
     public static final String EMAIL_SUBJECT_RETURN_REMINDER = EMAIL_SUBJECT_ORIGIN + "Return Corporate Pass Reminder";
+    
     public static final String EMAIL_SUBJECT_COLLECT_REMINDER = EMAIL_SUBJECT_ORIGIN + "Collect Corporate Pass Reminder";
 
     public static final String EMAIL_CONTENT_CANCELLED(Booking booking) {
@@ -46,7 +49,6 @@ public class EmailHelper {
         return sb.toString();
     }
 
-
     public static String EMAIL_CONTENT_COLLECT_REMINDER(Booking booking) {
         StringBuilder sb = new StringBuilder();
 
@@ -65,4 +67,5 @@ public class EmailHelper {
 
         return sb.toString();
     }
+
 }
