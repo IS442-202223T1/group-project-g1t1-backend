@@ -30,6 +30,9 @@ public class CorporatePass {
     @NotNull
     int maxPersonsAdmitted;
 
+    @NotNull
+    boolean isActive;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDate expiryDate;
 
@@ -40,6 +43,7 @@ public class CorporatePass {
         this.passID = passID;
         this.status = status;
         this.maxPersonsAdmitted = maxPersonsAdmitted;
+        this.isActive = true;
     }
 
     public Membership getMembership() {
@@ -80,6 +84,14 @@ public class CorporatePass {
 
     public void setStatus(Status status){
         this.status = status;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive){
+        this.isActive = isActive;
     }
 
     public LocalDate getExpiryDate() {

@@ -40,14 +40,6 @@ public class Booking {
 
     private double feesOwed;
 
-    public int getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
-
     public Booking() {
         this.bookingDate = LocalDate.now();
     }
@@ -75,6 +67,14 @@ public class Booking {
         this.corporatePass = corporatePass;
         this.bookingStatus = bookingStatus;
         this.feesOwed = feesOwed;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public LocalDate getBorrowDate() {

@@ -31,16 +31,17 @@ public class MembershipSeeder {
         Template ePassAttachmentTemplate = new Template();
         ePassAttachmentTemplate.setTemplateContent(buildSampleEPassAttachmentTemplate());
 
-        Membership membership = new Membership("Mandai Wildlife Reserve", physicalEmailTemplate, authorizationLetterAttachmentTemplate,
+
+        Membership membership = new Membership("Mandai Wildlife Reserve", "80 Mandai Lake Rd", physicalEmailTemplate, authorizationLetterAttachmentTemplate,
                 53.50, false,
                 "Visit Singapore's best wildlife parks at the Mandai Wildlife Reserve.",
                 "https://images.unsplash.com/photo-1665006518423-b81a193b4100?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
-        Membership membership2 = new Membership("Universal Studios", physicalEmailTemplate, authorizationLetterAttachmentTemplate, 87.00,
+        Membership membership2 = new Membership("Universal Studios", "8 Sentosa Gateway", physicalEmailTemplate, authorizationLetterAttachmentTemplate, 87.00,
                 false,
                 "Universal Studios Singapore is a theme park located within the Resorts World Sentosa at Sentosa, Singapore.",
                 "https://images.unsplash.com/photo-1601930113377-729966035f34?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
-        Membership membership3 = new Membership("Zoo", physicalEmailTemplate, authorizationLetterAttachmentTemplate, 19.00, true, "");
-        Membership membership4 = new Membership("SEA Aquarium", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "");
+        Membership membership3 = new Membership("Zoo", "Near Mandai", ePassEmailTemplate, ePassAttachmentTemplate, 19.00, true, "");
+        Membership membership4 = new Membership("SEA Aquarium", "Sentosa", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "");
         membership4.setLogoUrl("src/main/resources/images/cfoz_logo.jpg");
         membership4.setMembershipGrade("CFOZ PREMIUM");
 

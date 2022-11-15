@@ -34,6 +34,17 @@ public class AccountAdminService implements AccountAdminOps {
         return true;
     }
 
+    public boolean enableEmployee(String email) {
+        Optional<UserAccount> existingUser = userAccountRepository.findByEmail(email);
+        if (!existingUser.isPresent()) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        UserAccount user = existingUser.get();
+        user.setIsActive(true);
+        userAccountRepository.save(user);
+        return true;
+    }
+
     public boolean grantRole(String email, String roleName) {
         Optional<UserAccount> existingUser = userAccountRepository.findByEmail(email);
         if (!existingUser.isPresent()) {
@@ -43,13 +54,13 @@ public class AccountAdminService implements AccountAdminOps {
         
         Role role;
         switch (roleName) {
-            case "Administrator":
+            case "admin":
                 role = new Administrator();
                 break;
-            case "Borrower":
+            case "borrower":
                 role = new Borrower();
                 break;
-            case "General Office Personnel":
+            case "gop":
                 role = new GeneralOfficePersonnel();
                 break;
             default:
@@ -75,13 +86,13 @@ public class AccountAdminService implements AccountAdminOps {
         
         Role role;
         switch (roleName) {
-            case "Administrator":
+            case "admin":
                 role = new Administrator();
                 break;
-            case "Borrower":
+            case "borrower":
                 role = new Borrower();
                 break;
-            case "General Office Personnel":
+            case "gop":
                 role = new GeneralOfficePersonnel();
                 break;
             default:
@@ -89,6 +100,34 @@ public class AccountAdminService implements AccountAdminOps {
         }
 
         user.removeRole(role);
+        userAccountRepository.save(user);
+        return true;
+    }
+
+    public boolean updateRoles(String email, List<String> roleNames) {
+        Optional<UserAccount> existingUser = userAccountRepository.findByEmail(email);
+        if (!existingUser.isPresent()) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        UserAccount user = existingUser.get();
+        user.clearRoles();
+        for (String roleName : roleNames) {
+            Role role;
+            switch (roleName) {
+                case "admin":
+                    role = new Administrator();
+                    break;
+                case "borrower":
+                    role = new Borrower();
+                    break;
+                case "gop":
+                    role = new GeneralOfficePersonnel();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid role");
+            }
+            user.addRole(role);
+        }
         userAccountRepository.save(user);
         return true;
     }
