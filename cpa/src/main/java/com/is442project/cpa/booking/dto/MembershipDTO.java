@@ -1,15 +1,15 @@
 package com.is442project.cpa.booking.dto;
 
+import com.is442project.cpa.booking.model.CorporatePass;
+import com.is442project.cpa.common.template.Template;
+
 import lombok.Data;
 
 import java.util.List;
 
-import com.is442project.cpa.booking.model.CorporatePass;
-import com.is442project.cpa.common.template.Template;
-
 @Data
 public class MembershipDTO {
-    
+
     private String membershipName;
 
     private String membershipAddress;
@@ -31,5 +31,7 @@ public class MembershipDTO {
     private String logoUrl;
 
     private List<CorporatePass> corporatePasses;
+
+    private boolean isActive;
 
 }
