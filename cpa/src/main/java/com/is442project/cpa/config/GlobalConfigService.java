@@ -16,10 +16,21 @@ public class GlobalConfigService implements GlobalConfigOps{
 
     public GlobalConfig updateConfig(ConfigDTO configDTO) {
         GlobalConfig globalConfig = globalConfigRepository.findFirstBy();
-        globalConfig.setLoanLimitPerMonth(configDTO.getLoanLimitPerMonth());
-        globalConfig.setPassLimitPerLoan(configDTO.getPassLimitPerLoan());
-        globalConfig.setLetterHeadUrl(configDTO.getLetterHeadUrl());
-        globalConfig.setCorporateMemberName(configDTO.getCorporateMemberName());
+
+        if (configDTO.getLoanLimitPerMonth() != 0) {
+            globalConfig.setLoanLimitPerMonth(configDTO.getLoanLimitPerMonth());
+        }
+        if (configDTO.getPassLimitPerLoan() != 0) {
+            globalConfig.setPassLimitPerLoan(configDTO.getPassLimitPerLoan());
+        }
+        if (configDTO.getLetterHeadUrl() != null) {
+            globalConfig.setLetterHeadUrl(configDTO.getLetterHeadUrl());
+        }
+        if (configDTO.getCorporateMemberName() != null) {
+            globalConfig.setCorporateMemberName(configDTO.getCorporateMemberName());
+        }
+
         return globalConfigRepository.save(globalConfig);
     }
 }
+
