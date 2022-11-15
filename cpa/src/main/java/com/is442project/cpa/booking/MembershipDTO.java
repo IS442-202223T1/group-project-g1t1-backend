@@ -21,6 +21,10 @@ public class MembershipDTO {
 
     private String imageUrl;
 
+    private String membershipGrade;
+
+    private String logoUrl;
+
     private List<CorporatePass> corporatePasses;
 
     public String getMembershipName() {
@@ -93,6 +97,22 @@ public class MembershipDTO {
 
     public void setAttachmentTemplate(Template attachmentTemplate) {
         this.attachmentTemplate = attachmentTemplate;
+    }
+
+    public String getMembershipGrade() {
+        return membershipGrade;
+    }
+
+    public void setMembershipGrade(String membershipGrade) {
+        this.membershipGrade = membershipGrade;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 
 }
