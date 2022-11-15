@@ -401,6 +401,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                         currentPass.setMaxPersonsAdmitted(updatedPass.getMaxPersonsAdmitted());
                     }
 
+                    if (updatedPass.getExpiryDate() != null) {
+                        currentPass.setExpiryDate(updatedPass.getExpiryDate());
+                    }
+
                     corporatePassRepository.saveAndFlush(currentPass);
                     isPassPresent = true;
                     continue;
