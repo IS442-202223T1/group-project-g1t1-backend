@@ -345,6 +345,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             currentMembership.setReplacementFee(updatedMembership.getReplacementFee());
         }
 
+        if (updatedMembership.getMembershipGrade() != null) {
+            currentMembership.setMembershipGrade(updatedMembership.getMembershipGrade());
+        }
+
+        if (updatedMembership.getLogoUrl() != null) {
+            currentMembership.setLogoUrl(updatedMembership.getLogoUrl());
+        }
+
         if (updatedMembership.getEmailTemplate() != null) {
             currentMembership.setEmailTemplate(updatedMembership.getEmailTemplate());
         }
@@ -391,6 +399,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
                     if (updatedPass.getMaxPersonsAdmitted() != 0) {
                         currentPass.setMaxPersonsAdmitted(updatedPass.getMaxPersonsAdmitted());
+                    }
+
+                    if (updatedPass.getExpiryDate() != null) {
+                        currentPass.setExpiryDate(updatedPass.getExpiryDate());
                     }
 
                     corporatePassRepository.saveAndFlush(currentPass);
