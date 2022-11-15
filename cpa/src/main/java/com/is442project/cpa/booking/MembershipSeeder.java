@@ -32,7 +32,7 @@ public class MembershipSeeder {
                 "Universal Studios Singapore is a theme park located within the Resorts World Sentosa at Sentosa, Singapore.",
                 "https://images.unsplash.com/photo-1601930113377-729966035f34?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
         Membership membership3 = new Membership("Zoo", "Near Mandai", physicalEmailTemplate, attachmentTemplate, 19.00, true, "");
-        Membership membership4 = new Membership("SEA Aquarium", "Sentosa", new Template(), attachmentTemplate, 20.50, true, "");
+        Membership membership4 = new Membership("SEA Aquarium", "Sentosa", physicalEmailTemplate, attachmentTemplate, 20.50, true, "");
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3, membership4));
 
