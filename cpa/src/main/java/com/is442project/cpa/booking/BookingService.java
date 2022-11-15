@@ -415,8 +415,15 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     }
     
     public List<Booking> getBookingsByEmail(String email) {
-        List<Booking> bookings = bookingRepository.findByBorrowerEmail(email);
+        List<Booking> bookings;
         List<Booking> openBookingsByEmail = new ArrayList<>();
+
+        if(email == null || email.equals("")){
+            bookings = bookingRepository.findAll();
+        }
+        else{
+            bookings = bookingRepository.findByBorrowerEmail(email);
+        }
 
         for (Booking booking : bookings) {
             if((booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
