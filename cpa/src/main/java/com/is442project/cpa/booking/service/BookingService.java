@@ -43,6 +43,7 @@ import com.is442project.cpa.common.template.TemplateEngine;
 import com.is442project.cpa.config.model.GlobalConfig;
 import com.is442project.cpa.config.model.GlobalConfigRepository;
 
+
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
@@ -269,7 +270,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         LocalDate yesterday = today.minusDays(1);
 
         for (Booking booking : bookings) {
-            if (booking.getBorrowDate().isAfter(yesterday)) {
+            if (booking.getBorrowDate().isAfter(yesterday) && booking.getBookingStatus() != BookingStatus.CANCELLED) {
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
 
                 if (!booking.getCorporatePass().getMembership().getIsElectronicPass()) {
@@ -295,7 +296,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         LocalDate today = LocalDate.now();
 
         for (Booking booking : bookings) {
-            if (booking.getBorrowDate().isBefore(today)) {
+            if (booking.getBorrowDate().isBefore(today) && booking.getBookingStatus() != BookingStatus.CANCELLED) {
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
                 pastBookings.add(bookingResponseDTO);
             }
