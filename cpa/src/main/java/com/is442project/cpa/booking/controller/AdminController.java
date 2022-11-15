@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,9 +28,9 @@ public class AdminController {
   
   private final AdminOps adminOps;
 
-  public AdminController(BookingService bookingService) {
-    adminOps = bookingService;
-  }
+    public AdminController(BookingService bookingService) {
+        adminOps = bookingService;
+    }
 
   @GetMapping("/membership")
   @ResponseStatus(code = HttpStatus.OK)
@@ -54,12 +55,12 @@ public class AdminController {
     Membership newMembership = convertToMembershipEntity(newMembershipDTO);
     Membership membership = adminOps.createMembership(newMembership);
 
-    List<CorporatePass> newPasses = newMembershipDTO.getCorporatePasses();
-    newPasses = adminOps.createPasses(membership, newPasses);
+        List<CorporatePass> newPasses = newMembershipDTO.getCorporatePasses();
+        newPasses = adminOps.createPasses(membership, newPasses);
 
-    MembershipDTO result = this.convertToMembershipDTO(membership, newPasses);
-    return new ResponseEntity<>(result, HttpStatus.CREATED);
-  }
+        MembershipDTO result = this.convertToMembershipDTO(membership, newPasses);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 
   @PostMapping("/membership/update-membership/{membershipName}")
   @ResponseStatus(code = HttpStatus.OK)
@@ -69,31 +70,49 @@ public class AdminController {
     List<CorporatePass> updatedPasses = updatedMembershipDTO.getCorporatePasses();
     updatedPasses = adminOps.updatePasses(membershipName, updatedPasses);
 
-    Membership updatedMembership = convertToMembershipEntity(updatedMembershipDTO);
-    updatedMembership = adminOps.updateMembership(membershipName, updatedMembership);
+        Membership updatedMembership = convertToMembershipEntity(updatedMembershipDTO);
+        updatedMembership = adminOps.updateMembership(membershipName, updatedMembership);
 
-    MembershipDTO result = this.convertToMembershipDTO(updatedMembership, updatedPasses);
-    return new ResponseEntity<>(result, HttpStatus.OK);
-  }
+        MembershipDTO result = this.convertToMembershipDTO(updatedMembership, updatedPasses);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
-  @DeleteMapping("/booking-by-borrower/{borrowerEmail}")
-  public ResponseEntity<Boolean> deleteBookingByBorrower(@PathVariable("borrowerEmail") String borrowerEmail) {
-    adminOps.deleteBookingsByBorrower(borrowerEmail);
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
+    @PutMapping("/membership/enable-membership/{membershipName}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<MembershipDTO> enableMembership(
+            @PathVariable("membershipName") String membershipName) {
+        adminOps.enableMembership(membershipName);
+        adminOps.enablePasses(membershipName);
 
-  private MembershipDTO convertToMembershipDTO(Membership membership, List<CorporatePass> passes) {
-    ModelMapper mapper = new ModelMapper();
-    MembershipDTO membershipDTO = mapper.map(membership, MembershipDTO.class);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-    membershipDTO.setCorporatePasses(passes);
-    return membershipDTO;
-  }
+    @DeleteMapping("/membership/{membershipName}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<MembershipDTO> deleteMembershipDTO(@PathVariable("membershipName") String membershipName) {
+        adminOps.deleteMembership(membershipName);
+        adminOps.deletePasses(membershipName);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-  private Membership convertToMembershipEntity(MembershipDTO membershipDTO) {
-    ModelMapper mapper = new ModelMapper();
+    @DeleteMapping({ "/booking-by-borrower/{borrowerEmail}" })
+    public ResponseEntity<Boolean> deleteBookingByBorrower(@PathVariable("borrowerEmail") String borrowerEmail) {
+        adminOps.deleteBookingsByBorrower(borrowerEmail);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-    Membership membership = mapper.map(membershipDTO, Membership.class);
+    private MembershipDTO convertToMembershipDTO(Membership membership, List<CorporatePass> passes) {
+        ModelMapper mapper = new ModelMapper();
+        MembershipDTO membershipDTO = mapper.map(membership, MembershipDTO.class);
+
+        membershipDTO.setCorporatePasses(passes);
+        return membershipDTO;
+    }
+
+    private Membership convertToMembershipEntity(MembershipDTO membershipDTO) {
+        ModelMapper mapper = new ModelMapper();
+
+        Membership membership = mapper.map(membershipDTO, Membership.class);
 
     return membership;
   }
