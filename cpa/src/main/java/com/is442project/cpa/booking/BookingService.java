@@ -316,6 +316,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return membershipRepository.findAll();
     }
 
+    public List<Membership> getAllActiveMemberships() {
+        return membershipRepository.findByIsActive(true);
+    }
+
     public Membership getMembershipByName(String membershipName) {
         Membership membership = membershipRepository.findByMembershipName(membershipName)
             .orElseThrow(
@@ -378,6 +382,18 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
 
         return membershipRepository.saveAndFlush(currentMembership);
+    }
+
+    public void enableMembership(String membershipName) {
+        Membership membership = this.getMembershipByName(membershipName);
+        membership.setIsActive(true);
+        membershipRepository.saveAndFlush(membership);
+    }
+
+    public void deleteMembership(String membershipName) {
+        Membership membership = this.getMembershipByName(membershipName);
+        membership.setIsActive(false);
+        membershipRepository.saveAndFlush(membership);
     }
 
     public CorporatePass createPass(Membership membership, CorporatePass pass) {
@@ -474,6 +490,26 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             corporatePass.setStatus(nextCorporatePassStatus.get(actionToPerform));
         }
         return false;
+    }
+
+    public void enablePasses(String membershipName) {
+        Membership membership = this.getMembershipByName(membershipName);
+        List<CorporatePass> passes = corporatePassRepository.findByMembershipAndIsActive(membership, false);
+
+        for (CorporatePass pass : passes) {
+            pass.setIsActive(true);
+            corporatePassRepository.saveAndFlush(pass);
+        }
+    }
+
+    public void deletePasses(String membershipName) {
+        Membership membership = this.getMembershipByName(membershipName);
+        List<CorporatePass> passes = corporatePassRepository.findByMembershipAndIsActive(membership, true);
+
+        for (CorporatePass pass : passes) {
+            pass.setIsActive(false);
+            corporatePassRepository.saveAndFlush(pass);
+        }
     }
 
     public void commitBookingToDatabase(Booking currentBooking, String actionToPerform) {

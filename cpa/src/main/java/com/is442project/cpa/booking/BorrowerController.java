@@ -27,7 +27,7 @@ public class BorrowerController {
     @GetMapping("/")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<List<Membership>> getMemberships() {
-      List<Membership> result = borrowerOps.getAllMemberships();
+      List<Membership> result = borrowerOps.getAllActiveMemberships();
       return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
