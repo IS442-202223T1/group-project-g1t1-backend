@@ -24,10 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -511,6 +509,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                 }
             }
 
+            List<UserAccount> admins = accountService.getAllAdmins();
+            admins.stream().forEach(admin -> {
+                emailService.sendHtmlMessage(admin.getEmail(),
+                    EmailHelper.EMAIL_SUBJECT_LOST_CARD, EmailHelper.EMAIL_CONTENT_LOST_CARD(currentBooking));
+
+                logger.info("Report Lost Email Sent to: " + admin.getEmail());
+            });
+
             currentBooking.setFeesOwed(currentBooking.getCorporatePass().getMembership().getReplacementFee());
 
         } else if (actionToPerform.equals("clearDues")) {
@@ -518,7 +524,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         } else if (actionToPerform.equals("collect")) {
             emailService.sendHtmlMessage(currentBooking.getBorrower().getEmail(),
-                    EmailHelper.EMAIL_CONTENT_COLLECTED, EmailHelper.EMAIL_CONTENT_COLLECTED(currentBooking));
+                    EmailHelper.EMAIL_SUBJECT_COLLECTED, EmailHelper.EMAIL_CONTENT_COLLECTED(currentBooking));
 
         }
 
