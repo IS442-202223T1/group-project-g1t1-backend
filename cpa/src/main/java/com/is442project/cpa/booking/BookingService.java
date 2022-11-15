@@ -60,6 +60,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             throw new RuntimeException("Exceed maximum bookings in a day");
         }
 
+        // check if user has any outstanding dues
+        if (checkForDuesOwed(bookingDto.getEmail())) {
+            throw new RuntimeException("Dues Owed");
+        }
+
         List<CorporatePass> availPasses = getAvailablePasses(bookingDto.getDate(), bookingDto.getMembershipName());
         // check if there is enough passes for the day
         if (availPasses.size() < bookingDto.getQuantity()) {
@@ -141,6 +146,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         distinctLocationSet.add(bookingDto.getMembershipName());
 
         return (userBookingsInDay.size() + qty > 2) || (distinctLocationSet.size() > 1);
+    }
+
+    public boolean checkForDuesOwed(String email) {
+        
+        List<Booking> userBookingsWithDuesOwed = bookingRepository.findByBorrowerEmailAndBookingStatus(email,
+                BookingStatus.DUESOWED);
+
+        return userBookingsWithDuesOwed.size() > 0;
     }
 
     public List<CorporatePass> getAvailablePasses(LocalDate date, String membershipName) {
