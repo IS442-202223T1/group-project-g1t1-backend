@@ -99,7 +99,7 @@ class CorporatePassApplicationTests {
 		Booking booking = bookingRepository.findById(2).get();
 
 		ElectronicPassTemplate electronicPassTemplate = new ElectronicPassTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
-		ElectronicPass ePass = new ElectronicPass(electronicPassTemplate, booking);
+		ElectronicPass ePass = new ElectronicPass(electronicPassTemplate, booking,1);
 
 		PdfFactory pdfFactory = new PdfFactory(ePass);
 

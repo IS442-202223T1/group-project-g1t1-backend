@@ -89,13 +89,22 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         if (membership.getIsElectronicPass()) {
 
-            List<Attachment> ePassAttachmentList = bookingResults.stream().map(booking -> {
-                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), booking);
-                ElectronicPass ePass = new ElectronicPass(ePassTemplate, booking);
-                PdfFactory pdfFactory = new PdfFactory(ePass);
+//            List<Attachment> ePassAttachmentList = bookingResults.stream().map(booking -> {
+//                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), booking);
+//                ElectronicPass ePass = new ElectronicPass(ePassTemplate, booking, 1);
+//                PdfFactory pdfFactory = new PdfFactory(ePass);
+//
+//                return );
+//            }).collect(Collectors.toList());
 
-                return new Attachment("ePass" + booking.getBookingId(), pdfFactory.generatePdfFile());
-            }).collect(Collectors.toList());
+            List<Attachment> ePassAttachmentList = new ArrayList<>();
+            for (int i = 0; i < bookingResults.size(); i++) {
+                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingResults.get(i));
+                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingResults.get(i), i+1);
+                PdfFactory pdfFactory = new PdfFactory(ePass);
+                ePassAttachmentList.add(new Attachment("ePass" + i+1, pdfFactory.generatePdfFile()));
+
+            }
 
             emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
                     templateEngine.getContent(), ePassAttachmentList);

@@ -6,6 +6,7 @@ import com.is442project.cpa.common.template.TemplateResources;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -15,19 +16,22 @@ import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ElectronicPass implements PdfTemplate {
 
     private final PDDocument document = new PDDocument();
     private final TemplateResources templateResources;
-    private Booking booking;
+    private final Booking booking;
 
-    public ElectronicPass(TemplateResources templateResources, Booking booking) {
+    private final int passSeq;
+
+    public ElectronicPass(TemplateResources templateResources, Booking booking, int passSeq) {
         this.templateResources = templateResources;
         this.booking = booking;
+        this.passSeq = passSeq;
     }
 
 
@@ -47,18 +51,35 @@ public class ElectronicPass implements PdfTemplate {
                     letterHeadImage.getWidth(), letterHeadImage.getHeight());
 
             //generate barcode
+            int barcodeWidth = 200;
             addBarcode(document, page, booking.getCorporatePass().getPassID(),
                     page.getTrimBox().getWidth()-300, page.getTrimBox().getHeight()-190,
-                    200, 110);
+                    barcodeWidth, 110);
 
+            String [] barcodeDescription = new String[3];
+            barcodeDescription[0] = booking.getCorporatePass().getMembership().getMembershipGrade();
+            barcodeDescription[1] = "(Barcode #)" + passSeq;
+            barcodeDescription[2] = booking.getCorporatePass().getExpiryDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+            PDFont font = PDType1Font.TIMES_ROMAN;
+            int fontSize = 12;
+            for (int i = 0; i < barcodeDescription.length ; i++) {
+                float xLeftWidthBalanceSpace = (barcodeWidth - font.getStringWidth(barcodeDescription[i])/1000 *fontSize)/2;
+                float yFontHeight= font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
+                contentStream.beginText();
+                contentStream.newLineAtOffset(page.getTrimBox().getWidth()-300+xLeftWidthBalanceSpace,
+                        (page.getTrimBox().getHeight()-190-15) - yFontHeight * (i+1));
+                contentStream.setFont(font, fontSize);
+                contentStream.showText(barcodeDescription[i]);
+                contentStream.endText();
+            }
 
             //add attraction logo
             float scale = 0.4f;
-            PDImageXObject attractionLogo = PDImageXObject.createFromFile("src/main/resources/images/cfoz_logo.jpg", document);
+            PDImageXObject attractionLogo = PDImageXObject.createFromFile(booking.getCorporatePass().getMembership().getLogoUrl(), document);
 
             contentStream.drawImage(attractionLogo, 75, page.getTrimBox().getHeight() - 250,
                     attractionLogo.getWidth()*scale, attractionLogo.getHeight()*scale);
-
 
             //PDFBox library showtext method cannot have String containing new line or carriage symbol
             //Lastly to split all html <br> tags to manually print newline in pdf.
@@ -66,6 +87,8 @@ public class ElectronicPass implements PdfTemplate {
                     .replaceAll("\r", "").split("<br>");
 
             List<String> pdfContentsList = new ArrayList<>();
+
+
 
             //process html <li> elements
             for (String sentence : pdfContents) {
@@ -116,7 +139,7 @@ public class ElectronicPass implements PdfTemplate {
                     contentStream.newLine();
                 }
             }
-            contentStream.showText(PdfTemplate.CORPORATE_MEMBER_NAME);
+            contentStream.showText(PdfTemplate.CORPORATE_MEMBER_NAME.toUpperCase());
             contentStream.newLine();
 
             contentStream.endText();

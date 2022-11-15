@@ -41,6 +41,8 @@ public class MembershipSeeder {
                 "https://images.unsplash.com/photo-1601930113377-729966035f34?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
         Membership membership3 = new Membership("Zoo", physicalEmailTemplate, authorizationLetterAttachmentTemplate, 19.00, true, "");
         Membership membership4 = new Membership("SEA Aquarium", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "");
+        membership4.setLogoUrl("src/main/resources/images/cfoz_logo.jpg");
+        membership4.setMembershipGrade("CFOZ PREMIUM");
 
         membershipRepository.saveAllAndFlush(Arrays.asList(membership, membership2, membership3, membership4));
 

@@ -36,8 +36,11 @@ public class Membership {
     private boolean isElectronicPass;
 
     private String description;
-
     private String imageUrl;
+
+    private String membershipGrade;
+
+    private String logoUrl;
 
     public Membership() {
     }
@@ -105,5 +108,21 @@ public class Membership {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getMembershipGrade() {
+        return membershipGrade;
+    }
+
+    public void setMembershipGrade(String membershipGrade) {
+        this.membershipGrade = membershipGrade;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 }

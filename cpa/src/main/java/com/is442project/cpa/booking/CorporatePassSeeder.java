@@ -5,7 +5,10 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import com.is442project.cpa.booking.CorporatePass.Status;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -42,7 +45,10 @@ public class CorporatePassSeeder {
         CorporatePass pass23 = new CorporatePass(membership4, "22401046113600009091", Status.AVAILABLE, 2);
         CorporatePass pass24 = new CorporatePass(membership4, "22401046113600009092", Status.AVAILABLE, 2);
 
-        corporatePassRepository.saveAllAndFlush(Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7, pass8, pass20, pass21, pass22, pass23, pass24));
+        List<CorporatePass> corporatePasses = Arrays.asList(pass1, pass2, pass3, pass4, pass5, pass6, pass7, pass8, pass20, pass21, pass22, pass23, pass24);
+
+        corporatePasses.stream().forEach(corporatePass -> corporatePass.setExpiryDate(LocalDate.of(2023,03, 31)));
+        corporatePassRepository.saveAllAndFlush(corporatePasses);
 
         System.out.println("======TEST CORPORATE PASS INSERTED======");
     }

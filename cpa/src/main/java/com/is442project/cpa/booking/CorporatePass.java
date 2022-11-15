@@ -1,7 +1,10 @@
 package com.is442project.cpa.booking;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "corporatePass")
@@ -26,6 +29,9 @@ public class CorporatePass {
 
     @NotNull
     int maxPersonsAdmitted;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
+    LocalDate expiryDate;
 
     public CorporatePass(){}
 
@@ -74,5 +80,13 @@ public class CorporatePass {
 
     public void setStatus(Status status){
         this.status = status;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }
