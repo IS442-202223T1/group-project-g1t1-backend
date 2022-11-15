@@ -40,8 +40,10 @@ public class MembershipSeeder {
                 false,
                 "Universal Studios Singapore is a theme park located within the Resorts World Sentosa at Sentosa, Singapore.",
                 "https://images.unsplash.com/photo-1601930113377-729966035f34?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
-        Membership membership3 = new Membership("Zoo", "Near Mandai", ePassEmailTemplate, ePassAttachmentTemplate, 19.00, true, "");
-        Membership membership4 = new Membership("SEA Aquarium", "Sentosa", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "");
+        Membership membership3 = new Membership("Zoo", "Near Mandai", ePassEmailTemplate, ePassAttachmentTemplate, 19.00, true, "The Singapore Zoo, formerly known as the Singapore Zoological Gardens or Mandai Zoo, is a 28 hectares zoo located on the margins of Upper Seletar Reservoir within Singapore's heavily forested central catchment area.", "https://images.unsplash.com/photo-1619961667661-6adb722df9e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80");
+        membership3.setLogoUrl("src/main/resources/images/cfoz_logo.jpg");
+        membership3.setMembershipGrade("CFOZ PREMIUM");
+        Membership membership4 = new Membership("SEA Aquarium", "Sentosa", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "S.E.A. Aquarium is one of the world\'s largest aquariums, home to more than 100,000 marine animals representing 1,000 species across more than 40 diverse habitats.", "https://images.unsplash.com/photo-1577095972634-64026236ee73?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80");
         membership4.setLogoUrl("src/main/resources/images/cfoz_logo.jpg");
         membership4.setMembershipGrade("CFOZ PREMIUM");
 
