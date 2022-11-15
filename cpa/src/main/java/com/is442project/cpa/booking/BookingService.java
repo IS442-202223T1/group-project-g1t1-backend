@@ -252,7 +252,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             if (booking.getBorrowDate().isAfter(yesterday)) {
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
 
-                if (booking.getBorrowDate().getDayOfWeek() == DayOfWeek.SUNDAY && !booking.getCorporatePass().getMembership().getIsElectronicPass()) {
+                if (!booking.getCorporatePass().getMembership().getIsElectronicPass()) {
                     BookerDetailsResponseDTO bookerDetailsResponseDTO = getPreviousDayBoookingDetails(booking.getBorrowDate(), booking.getCorporatePass().getId());
 
                     if (bookerDetailsResponseDTO != null) {
