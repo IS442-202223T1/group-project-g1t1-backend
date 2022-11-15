@@ -16,6 +16,8 @@ public interface BorrowerOps {
 
     public abstract List<Membership> getAllMemberships();
 
+    public abstract List<Membership> getAllActiveMemberships();
+
     public abstract List<BookingResponseDTO> getUpcomingBookings(String email);
 
     public abstract List<BookingResponseDTO> getPastBookings(String email);

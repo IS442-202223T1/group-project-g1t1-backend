@@ -27,6 +27,8 @@ public class MembershipDTO {
 
     private List<CorporatePass> corporatePasses;
 
+    private boolean isActive;
+
     public String getMembershipName() {
         return membershipName;
     }
@@ -113,6 +115,14 @@ public class MembershipDTO {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
 }

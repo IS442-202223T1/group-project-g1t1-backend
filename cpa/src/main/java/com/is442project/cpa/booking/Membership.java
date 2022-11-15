@@ -43,6 +43,8 @@ public class Membership {
 
     private String logoUrl;
 
+    private boolean isActive;
+
     public Membership() {
     }
 
@@ -61,6 +63,7 @@ public class Membership {
         this.isElectronicPass = isElectronicPass;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.isActive = true;
     }
 
     public long getMembershipId() {
@@ -149,5 +152,13 @@ public class Membership {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
