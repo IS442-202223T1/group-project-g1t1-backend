@@ -24,10 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -259,7 +257,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         LocalDate yesterday = today.minusDays(1);
 
         for (Booking booking : bookings) {
-            if (booking.getBorrowDate().isAfter(yesterday)) {
+            if (booking.getBorrowDate().isAfter(yesterday) && booking.getBookingStatus() != BookingStatus.CANCELLED) {
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
 
                 if (!booking.getCorporatePass().getMembership().getIsElectronicPass()) {
@@ -286,7 +284,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         LocalDate today = LocalDate.now();
 
         for (Booking booking : bookings) {
-            if (booking.getBorrowDate().isBefore(today)) {
+            if (booking.getBorrowDate().isBefore(today) && booking.getBookingStatus() != BookingStatus.CANCELLED) {
                 BookingResponseDTO bookingResponseDTO = convertToBookingResponseDTO(booking);
                 pastBookings.add(bookingResponseDTO);
             }
