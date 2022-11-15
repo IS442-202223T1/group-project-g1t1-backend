@@ -9,8 +9,10 @@ import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.email.EmailHelper;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.ElectronicPass;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
+import com.is442project.cpa.common.template.ElectronicPassTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -86,22 +89,29 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingResults);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
-        emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
-                templateEngine.getContent());
 
-        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(
-                membership.getAttachmentTemplate(), bookingResults);
-        AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
-        PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
-        emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
-                templateEngine.getContent(),
-                Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
 
-        if (!membership.getIsElectronicPass()) {
-            // todo attach authorisation form
+        if (membership.getIsElectronicPass()) {
+            List<Attachment> ePassAttachmentList = new ArrayList<>();
+            for (int i = 0; i < bookingResults.size(); i++) {
+                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingResults.get(i));
+                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingResults.get(i), i+1);
+                PdfFactory pdfFactory = new PdfFactory(ePass);
+                ePassAttachmentList.add(new Attachment("ePass" + (i+1), pdfFactory.generatePdfFile()));
+
+            }
+
+            emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                    templateEngine.getContent(), ePassAttachmentList);
+
         } else {
-            // todo attach ePasses
+            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingResults);
+            AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+            PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
+
+            emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                    templateEngine.getContent(), Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
         }
 
         return true;
@@ -149,7 +159,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     }
 
     public boolean checkForDuesOwed(String email) {
-        
+
         List<Booking> userBookingsWithDuesOwed = bookingRepository.findByBorrowerEmailAndBookingStatus(email,
                 BookingStatus.DUESOWED);
 
