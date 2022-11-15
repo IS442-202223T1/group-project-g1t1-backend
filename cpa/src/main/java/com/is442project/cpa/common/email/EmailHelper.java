@@ -8,6 +8,7 @@ public class EmailHelper {
     public static final String EMAIL_SUBJECT_CANCELLED = EMAIL_SUBJECT_ORIGIN + "Booking Confirmation Cancelled";
     public static final String EMAIL_SUBJECT_RETURN_REMINDER = EMAIL_SUBJECT_ORIGIN + "Return Corporate Pass Reminder";
     public static final String EMAIL_SUBJECT_COLLECT_REMINDER = EMAIL_SUBJECT_ORIGIN + "Collect Corporate Pass Reminder";
+    public static final String EMAIL_CONTENT_COLLECTED = EMAIL_SUBJECT_ORIGIN + "Corporate Pass Collected!";
 
     public static final String EMAIL_CONTENT_CANCELLED(Booking booking) {
 
@@ -57,6 +58,25 @@ public class EmailHelper {
 
         sb.append("<br><br>");
         sb.append("Please proceed to General Pass Office to collect your corporate pass.");
+
+        sb.append("<br><br><br>");
+        sb.append("Warm regards");
+        sb.append("<br>");
+        sb.append("HR Department");
+
+        return sb.toString();
+    }
+
+    public static String EMAIL_CONTENT_COLLECTED(Booking booking) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Dear " + booking.getBorrower().getName() + ",");
+        sb.append("<br><br>");
+        sb.append(String.format("For record purpose, you have collected the corporate pass %s to %s",
+                booking.getCorporatePass().getPassID(),booking.getCorporatePass().getMembership().getMembershipName()));
+
+        sb.append("<br><br>");
+        sb.append("Please be reminded to return the corporate pass to General Pass Office after your visit.");
 
         sb.append("<br><br><br>");
         sb.append("Warm regards");

@@ -515,6 +515,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         } else if (actionToPerform.equals("clearDues")) {
             currentBooking.setFeesOwed(0);
+
+        } else if (actionToPerform.equals("collect")) {
+            emailService.sendHtmlMessage(currentBooking.getBorrower().getEmail(),
+                    EmailHelper.EMAIL_CONTENT_COLLECTED, EmailHelper.EMAIL_CONTENT_COLLECTED(currentBooking));
+
         }
 
         bookingRepository.save(currentBooking);
