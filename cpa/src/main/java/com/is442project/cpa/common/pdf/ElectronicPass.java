@@ -58,7 +58,7 @@ public class ElectronicPass implements PdfTemplate {
 
             String [] barcodeDescription = new String[3];
             barcodeDescription[0] = booking.getCorporatePass().getMembership().getMembershipGrade();
-            barcodeDescription[1] = "(Barcode #)" + passSeq;
+            barcodeDescription[1] = String.format("(Booking #%d)", passSeq);
             barcodeDescription[2] = booking.getCorporatePass().getExpiryDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
             PDFont font = PDType1Font.TIMES_ROMAN;
