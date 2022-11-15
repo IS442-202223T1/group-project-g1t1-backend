@@ -310,6 +310,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             currentMembership.setMembershipName(updatedMembership.getMembershipName());
         }
 
+        if (updatedMembership.getMembershipAddress() != null) {
+            currentMembership.setMembershipAddress(updatedMembership.getMembershipAddress());
+        }
+
         if (updatedMembership.getDescription() != null) {
             currentMembership.setDescription(updatedMembership.getDescription());
         }
@@ -322,6 +326,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             currentMembership.setEmailTemplate(updatedMembership.getEmailTemplate());
         }
 
+        if (updatedMembership.getImageUrl() != null) {
+            currentMembership.setImageUrl(updatedMembership.getImageUrl());
+        }
+
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
 
         return membershipRepository.saveAndFlush(currentMembership);
@@ -331,6 +339,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         pass.setMembership(membership);
         pass.setIsActive(true);
         return corporatePassRepository.saveAndFlush(pass);
+    }
+
+    public List<CorporatePass> createPasses(Membership membership, List<CorporatePass> newPasses) {
+        for (CorporatePass newPass : newPasses) {
+            this.createPass(membership, newPass);
+        }
+
+        return corporatePassRepository.findByMembershipAndIsActive(membership, true);
     }
 
     public List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatedPasses) {

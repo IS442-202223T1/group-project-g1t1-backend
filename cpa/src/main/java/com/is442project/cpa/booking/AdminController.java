@@ -43,8 +43,14 @@ public class AdminController {
 
   @PostMapping({ "/membership/create-membership" })
   @ResponseStatus(code = HttpStatus.CREATED)
-  public ResponseEntity<Membership> createMembership(@RequestBody Membership newMembership) {
-    Membership result = adminOps.createMembership(newMembership);
+  public ResponseEntity<MembershipDTO> createMembershipDTO(@RequestBody MembershipDTO newMembershipDTO) {
+    Membership newMembership = convertToMembershipEntity(newMembershipDTO);
+    Membership membership = adminOps.createMembership(newMembership);
+
+    List<CorporatePass> newPasses = newMembershipDTO.getCorporatePasses();
+    newPasses = adminOps.createPasses(membership, newPasses);
+
+    MembershipDTO result = this.convertToMembershipDTO(membership, newPasses);
     return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
