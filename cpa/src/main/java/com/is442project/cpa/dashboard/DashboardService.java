@@ -61,22 +61,30 @@ public class DashboardService implements DashboardOps {
     public List<EmployeeReportDTO> getEmployeeUsageReport(String duration, List<UserAccount> allUsers){
 
         LocalDate now = LocalDate.now();
+        int thisMonth = now.getMonthValue();
+        int thisYear = now.getYear();
         LocalDate end = LocalDate.now();
         LocalDate start = LocalDate.now();
+        String period = new String();
+
         if(duration.equals("month")){
             start = now.withDayOfMonth(1);
             end = now.withDayOfMonth(now.getMonth().length(now.isLeapYear()));
+            period = Month.of(thisMonth).toString() + " " + thisYear;
         } else if(duration.equals("biannual")){
             if(now.getMonthValue() <= 6){
                 start = now.withMonth(1).withDayOfMonth(1);
                 end = now.withMonth(6).withDayOfMonth(30);
+                period = "Jan " + thisYear + " - Jun " + thisYear;
             } else {
                 start = now.withMonth(7).withDayOfMonth(1);
                 end = now.withMonth(12).withDayOfMonth(31);
-            }
+                period = "Jul " + thisYear + " - Dec " + thisYear;
+            } 
         } else if(duration.equals("annual")){
             start = now.with(TemporalAdjusters.firstDayOfYear());
             end = now.with(TemporalAdjusters.lastDayOfYear());
+            period = thisYear + "";
         } else {
             throw new EntityNotFoundException("Invalid duration");
         }
@@ -87,7 +95,7 @@ public class DashboardService implements DashboardOps {
         for (UserAccount user:allUsers){
             String email = user.getEmail();
             String name = user.getName();
-            EmployeeReportDTO employeeReport = new EmployeeReportDTO(name, email, 0);
+            EmployeeReportDTO employeeReport = new EmployeeReportDTO(name, email, 0, period);
             resultList.add(employeeReport);
         }
    

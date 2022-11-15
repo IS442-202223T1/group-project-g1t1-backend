@@ -25,6 +25,8 @@ public class Booking {
     private CorporatePass corporatePass;
 
     @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate bookingDate;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate borrowDate;
 
     @ManyToOne
@@ -38,24 +40,19 @@ public class Booking {
 
     private double feesOwed;
 
-    public int getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
-
     public Booking() {
+        this.bookingDate = LocalDate.now();
     }
 
     public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass) {
+        this();
         this.borrowDate = borrowDate;
         this.borrower = borrower;
         this.corporatePass = corporatePass;
     }
 
     public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass, BookingStatus bookingStatus) {
+        this();
         this.borrowDate = borrowDate;
         this.borrower = borrower;
         this.corporatePass = corporatePass;
@@ -64,11 +61,20 @@ public class Booking {
     }
 
     public Booking(LocalDate borrowDate, UserAccount borrower, CorporatePass corporatePass, BookingStatus bookingStatus, Double feesOwed) {
+        this();
         this.borrowDate = borrowDate;
         this.borrower = borrower;
         this.corporatePass = corporatePass;
         this.bookingStatus = bookingStatus;
         this.feesOwed = feesOwed;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public LocalDate getBorrowDate() {
@@ -109,5 +115,13 @@ public class Booking {
 
     public void setFeesOwed(double feesOwed){
         this.feesOwed = feesOwed;
+    }
+
+    public LocalDate getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(LocalDate bookingDate) {
+        this.bookingDate = bookingDate;
     }
 }

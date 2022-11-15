@@ -17,16 +17,17 @@ public class Membership {
     @NotNull
     private String membershipName;
 
-    @AttributeOverride(name = "templateContent", column = @Column(name = "EMAIL_TEMPLATE_CONTENT"))
     @NotNull
     private String membershipAddress;
 
     @AttributeOverride(name="templateContent", column=@Column(name="EMAIL_TEMPLATE_CONTENT"))
     @Embedded
+    @NotNull
     private Template emailTemplate;
 
     @AttributeOverride(name = "templateContent", column = @Column(name = "ATTACHMENT_TEMPLATE_CONTENT"))
     @Embedded
+    @NotNull
     private Template attachmentTemplate;
 
     @NotNull
@@ -36,27 +37,30 @@ public class Membership {
     private boolean isElectronicPass;
 
     private String description;
-
     private String imageUrl;
+
+    private String membershipGrade;
+
+    private String logoUrl;
 
     public Membership() {
     }
 
-    public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
+    public Membership(String membershipName, String membershipAddress, Template emailTemplate, Template attachmentTemplate, double replacementFee,
             boolean isElectronicPass, String description) {
-        this(membershipName, emailTemplate, attachmentTemplate, replacementFee, isElectronicPass, description, null);
+        this(membershipName, membershipAddress, emailTemplate, attachmentTemplate, replacementFee, isElectronicPass, description, null);
     }
 
-    public Membership(String membershipName, Template emailTemplate, Template attachmentTemplate, double replacementFee,
+    public Membership(String membershipName, String membershipAddress, Template emailTemplate, Template attachmentTemplate, double replacementFee,
             boolean isElectronicPass, String description, String imageUrl) {
         this.membershipName = membershipName;
+        this.membershipAddress = membershipAddress;
         this.emailTemplate = emailTemplate;
         this.attachmentTemplate = attachmentTemplate;
         this.replacementFee = replacementFee;
         this.isElectronicPass = isElectronicPass;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.membershipAddress = membershipName + "Address";
     }
 
     public long getMembershipId() {
@@ -73,6 +77,30 @@ public class Membership {
 
     public void setMembershipName(String membershipName) {
         this.membershipName = membershipName;
+    }
+
+    public String getMembershipAddress() {
+        return membershipAddress;
+    }
+
+    public void setMembershipAddress(String membershipAddress) {
+        this.membershipAddress = membershipAddress;
+    }
+
+    public Template getEmailTemplate() {
+        return emailTemplate;
+    }
+
+    public void setEmailTemplate(Template emailTemplate) {
+        this.emailTemplate = emailTemplate;
+    }
+
+    public Template getAttachmentTemplate() {
+        return attachmentTemplate;
+    }
+
+    public void setAttachmentTemplate(Template attachmentTemplate) {
+        this.attachmentTemplate = attachmentTemplate;
     }
 
     public double getReplacementFee() {
@@ -105,5 +133,21 @@ public class Membership {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getMembershipGrade() {
+        return membershipGrade;
+    }
+
+    public void setMembershipGrade(String membershipGrade) {
+        this.membershipGrade = membershipGrade;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 }

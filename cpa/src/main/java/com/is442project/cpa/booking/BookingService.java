@@ -9,8 +9,10 @@ import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.email.EmailHelper;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
+import com.is442project.cpa.common.pdf.ElectronicPass;
 import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
+import com.is442project.cpa.common.template.ElectronicPassTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
 
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class BookingService implements BorrowerOps, GopOps, AdminOps {
@@ -60,6 +63,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             throw new RuntimeException("Exceed maximum bookings in a day");
         }
 
+        // check if user has any outstanding dues
+        if (checkForDuesOwed(bookingDto.getEmail())) {
+            throw new RuntimeException("Dues Owed");
+        }
+
         List<CorporatePass> availPasses = getAvailablePasses(bookingDto.getDate(), bookingDto.getMembershipName());
         // check if there is enough passes for the day
         if (availPasses.size() < bookingDto.getQuantity()) {
@@ -81,22 +89,29 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingResults);
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
-        emailService.sendHtmlMessage(borrowerObject.getEmail(), "CPA - Booking Confirmation",
-                templateEngine.getContent());
 
-        AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(
-                membership.getAttachmentTemplate(), bookingResults);
-        AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
-        PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
-        emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
-                templateEngine.getContent(),
-                Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
 
-        if (!membership.getIsElectronicPass()) {
-            // todo attach authorisation form
+        if (membership.getIsElectronicPass()) {
+            List<Attachment> ePassAttachmentList = new ArrayList<>();
+            for (int i = 0; i < bookingResults.size(); i++) {
+                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingResults.get(i));
+                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingResults.get(i), i+1);
+                PdfFactory pdfFactory = new PdfFactory(ePass);
+                ePassAttachmentList.add(new Attachment("ePass" + (i+1), pdfFactory.generatePdfFile()));
+
+            }
+
+            emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                    templateEngine.getContent(), ePassAttachmentList);
+
         } else {
-            // todo attach ePasses
+            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingResults);
+            AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+            PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
+
+            emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
+                    templateEngine.getContent(), Arrays.asList(new Attachment("Authorization Letter.pdf", pdfFactory.generatePdfFile())));
         }
 
         return true;
@@ -141,6 +156,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         distinctLocationSet.add(bookingDto.getMembershipName());
 
         return (userBookingsInDay.size() + qty > 2) || (distinctLocationSet.size() > 1);
+    }
+
+    public boolean checkForDuesOwed(String email) {
+
+        List<Booking> userBookingsWithDuesOwed = bookingRepository.findByBorrowerEmailAndBookingStatus(email,
+                BookingStatus.DUESOWED);
+
+        return userBookingsWithDuesOwed.size() > 0;
     }
 
     public List<CorporatePass> getAvailablePasses(LocalDate date, String membershipName) {
@@ -310,6 +333,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             currentMembership.setMembershipName(updatedMembership.getMembershipName());
         }
 
+        if (updatedMembership.getMembershipAddress() != null) {
+            currentMembership.setMembershipAddress(updatedMembership.getMembershipAddress());
+        }
+
         if (updatedMembership.getDescription() != null) {
             currentMembership.setDescription(updatedMembership.getDescription());
         }
@@ -322,6 +349,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             currentMembership.setEmailTemplate(updatedMembership.getEmailTemplate());
         }
 
+        if (updatedMembership.getAttachmentTemplate() != null) {
+            currentMembership.setAttachmentTemplate(updatedMembership.getAttachmentTemplate());
+        }
+
+        if (updatedMembership.getImageUrl() != null) {
+            currentMembership.setImageUrl(updatedMembership.getImageUrl());
+        }
+
         currentMembership.setIsElectronicPass(updatedMembership.getIsElectronicPass());
 
         return membershipRepository.saveAndFlush(currentMembership);
@@ -331,6 +366,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         pass.setMembership(membership);
         pass.setIsActive(true);
         return corporatePassRepository.saveAndFlush(pass);
+    }
+
+    public List<CorporatePass> createPasses(Membership membership, List<CorporatePass> newPasses) {
+        for (CorporatePass newPass : newPasses) {
+            this.createPass(membership, newPass);
+        }
+
+        return corporatePassRepository.findByMembershipAndIsActive(membership, true);
     }
 
     public List<CorporatePass> updatePasses(String membershipName, List<CorporatePass> updatedPasses) {
@@ -461,6 +504,14 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         return bookingResponseDTO;
     }
 
+    public void deleteBookingsByBorrower(String email) {
+        List<Booking> bookings = bookingRepository.findByBorrowDateAfterAndBorrowerEmailAndBookingStatusNot(LocalDate.now(), email, BookingStatus.COLLECTED);
+        for (Booking booking : bookings) {
+            bookingRepository.delete(booking);
+        }
+        bookingRepository.flush();
+    }
+
     public void sendReturnCardReminderEmails() {
         LocalDate today = LocalDate.now();
         List<Booking> allBookings = bookingRepository.findAll();
@@ -494,5 +545,4 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             }
         }
     }
-
 }

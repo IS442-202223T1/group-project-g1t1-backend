@@ -7,6 +7,8 @@ import java.util.List;
 public class MembershipDTO {
     private String membershipName;
 
+    private String membershipAddress;
+
     private Template emailTemplate;
 
     private Template attachmentTemplate;
@@ -27,6 +29,14 @@ public class MembershipDTO {
 
     public void setMembershipName(String membershipName) {
         this.membershipName = membershipName;
+    }
+
+    public String getMembershipAddress() {
+        return membershipAddress;
+    }
+
+    public void setMembershipAddress(String membershipAddress) {
+        this.membershipAddress = membershipAddress;
     }
 
     public double getReplacementFee() {

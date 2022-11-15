@@ -43,21 +43,23 @@ public class AuthorizationLetter implements PdfTemplate {
             contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
 
             //WordUtils.wrap not working so implement manual wrapping.
+            int wrapLength = 100;
             for (String pdfContent : pdfContents) {
                 if (!pdfContent.isEmpty()) {
                     String[] subContent = pdfContent.split(" ");
 
-                    int wrapLength = 100;
+                    int charQuota = wrapLength;
                     String perLine = "";
                     for (String s : subContent) {
-                        wrapLength -= s.length() + 1;
-                        if (wrapLength > 0) {
+                        charQuota -= s.length() + 1;
+                        if (charQuota > 0) {
                             perLine += s + " ";
                         } else {
                             contentStream.showText(perLine.substring(0, perLine.length() - 1));
                             contentStream.newLine();
-                            wrapLength = 200;
+                            charQuota = wrapLength;
                             perLine = s + " ";
+                            charQuota -= s.length()+1;
                         }
                     }
                     contentStream.showText(perLine.substring(0, perLine.length() - 1));
