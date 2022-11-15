@@ -13,6 +13,8 @@ import com.is442project.cpa.common.pdf.PdfFactory;
 import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
+import com.is442project.cpa.config.GlobalConfig;
+import com.is442project.cpa.config.GlobalConfigRepository;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -33,15 +35,17 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     private final CorporatePassRepository corporatePassRepository;
     private final AccountService accountService;
     private final EmailService emailService;
+    private final GlobalConfigRepository globalConfigRepository;
 
     public BookingService(BookingRepository bookingRepository, AccountService accountService,
             CorporatePassRepository corporatePassRepository, MembershipRepository membershipRepository,
-            EmailService emailService) {
+            EmailService emailService, GlobalConfigRepository globalConfigRepository) {
         this.bookingRepository = bookingRepository;
         this.corporatePassRepository = corporatePassRepository;
         this.accountService = accountService;
         this.membershipRepository = membershipRepository;
         this.emailService = emailService;
+        this.globalConfigRepository = globalConfigRepository;
     }
 
     public boolean bookPass(BookingDTO bookingDto) throws RuntimeException {
@@ -52,7 +56,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         // check if user exceed 2 loans a month
         if (checkExceedMonthlyLimit(bookingDto)) {
-            throw new RuntimeException("You have exceeded 2 loans in a month");
+            throw new RuntimeException("You have exceeded the maximum loans in a month");
         }
 
         // check if user exceed 2 bookings in the desired day
@@ -127,7 +131,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         userBookingsSet.add(bookingDto.getDate().toString() + bookingDto.getMembershipName());
 
-        return userBookingsSet.size() > 2;
+        GlobalConfig config = globalConfigRepository.findFirstBy();
+        int monthlyLimit = config.getLoanLimitPerMonth();
+
+        return userBookingsSet.size() > monthlyLimit;
     }
 
     public boolean checkExceedDailyLimit(BookingDTO bookingDto) {
@@ -145,7 +152,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         distinctLocationSet.add(bookingDto.getMembershipName());
 
-        return (userBookingsInDay.size() + qty > 2) || (distinctLocationSet.size() > 1);
+        GlobalConfig config = globalConfigRepository.findFirstBy();
+        int dailyLimit = config.getPassLimitPerLoan();
+
+        return (userBookingsInDay.size() + qty > dailyLimit) || (distinctLocationSet.size() > 1);
     }
 
     public boolean checkForDuesOwed(String email) {
