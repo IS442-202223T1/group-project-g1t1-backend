@@ -77,7 +77,6 @@ class CorporatePassApplicationTests {
 		//arrange
 		Membership sampleMemberShip = membershipRepository.findById(Long.valueOf(1)).get();
 
-
 		Booking booking = bookingRepository.findById(5).get();
 
 		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
@@ -93,7 +92,6 @@ class CorporatePassApplicationTests {
 	public void GenerateLetterPDF() {
 		//arrange
 		Membership sampleMemberShip = membershipRepository.findById(4L).get();
-
 
 		Booking booking = bookingRepository.findById(2).get();
 

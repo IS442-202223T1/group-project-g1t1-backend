@@ -9,4 +9,5 @@ public interface PdfTemplate {
     String CORPORATE_MEMBER_NAME = "Singapore Sports School";
 
     PDDocument getPdfDocument();
+    
 }

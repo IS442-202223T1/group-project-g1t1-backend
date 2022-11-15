@@ -36,7 +36,7 @@ public class EmailHelper {
         sb.append("Dear " + booking.getBorrower().getName() + ",");
         sb.append("<br><br>");
         sb.append(String.format("The Corporate Pass: %s under your booking to %s on %s is due to be returned",
-                 booking.getCorporatePass().getPassID(),booking.getCorporatePass().getMembership().getMembershipName(), booking.getBorrowDate().toString()));
+                booking.getCorporatePass().getPassID(),booking.getCorporatePass().getMembership().getMembershipName(), booking.getBorrowDate().toString()));
 
         sb.append("<br><br>");
         sb.append("Please return the above corporate pass to the General Pass Office.");

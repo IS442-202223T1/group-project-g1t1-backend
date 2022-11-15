@@ -21,7 +21,7 @@ public class TemplateEngine {
             String key = userfriendlyKeys.next();
             vtlFormatTemplateContent=vtlFormatTemplateContent.replaceAll("\\}\\}", ">");
             vtlFormatTemplateContent=vtlFormatTemplateContent.replaceAll("\\{\\{", "<");
-           vtlFormatTemplateContent = vtlFormatTemplateContent.replaceAll(key, Matcher.quoteReplacement(placeholders.get(key)));
+            vtlFormatTemplateContent = vtlFormatTemplateContent.replaceAll(key, Matcher.quoteReplacement(placeholders.get(key)));
         }
 
         Velocity.evaluate(templateResources.getTemplateContextMapper(), writer, "", vtlFormatTemplateContent);

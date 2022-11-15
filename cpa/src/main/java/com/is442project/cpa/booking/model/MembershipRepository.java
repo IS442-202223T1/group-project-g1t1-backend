@@ -12,4 +12,5 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
   Optional<Membership> findByMembershipName(String membershipName);
 
   List<Membership> findByIsActive(boolean isActive);
+  
 }

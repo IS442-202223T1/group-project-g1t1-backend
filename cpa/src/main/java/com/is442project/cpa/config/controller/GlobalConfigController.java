@@ -12,7 +12,7 @@ import com.is442project.cpa.config.service.GlobalConfigService;
 @RestController
 @RequestMapping("/api/v1/global-config")
 public class GlobalConfigController {
-  
+
     private final GlobalConfigOps globalConfigOps;
 
     public GlobalConfigController(GlobalConfigService globalConfigService) {
@@ -22,8 +22,8 @@ public class GlobalConfigController {
     @GetMapping("")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity getOne() {
-      GlobalConfig result = globalConfigOps.getOne();
-      return new ResponseEntity<>(result, HttpStatus.OK);
+        GlobalConfig result = globalConfigOps.getOne();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping("")

@@ -39,8 +39,8 @@ public class BorrowerController {
     @GetMapping("/")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<List<Membership>> getMemberships() {
-      List<Membership> result = borrowerOps.getAllActiveMemberships();
-      return new ResponseEntity<>(result, HttpStatus.OK);
+        List<Membership> result = borrowerOps.getAllActiveMemberships();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/booking/create-booking")
@@ -70,9 +70,9 @@ public class BorrowerController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<MembershipForBorrowerResponseDTO> getMembershipDetails(
         @PathVariable("membershipName") String membershipName) {
-      Membership membership = borrowerOps.getMembershipByName(membershipName);
-      MembershipForBorrowerResponseDTO membershipDTO = this.convertToMembershipForBorrowerResponseDTO(membership);
-      return new ResponseEntity<>(membershipDTO, HttpStatus.OK);
+        Membership membership = borrowerOps.getMembershipByName(membershipName);
+        MembershipForBorrowerResponseDTO membershipDTO = this.convertToMembershipForBorrowerResponseDTO(membership);
+        return new ResponseEntity<>(membershipDTO, HttpStatus.OK);
     }
 
     @PutMapping("/cancelBooking")
@@ -89,7 +89,7 @@ public class BorrowerController {
         MembershipForBorrowerResponseDTO membershipForBorrowerResponseDTO = mapper.map(membership, MembershipForBorrowerResponseDTO.class);
 
         return membershipForBorrowerResponseDTO;
-      }
+    }
 
     @PostMapping("/upcoming-bookings")
     public ResponseEntity upcomingBookings(@RequestBody GetBookingsDTO getBookingsDTO){
@@ -102,4 +102,5 @@ public class BorrowerController {
         List<BookingResponseDTO> bookingList = borrowerOps.getPastBookings(getBookingsDTO.getEmail());
         return ResponseEntity.ok(bookingList);
     }
+    
 }

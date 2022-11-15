@@ -170,4 +170,5 @@ public class Membership {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
+    
 }

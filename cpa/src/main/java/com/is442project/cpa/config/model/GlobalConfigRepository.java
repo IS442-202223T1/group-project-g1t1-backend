@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 public interface GlobalConfigRepository extends JpaRepository<GlobalConfig, Integer> {
 
     GlobalConfig findFirstBy();
-  
+
 }

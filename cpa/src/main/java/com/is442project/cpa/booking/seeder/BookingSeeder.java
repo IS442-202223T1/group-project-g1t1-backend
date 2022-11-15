@@ -68,4 +68,5 @@ public class BookingSeeder {
         System.out.println("======TEST BOOKINGS INSERTED======");
 
     }
+    
 }

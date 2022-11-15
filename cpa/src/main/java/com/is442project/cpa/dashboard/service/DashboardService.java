@@ -104,7 +104,7 @@ public class DashboardService implements DashboardOps {
             EmployeeReportDTO employeeReport = new EmployeeReportDTO(name, email, 0, period);
             resultList.add(employeeReport);
         }
-   
+
         for (Booking booking:bookings){
             String borrowerEmail = booking.getBorrower().getEmail();
             for (EmployeeReportDTO employee:resultList){
