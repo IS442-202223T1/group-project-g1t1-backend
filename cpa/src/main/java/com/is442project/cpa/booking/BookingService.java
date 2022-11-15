@@ -326,6 +326,10 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             currentMembership.setEmailTemplate(updatedMembership.getEmailTemplate());
         }
 
+        if (updatedMembership.getAttachmentTemplate() != null) {
+            currentMembership.setAttachmentTemplate(updatedMembership.getAttachmentTemplate());
+        }
+
         if (updatedMembership.getImageUrl() != null) {
             currentMembership.setImageUrl(updatedMembership.getImageUrl());
         }

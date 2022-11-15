@@ -22,10 +22,12 @@ public class Membership {
 
     @AttributeOverride(name="templateContent", column=@Column(name="EMAIL_TEMPLATE_CONTENT"))
     @Embedded
+    @NotNull
     private Template emailTemplate;
 
     @AttributeOverride(name = "templateContent", column = @Column(name = "ATTACHMENT_TEMPLATE_CONTENT"))
     @Embedded
+    @NotNull
     private Template attachmentTemplate;
 
     @NotNull
