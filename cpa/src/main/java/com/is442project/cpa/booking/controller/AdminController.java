@@ -52,6 +52,7 @@ public class AdminController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<MembershipDTO> createMembershipDTO(@RequestBody MembershipDTO newMembershipDTO) {
         Membership newMembership = convertToMembershipEntity(newMembershipDTO);
+        newMembership.setIsActive(true);
         Membership membership = adminOps.createMembership(newMembership);
 
         List<CorporatePass> newPasses = newMembershipDTO.getCorporatePasses();
