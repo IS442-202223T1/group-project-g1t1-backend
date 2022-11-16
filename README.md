@@ -1,10 +1,40 @@
-# Backend
+<div id="top"></div>
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+
+  <h3 align="center">IS442 G1T1 Backend</h3>
+
+</div>
 
 [![Build Status](https://travis-ci.org/codecentric/springboot-sample-app.svg?branch=master)](https://travis-ci.org/codecentric/springboot-sample-app)
 [![Coverage Status](https://coveralls.io/repos/github/codecentric/springboot-sample-app/badge.svg?branch=master)](https://coveralls.io/github/codecentric/springboot-sample-app?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Minimal [Spring Boot](http://projects.spring.io/spring-boot/) sample app.
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#requirements">Requirements</a>
+    </li>
+    <li>
+      <a href="#installation-and-set-up">Installation and Set-Up</a>
+    </li>
+      <ul>
+        <li><a href="#set-up-local-directories">Set-up Local Directories</a></li>
+      </ul>
+      <ul>
+        <li><a href="#provide-environment-variables">Provide Environment Variables</a></li>
+      </ul>
+    <li>
+      <a href="#running-the-application-locally">Running the Application Locally</a>
+    </li>
+    <li><a href="#authentication-via-jwt">Authentication via JWT</a></li>
+    <li><a href="#copyright">Copyright</a></li>
+  </ol>
+</details>
 
 ## Requirements
 
@@ -12,6 +42,8 @@ For building and running the application you need:
 
 - [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Installation and Set-Up
 
@@ -36,7 +68,9 @@ cd cpa
 
 **Note: `.env` is automatically ignored by git`**
 
-## Running the application locally
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Running the Application Locally
 
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `cpa.src.main.java.com.is442project.cpa.CorporatePassApplication` class from your IDE.
 
@@ -49,6 +83,8 @@ mvn spring-boot:run
 ```
 
 By default, the application runs on port 8080.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Authentication via JWT
 
@@ -87,6 +123,10 @@ Alternatively, use `scripts/get_access_token.sh` to get an access token printed 
 Bearer XXX
 ```
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Copyright
 
 Released under the Apache License 2.0. See the [LICENSE](https://github.com/codecentric/springboot-sample-app/blob/master/LICENSE) file.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
