@@ -25,6 +25,9 @@
         <li><a href="#set-up-local-directories">Set-up Local Directories</a></li>
       </ul>
       <ul>
+        <li><a href="#choosing-the-environment-to-run">Choosing Environment Variables</a></li>
+      </ul>
+      <ul>
         <li><a href="#provide-environment-variables">Provide Environment Variables</a></li>
       </ul>
     <li>
@@ -61,6 +64,16 @@ Clone this repository or download to files to local directory. Open a terminal s
 cd /path/to/group-project-g1t1-backend
 ```
 
+### Choosing the Environment to run
+This application is created to be production ready. To streamline the setup for developers, a dev environment was setup to use H2, an in-memory database and seeding of test data. 
+
+To run the application in production, a separate environment properties is created.
+
+Instruction to choose which environment properties the application should run:
+1. Open `src\main\java\resources\application.properties`
+2. Update the attribute `spring.profiles.active` from  `dev` to `prod` for production mode and vice versa for development mode. 
+
+
 ### Provide Environment Variables
 
 This application relies on Mail Credentials, Web Server URL and Authentication Secrets to assist in computation logic and data. We need to provide it the following information. Edit the different variables in `.env.example` using any text editor (`vi .env.example`).
@@ -70,7 +83,8 @@ This application relies on Mail Credentials, Web Server URL and Authentication S
 cd cpa
 ```
 2. Replace `<>` fields with the respective information
-3. Rename `.env.example` to `.env`
+3. Rename `.env.dev.example` to `.env` for running in development mode
+4. Rename `.env.prod.example` to `.env` for running in Production mode
 
 **Note: `.env` is automatically ignored by git`**
 
