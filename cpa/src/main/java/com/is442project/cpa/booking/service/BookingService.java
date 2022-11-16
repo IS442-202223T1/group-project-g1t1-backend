@@ -62,6 +62,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     private final GlobalConfigRepository globalConfigRepository;
 
+    private GlobalConfig globalConfig;
+
     public BookingService(BookingRepository bookingRepository, AccountService accountService,
             CorporatePassRepository corporatePassRepository, MembershipRepository membershipRepository,
             EmailService emailService, GlobalConfigRepository globalConfigRepository) {
@@ -71,9 +73,13 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         this.membershipRepository = membershipRepository;
         this.emailService = emailService;
         this.globalConfigRepository = globalConfigRepository;
+
+        this.globalConfig = globalConfigRepository.findFirstBy();
     }
 
     public List<Booking> bookPass(BookingDTO bookingDTO) throws RuntimeException {
+        this.globalConfig = globalConfigRepository.findFirstBy();
+
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
         Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
@@ -130,7 +136,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             List<Attachment> ePassAttachmentList = new ArrayList<>();
             for (int i = 0; i < bookingEmailDTO.getBookingResults().size(); i++) {
                 ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults().get(i));
-                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
+                ElectronicPass ePass = new ElectronicPass(globalConfig, ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
                 PdfFactory pdfFactory = new PdfFactory(ePass);
                 ePassAttachmentList.add(new Attachment("ePass" + (i+1), pdfFactory.generatePdfFile()));
 
@@ -141,7 +147,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         } else {
             AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults());
-            AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+            AuthorizationLetter authorizationLetter = new AuthorizationLetter(globalConfig,attachmentTemplate);
             PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
             emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
@@ -171,8 +177,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         userBookingsSet.add(bookingDto.getDate().toString() + bookingDto.getMembershipName());
 
-        GlobalConfig config = globalConfigRepository.findFirstBy();
-        int monthlyLimit = config.getLoanLimitPerMonth();
+        int monthlyLimit = globalConfig.getLoanLimitPerMonth();
 
         return userBookingsSet.size() > monthlyLimit;
     }
@@ -192,8 +197,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         distinctLocationSet.add(bookingDto.getMembershipName());
 
-        GlobalConfig config = globalConfigRepository.findFirstBy();
-        int dailyLimit = config.getPassLimitPerLoan();
+        int dailyLimit = globalConfig.getPassLimitPerLoan();
 
         return (userBookingsInDay.size() + qty > dailyLimit) || (distinctLocationSet.size() > 1);
     }

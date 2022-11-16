@@ -2,6 +2,7 @@ package com.is442project.cpa.common.pdf;
 
 import com.is442project.cpa.common.template.TemplateEngine;
 import com.is442project.cpa.common.template.TemplateResources;
+import com.is442project.cpa.config.model.GlobalConfig;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -16,7 +17,10 @@ public class AuthorizationLetter implements PdfTemplate {
 
     private final TemplateResources templateResources;
 
-    public AuthorizationLetter(TemplateResources templateResources) {
+    private final GlobalConfig globalConfig;
+
+    public AuthorizationLetter(GlobalConfig globalConfig, TemplateResources templateResources) {
+        this.globalConfig = globalConfig;
         this.templateResources = templateResources;
     }
 
@@ -29,7 +33,7 @@ public class AuthorizationLetter implements PdfTemplate {
         document.addPage(page);
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-            PDImageXObject letterHeadImage = PDImageXObject.createFromFile(PdfTemplate.LETTER_HEAD_URL, document);
+            PDImageXObject letterHeadImage = PDImageXObject.createFromFile(globalConfig.getLetterHeadUrl(), document);
 
             contentStream.drawImage(letterHeadImage, 0, page.getTrimBox().getHeight() - 120, page.getTrimBox().getWidth(), 110);
 

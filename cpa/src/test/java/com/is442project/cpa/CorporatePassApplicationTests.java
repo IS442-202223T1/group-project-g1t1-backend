@@ -14,6 +14,7 @@ import com.is442project.cpa.common.template.AuthorizationLetterTemplate;
 import com.is442project.cpa.common.template.ElectronicPassTemplate;
 import com.is442project.cpa.common.template.EmailTemplate;
 import com.is442project.cpa.common.template.TemplateEngine;
+import com.is442project.cpa.config.model.GlobalConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,9 +58,11 @@ class CorporatePassApplicationTests {
 		sb.append(String.format("Date: <current_date>%n%n"));
 
 		Booking booking = bookingRepository.findById(5).get();
+		GlobalConfig globalConfig = new GlobalConfig(2, 2,
+				"src/main/resources/images/LetterHead.png", "Singapore Sports School");
 
 		AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(sb.toString(), Arrays.asList(booking));
-		AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+		AuthorizationLetter authorizationLetter = new AuthorizationLetter(globalConfig, attachmentTemplate);
 		PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 		try {
 			Attachment attachment = new Attachment("Zoo Authorization Letter", pdfFactory.generatePdfFile());
@@ -95,8 +98,11 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(2).get();
 
+		GlobalConfig globalConfig = new GlobalConfig(2, 2,
+				"src/main/resources/images/LetterHead.png", "Singapore Sports School");
+
 		ElectronicPassTemplate electronicPassTemplate = new ElectronicPassTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
-		ElectronicPass ePass = new ElectronicPass(electronicPassTemplate, booking,1);
+		ElectronicPass ePass = new ElectronicPass(globalConfig, electronicPassTemplate, booking,1);
 
 		PdfFactory pdfFactory = new PdfFactory(ePass);
 

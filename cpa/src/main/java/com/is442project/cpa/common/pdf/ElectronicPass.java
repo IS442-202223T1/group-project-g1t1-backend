@@ -3,6 +3,7 @@ package com.is442project.cpa.common.pdf;
 import com.is442project.cpa.booking.model.Booking;
 import com.is442project.cpa.common.template.TemplateEngine;
 import com.is442project.cpa.common.template.TemplateResources;
+import com.is442project.cpa.config.model.GlobalConfig;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -31,7 +32,10 @@ public class ElectronicPass implements PdfTemplate {
 
     private final int passSeq;
 
-    public ElectronicPass(TemplateResources templateResources, Booking booking, int passSeq) {
+    private final GlobalConfig globalConfig;
+
+    public ElectronicPass(GlobalConfig globalConfig, TemplateResources templateResources, Booking booking, int passSeq) {
+        this.globalConfig = globalConfig;
         this.templateResources = templateResources;
         this.booking = booking;
         this.passSeq = passSeq;
@@ -47,7 +51,7 @@ public class ElectronicPass implements PdfTemplate {
 
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
             //add letter head
-            PDImageXObject letterHeadImage = PDImageXObject.createFromFile(PdfTemplate.LETTER_HEAD_URL, document);
+            PDImageXObject letterHeadImage = PDImageXObject.createFromFile(globalConfig.getLetterHeadUrl(), document);
 
             contentStream.drawImage(letterHeadImage, 0, page.getTrimBox().getHeight() - 120,
                     letterHeadImage.getWidth(), letterHeadImage.getHeight());
@@ -139,7 +143,7 @@ public class ElectronicPass implements PdfTemplate {
                     contentStream.newLine();
                 }
             }
-            contentStream.showText(PdfTemplate.CORPORATE_MEMBER_NAME.toUpperCase());
+            contentStream.showText(globalConfig.getCorporateMemberName().toUpperCase());
             contentStream.newLine();
 
             contentStream.endText();
