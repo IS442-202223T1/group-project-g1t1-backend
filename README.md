@@ -13,6 +13,29 @@ For building and running the application you need:
 - [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
 
+## Installation and Set-Up
+
+### Set-up Local Directories
+
+Clone this repository or download to files to local directory. Open a terminal session and navigate to this application root (`.../group-project-g1t1-backend`)
+
+```bash
+cd /path/to/group-project-g1t1-backend
+```
+
+### Provide Environment Variables
+
+This application relies on Mail Credentials, Web Server URL and Authentication Secrets to assist in computation logic and data. We need to provide it the following information. Edit the different variables in `.env.example` using any text editor (`vi .env.example`).
+
+1. Navigate to application root
+```bash
+cd cpa
+```
+2. Replace `<>` fields with the respective information
+3. Rename `.env.example` to `.env`
+
+**Note: `.env` is automatically ignored by git`**
+
 ## Running the application locally
 
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `cpa.src.main.java.com.is442project.cpa.CorporatePassApplication` class from your IDE.
@@ -62,28 +85,6 @@ Alternatively, use `scripts/get_access_token.sh` to get an access token printed 
 ❯ ./scripts/get_access_token.sh
 
 Bearer XXX
-```
-
-## Deploying the application to OpenShift
-
-The easiest way to deploy the sample application to OpenShift is to use the [OpenShift CLI](https://docs.openshift.org/latest/cli_reference/index.html):
-
-```shell
-oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app
-```
-
-This will create:
-
-* An ImageStream called "springboot-maven3-centos"
-* An ImageStream called "springboot-sample-app"
-* A BuildConfig called "springboot-sample-app"
-* DeploymentConfig called "springboot-sample-app"
-* Service called "springboot-sample-app"
-
-If you want to access the app from outside your OpenShift installation, you have to expose the springboot-sample-app service:
-
-```shell
-oc expose springboot-sample-app --hostname=www.example.com
 ```
 
 ## Copyright
