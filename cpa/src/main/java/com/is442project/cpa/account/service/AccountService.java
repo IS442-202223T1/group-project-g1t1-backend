@@ -13,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import com.is442project.cpa.account.dto.ProfileDTO;
 import com.is442project.cpa.account.exception.UnauthorizedException;
 import com.is442project.cpa.account.model.Borrower;
+import com.is442project.cpa.account.model.Role;
 import com.is442project.cpa.account.model.UserAccount;
 import com.is442project.cpa.account.model.UserAccountRepository;
 import com.is442project.cpa.account.model.UserCreateRequest;
