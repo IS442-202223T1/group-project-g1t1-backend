@@ -43,4 +43,10 @@ public class GopController {
         List<Booking> bookingList = gopOps.getBookingsByEmail(email);
         return ResponseEntity.ok(bookingList);
     }
+
+    @GetMapping("/bookings/")
+    public ResponseEntity bookingsByEmail(){
+        List<Booking> bookingList = gopOps.getBookingsByEmail("");
+        return ResponseEntity.ok(bookingList);
+    }
 }
