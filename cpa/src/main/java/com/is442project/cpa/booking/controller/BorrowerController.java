@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.is442project.cpa.booking.dto.BookerDetailsResponseDTO;
 import com.is442project.cpa.booking.dto.BookingDTO;
+import com.is442project.cpa.booking.dto.BookingEmailDTO;
 import com.is442project.cpa.booking.dto.BookingIDDTO;
 import com.is442project.cpa.booking.dto.BookingResponseDTO;
 import com.is442project.cpa.booking.dto.GetBookingsDTO;
@@ -46,7 +47,7 @@ public class BorrowerController {
     @PostMapping("/booking/create-booking")
     public ResponseEntity addBooking(@RequestBody BookingDTO bookingDto){
         try {
-            boolean newBookings = borrowerOps.bookPass(bookingDto);
+            List<Booking> newBookings = borrowerOps.bookPass(bookingDto);
             return ResponseEntity.ok(newBookings);
         } catch (RuntimeException e) {
             if(e.getMessage() == "Insufficient Passes") {
@@ -62,8 +63,17 @@ public class BorrowerController {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
             }
-            
         }
+    }
+
+    @PostMapping("/booking/email")
+    public ResponseEntity sendEmail(@RequestBody BookingEmailDTO bookingEmailDTO){
+        try {
+            boolean emailSent = borrowerOps.sendEmail(bookingEmailDTO);
+            return ResponseEntity.ok(emailSent);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }   
     }
 
     @GetMapping("/membership/{membershipName}")

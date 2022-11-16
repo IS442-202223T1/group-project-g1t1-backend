@@ -29,6 +29,7 @@ import com.is442project.cpa.booking.model.Booking.BookingStatus;
 import com.is442project.cpa.booking.model.CorporatePass.Status;
 import com.is442project.cpa.booking.dto.BookerDetailsResponseDTO;
 import com.is442project.cpa.booking.dto.BookingDTO;
+import com.is442project.cpa.booking.dto.BookingEmailDTO;
 import com.is442project.cpa.booking.dto.BookingResponseDTO;
 import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
@@ -72,38 +73,38 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         this.globalConfigRepository = globalConfigRepository;
     }
 
-    public boolean bookPass(BookingDTO bookingDto) throws RuntimeException {
-        UserAccount borrowerObject = accountService.readUserByEmail(bookingDto.getEmail());
+    public List<Booking> bookPass(BookingDTO bookingDTO) throws RuntimeException {
+        UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
-        Membership membership = membershipRepository.findByMembershipName(bookingDto.getMembershipName())
-                .orElseThrow(() -> new MembershipNotFoundException(bookingDto.getMembershipName()));
+        Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
+                .orElseThrow(() -> new MembershipNotFoundException(bookingDTO.getMembershipName()));
 
         // check if user exceed 2 loans a month
-        if (checkExceedMonthlyLimit(bookingDto)) {
+        if (checkExceedMonthlyLimit(bookingDTO)) {
             throw new RuntimeException("You have exceeded the maximum loans in a month");
         }
 
         // check if user exceed 2 bookings in the desired day
-        if (checkExceedDailyLimit(bookingDto)) {
+        if (checkExceedDailyLimit(bookingDTO)) {
             throw new RuntimeException("You have exceeded the maximum bookings in a day");
         }
 
         // check if user has any outstanding dues
-        if (checkForDuesOwed(bookingDto.getEmail())) {
+        if (checkForDuesOwed(bookingDTO.getEmail())) {
             throw new RuntimeException("You have outstanding dues to be paid");
         }
 
-        List<CorporatePass> availPasses = getAvailablePasses(bookingDto.getDate(), bookingDto.getMembershipName());
+        List<CorporatePass> availPasses = getAvailablePasses(bookingDTO.getDate(), bookingDTO.getMembershipName());
         // check if there is enough passes for the day
-        if (availPasses.size() < bookingDto.getQuantity()) {
+        if (availPasses.size() < bookingDTO.getQuantity()) {
             throw new RuntimeException("Insufficient Passes");
         }
 
         // add booking to db
         List<Booking> bookingResults = new ArrayList<>();
-        for (int i = 0; i < bookingDto.getQuantity(); i++) {
+        for (int i = 0; i < bookingDTO.getQuantity(); i++) {
             CorporatePass assignedPass = availPasses.get(i);
-            Booking newBooking = new Booking(bookingDto.getDate(), borrowerObject, assignedPass);
+            Booking newBooking = new Booking(bookingDTO.getDate(), borrowerObject, assignedPass);
             // if membership is epass then booking status is set to collected
             if (membership.getIsElectronicPass()) {
                 newBooking.setBookingStatus(BookingStatus.COLLECTED);
@@ -112,14 +113,24 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             bookingResults.add(bookingResult);
         }
 
-        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingResults);
+        return bookingResults;
+    }
+
+    public boolean sendEmail(BookingEmailDTO bookingEmailDTO) {
+
+        UserAccount borrowerObject = accountService.readUserByEmail(bookingEmailDTO.getEmail());
+
+        Membership membership = membershipRepository.findByMembershipName(bookingEmailDTO.getMembershipName())
+                .orElseThrow(() -> new MembershipNotFoundException(bookingEmailDTO.getMembershipName()));
+
+        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingEmailDTO.getBookingResults());
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
 
         if (membership.getIsElectronicPass()) {
             List<Attachment> ePassAttachmentList = new ArrayList<>();
-            for (int i = 0; i < bookingResults.size(); i++) {
-                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingResults.get(i));
-                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingResults.get(i), i+1);
+            for (int i = 0; i < bookingEmailDTO.getBookingResults().size(); i++) {
+                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults().get(i));
+                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
                 PdfFactory pdfFactory = new PdfFactory(ePass);
                 ePassAttachmentList.add(new Attachment("ePass" + (i+1), pdfFactory.generatePdfFile()));
 
@@ -129,7 +140,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                     templateEngine.getContent(), ePassAttachmentList);
 
         } else {
-            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingResults);
+            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults());
             AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
             PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
