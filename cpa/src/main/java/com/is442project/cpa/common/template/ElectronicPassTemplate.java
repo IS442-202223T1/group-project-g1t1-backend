@@ -1,13 +1,11 @@
 package com.is442project.cpa.common.template;
 
-import com.is442project.cpa.booking.Booking;
+import com.is442project.cpa.booking.model.Booking;
 import com.is442project.cpa.common.pdf.PdfTemplate;
 import org.apache.velocity.VelocityContext;
 
 import javax.persistence.Embeddable;
-import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Embeddable
@@ -53,4 +51,5 @@ public class ElectronicPassTemplate extends Template implements TemplateResource
 
         return context;
     }
+    
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public class TemplateEngine {
+    
     StringWriter writer = new StringWriter();
 
     public TemplateEngine(TemplateResources templateResources) {
@@ -20,7 +21,7 @@ public class TemplateEngine {
             String key = userfriendlyKeys.next();
             vtlFormatTemplateContent=vtlFormatTemplateContent.replaceAll("\\}\\}", ">");
             vtlFormatTemplateContent=vtlFormatTemplateContent.replaceAll("\\{\\{", "<");
-           vtlFormatTemplateContent = vtlFormatTemplateContent.replaceAll(key, Matcher.quoteReplacement(placeholders.get(key)));
+            vtlFormatTemplateContent = vtlFormatTemplateContent.replaceAll(key, Matcher.quoteReplacement(placeholders.get(key)));
         }
 
         Velocity.evaluate(templateResources.getTemplateContextMapper(), writer, "", vtlFormatTemplateContent);
@@ -29,4 +30,5 @@ public class TemplateEngine {
     public String getContent() {
         return writer.toString();
     }
+
 }

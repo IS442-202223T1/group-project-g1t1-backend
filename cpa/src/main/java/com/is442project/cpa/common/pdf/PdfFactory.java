@@ -1,13 +1,17 @@
 package com.is442project.cpa.common.pdf;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.mail.util.ByteArrayDataSource;
-import java.io.*;
 
 public class PdfFactory {
 
     private final PDDocument pdDocument;
+
     public PdfFactory(PdfTemplate pdfTemplate)  {
         pdDocument = pdfTemplate.getPdfDocument();
     }
@@ -21,8 +25,6 @@ public class PdfFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 
 }

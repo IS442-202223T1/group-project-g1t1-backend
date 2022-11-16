@@ -1,10 +1,10 @@
 package com.is442project.cpa.common.template;
 
-import com.is442project.cpa.booking.Booking;
 import org.apache.velocity.VelocityContext;
 
+import com.is442project.cpa.booking.model.Booking;
+
 import javax.persistence.Embeddable;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,4 +53,5 @@ public class AuthorizationLetterTemplate extends Template implements TemplateRes
 
         return context;
     }
+    
 }

@@ -13,10 +13,14 @@ import java.util.Set;
 
 
 public class ApiError {
+    
     private HttpStatus status;
+
     @JsonFormat(shape =JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
+
     private String message;
+
     private String debugMessage;
 
     private List<ApiSubError> subErrors;
@@ -126,7 +130,5 @@ public class ApiError {
     public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
         constraintViolations.forEach(this::addValidationError);
     }
-
-
 
 }

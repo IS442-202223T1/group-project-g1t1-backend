@@ -1,13 +1,15 @@
 package com.is442project.cpa.common.email;
 
-import com.is442project.cpa.booking.Booking;
+import com.is442project.cpa.booking.model.Booking;
 
 public class EmailHelper {
 
     public static final String EMAIL_SUBJECT_ORIGIN = "CPA - ";
     public static final String EMAIL_SYSTEM_GENERATED = "--------------This is a system genearted email-------------- ";
     public static final String EMAIL_SUBJECT_CANCELLED = EMAIL_SUBJECT_ORIGIN + "Booking Confirmation Cancelled";
+
     public static final String EMAIL_SUBJECT_RETURN_REMINDER = EMAIL_SUBJECT_ORIGIN + "Return Corporate Pass Reminder";
+    
     public static final String EMAIL_SUBJECT_COLLECT_REMINDER = EMAIL_SUBJECT_ORIGIN + "Collect Corporate Pass Reminder";
     public static final String EMAIL_SUBJECT_COLLECTED = EMAIL_SUBJECT_ORIGIN + "Corporate Pass Collected!";
     public static final String EMAIL_SUBJECT_LOST_CARD = EMAIL_SUBJECT_ORIGIN + "Corporate Pass Lost";
@@ -36,7 +38,7 @@ public class EmailHelper {
         sb.append("Dear " + booking.getBorrower().getName() + ",");
         sb.append("<br><br>");
         sb.append(String.format("The Corporate Pass: %s under your booking to %s on %s is due to be returned",
-                 booking.getCorporatePass().getPassID(),booking.getCorporatePass().getMembership().getMembershipName(), booking.getBorrowDate().toString()));
+                booking.getCorporatePass().getPassID(),booking.getCorporatePass().getMembership().getMembershipName(), booking.getBorrowDate().toString()));
 
         sb.append("<br><br>");
         sb.append("Please return the above corporate pass to the General Pass Office.");
@@ -48,7 +50,6 @@ public class EmailHelper {
 
         return sb.toString();
     }
-
 
     public static String EMAIL_CONTENT_COLLECT_REMINDER(Booking booking) {
         StringBuilder sb = new StringBuilder();

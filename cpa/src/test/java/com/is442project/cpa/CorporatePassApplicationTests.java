@@ -1,10 +1,10 @@
 package com.is442project.cpa;
 
-import com.is442project.cpa.account.AccountService;
-import com.is442project.cpa.booking.Booking;
-import com.is442project.cpa.booking.BookingRepository;
-import com.is442project.cpa.booking.Membership;
-import com.is442project.cpa.booking.MembershipRepository;
+import com.is442project.cpa.account.service.AccountService;
+import com.is442project.cpa.booking.model.Booking;
+import com.is442project.cpa.booking.model.BookingRepository;
+import com.is442project.cpa.booking.model.Membership;
+import com.is442project.cpa.booking.model.MembershipRepository;
 import com.is442project.cpa.common.email.Attachment;
 import com.is442project.cpa.common.email.EmailService;
 import com.is442project.cpa.common.pdf.AuthorizationLetter;
@@ -72,12 +72,10 @@ class CorporatePassApplicationTests {
 		}
 	}
 
-
 	@Test
 	public void GenerateEmailContent_usingTemplateEngine_shouldGenerateContent() {
 		//arrange
 		Membership sampleMemberShip = membershipRepository.findById(Long.valueOf(1)).get();
-
 
 		Booking booking = bookingRepository.findById(5).get();
 
@@ -94,7 +92,6 @@ class CorporatePassApplicationTests {
 	public void GenerateLetterPDF() {
 		//arrange
 		Membership sampleMemberShip = membershipRepository.findById(4L).get();
-
 
 		Booking booking = bookingRepository.findById(2).get();
 

@@ -13,6 +13,7 @@ import java.io.IOException;
 public class AuthorizationLetter implements PdfTemplate {
 
     private final PDDocument document = new PDDocument();
+
     private final TemplateResources templateResources;
 
     public AuthorizationLetter(TemplateResources templateResources) {
@@ -79,4 +80,5 @@ public class AuthorizationLetter implements PdfTemplate {
 
         return document;
     }
+    
 }

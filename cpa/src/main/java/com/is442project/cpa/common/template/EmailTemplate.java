@@ -1,13 +1,15 @@
 package com.is442project.cpa.common.template;
 
-import com.is442project.cpa.booking.Booking;
 import org.apache.velocity.VelocityContext;
+
+import com.is442project.cpa.booking.model.Booking;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Embeddable
 public class EmailTemplate extends Template implements TemplateResources {
 
@@ -48,6 +50,5 @@ public class EmailTemplate extends Template implements TemplateResources {
 
         return context;
     }
-
 
 }
