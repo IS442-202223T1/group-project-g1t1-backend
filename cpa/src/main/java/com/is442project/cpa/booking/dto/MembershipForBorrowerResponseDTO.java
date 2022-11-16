@@ -11,6 +11,6 @@ public class MembershipForBorrowerResponseDTO {
 
     private String description;
 
-    private String address;
+    private String membershipAddress;
 
 }
