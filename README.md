@@ -13,7 +13,10 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#requirements">Requirements</a>
+      <a href="#about-the-project">About the Project</a>
+    </li>
+    <li>
+      <a href="#prerequisites">Prerequisites</a>
     </li>
     <li>
       <a href="#installation-and-set-up">Installation and Set-Up</a>
@@ -37,10 +40,12 @@
 Java-based RESTful API built with Spring Boot. This API serves the computation logic needed for the Corporate Pass Application for Singapore Sports School and is optimized to be used by its [accompanying web application](https://github.com/IS442-202223T1/group-project-g1t1-frontend).
 
 <img src="./uml-class-diagram.png" alt="UML Class Diagram" width=500 />
-## Requirements
 
-For building and running the application you need:
+## Prerequisites
 
+- Recommended platform
+  - Development: macOS Monterey (Intel)
+  - Production: Linux (Ubuntu 16.04)
 - [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
 
