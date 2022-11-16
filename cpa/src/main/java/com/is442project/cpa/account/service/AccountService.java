@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -28,6 +30,11 @@ public class AccountService implements UserOps {
 
     public UserAccount readUserByEmail (String email) {
         return userAccountRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<UserAccount> getAllAdmins() {
+        List<UserAccount> users = userAccountRepository.findAll();
+        return users.stream().filter(userAccount -> userAccount.getRoles().contains(new Role("admin"))).collect(Collectors.toList());
     }
 
     public UserAccount createUser(UserCreateRequest userCreateRequest) {
