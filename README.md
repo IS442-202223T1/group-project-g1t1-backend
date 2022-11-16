@@ -36,6 +36,11 @@
   </ol>
 </details>
 
+## About the Project
+
+Java-based RESTful API built with Spring Boot. This API serves the computation logic needed for the Corporate Pass Application for Singapore Sports School and is optimized to be used by its [accompanying web application](https://github.com/IS442-202223T1/group-project-g1t1-frontend).
+
+<img src="./uml-class-diagram.png" alt="UML Class Diagram" width=500 />
 ## Requirements
 
 For building and running the application you need:
