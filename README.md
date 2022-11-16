@@ -25,6 +25,9 @@
         <li><a href="#set-up-local-directories">Set-up Local Directories</a></li>
       </ul>
       <ul>
+        <li><a href="#choosing the Environment to run">Choosing Environment Variables</a></li>
+      </ul>
+      <ul>
         <li><a href="#provide-environment-variables">Provide Environment Variables</a></li>
       </ul>
     <li>
@@ -62,9 +65,9 @@ cd /path/to/group-project-g1t1-backend
 ```
 
 ### Choosing the Environment to run
-This application is created to be production ready. To streamline the setup for developers, a dev environment was setup to use H2, an in-memory database. 
+This application is created to be production ready. To streamline the setup for developers, a dev environment was setup to use H2, an in-memory database and seeding of test data. 
 
-To run the applicable in production, a separate environment properties is created.
+To run the application in production, a separate environment properties is created.
 
 Instruction to choose which environment properties the application should run:
 1. Open `src\main\java\resources\application.properties`
