@@ -62,6 +62,8 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
     private final GlobalConfigRepository globalConfigRepository;
 
+    private GlobalConfig globalConfig;
+
     public BookingService(BookingRepository bookingRepository, AccountService accountService,
             CorporatePassRepository corporatePassRepository, MembershipRepository membershipRepository,
             EmailService emailService, GlobalConfigRepository globalConfigRepository) {
@@ -71,9 +73,13 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         this.membershipRepository = membershipRepository;
         this.emailService = emailService;
         this.globalConfigRepository = globalConfigRepository;
+
+        this.globalConfig = globalConfigRepository.findFirstBy();
     }
 
     public List<Booking> bookPass(BookingDTO bookingDTO) throws RuntimeException {
+        this.globalConfig = globalConfigRepository.findFirstBy();
+
         UserAccount borrowerObject = accountService.readUserByEmail(bookingDTO.getEmail());
 
         Membership membership = membershipRepository.findByMembershipName(bookingDTO.getMembershipName())
@@ -171,8 +177,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         userBookingsSet.add(bookingDto.getDate().toString() + bookingDto.getMembershipName());
 
-        GlobalConfig config = globalConfigRepository.findFirstBy();
-        int monthlyLimit = config.getLoanLimitPerMonth();
+        int monthlyLimit = globalConfig.getLoanLimitPerMonth();
 
         return userBookingsSet.size() > monthlyLimit;
     }
@@ -192,8 +197,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         distinctLocationSet.add(bookingDto.getMembershipName());
 
-        GlobalConfig config = globalConfigRepository.findFirstBy();
-        int dailyLimit = config.getPassLimitPerLoan();
+        int dailyLimit = globalConfig.getPassLimitPerLoan();
 
         return (userBookingsInDay.size() + qty > dailyLimit) || (distinctLocationSet.size() > 1);
     }
