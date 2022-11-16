@@ -136,7 +136,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
             List<Attachment> ePassAttachmentList = new ArrayList<>();
             for (int i = 0; i < bookingEmailDTO.getBookingResults().size(); i++) {
                 ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults().get(i));
-                ElectronicPass ePass = new ElectronicPass(ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
+                ElectronicPass ePass = new ElectronicPass(globalConfig, ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
                 PdfFactory pdfFactory = new PdfFactory(ePass);
                 ePassAttachmentList.add(new Attachment("ePass" + (i+1), pdfFactory.generatePdfFile()));
 
@@ -147,7 +147,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         } else {
             AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults());
-            AuthorizationLetter authorizationLetter = new AuthorizationLetter(attachmentTemplate);
+            AuthorizationLetter authorizationLetter = new AuthorizationLetter(globalConfig,attachmentTemplate);
             PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
             emailService.sendHtmlMessageWithAttachments(borrowerObject.getEmail(), "CPA - Booking Confirmation",
