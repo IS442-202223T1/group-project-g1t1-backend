@@ -1,19 +1,82 @@
-# Backend
+<div id="top"></div>
 
-[![Build Status](https://travis-ci.org/codecentric/springboot-sample-app.svg?branch=master)](https://travis-ci.org/codecentric/springboot-sample-app)
-[![Coverage Status](https://coveralls.io/repos/github/codecentric/springboot-sample-app/badge.svg?branch=master)](https://coveralls.io/github/codecentric/springboot-sample-app?branch=master)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
 
-Minimal [Spring Boot](http://projects.spring.io/spring-boot/) sample app.
+  <h3 align="center">IS442 G1T1 Backend</h3>
 
-## Requirements
+</div>
 
-For building and running the application you need:
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About the Project</a>
+    </li>
+    <li>
+      <a href="#prerequisites">Prerequisites</a>
+    </li>
+    <li>
+      <a href="#installation-and-set-up">Installation and Set-Up</a>
+    </li>
+      <ul>
+        <li><a href="#set-up-local-directories">Set-up Local Directories</a></li>
+      </ul>
+      <ul>
+        <li><a href="#provide-environment-variables">Provide Environment Variables</a></li>
+      </ul>
+    <li>
+      <a href="#running-the-application-locally">Running the Application Locally</a>
+    </li>
+    <li><a href="#authentication-via-jwt">Authentication via JWT</a></li>
+    <li><a href="#copyright">Copyright</a></li>
+  </ol>
+</details>
 
+## About the Project
+
+Java-based RESTful API built with Spring Boot. This API serves the computation logic needed for the Corporate Pass Application for Singapore Sports School and is optimized to be used by its [accompanying web application](https://github.com/IS442-202223T1/group-project-g1t1-frontend).
+
+<img src="./uml-class-diagram.png" alt="UML Class Diagram" width=500 />
+
+## Prerequisites
+
+- Recommended platform
+  - Development: macOS Monterey (Intel)
+  - Production: Linux (Ubuntu 16.04)
 - [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven 3](https://maven.apache.org)
 
-## Running the application locally
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Installation and Set-Up
+
+### Set-up Local Directories
+
+Clone this repository or download to files to local directory. Open a terminal session and navigate to this application root (`.../group-project-g1t1-backend`)
+
+```bash
+cd /path/to/group-project-g1t1-backend
+```
+
+### Provide Environment Variables
+
+This application relies on Mail Credentials, Web Server URL and Authentication Secrets to assist in computation logic and data. We need to provide it the following information. Edit the different variables in `.env.example` using any text editor (`vi .env.example`).
+
+1. Navigate to application root
+```bash
+cd cpa
+```
+2. Replace `<>` fields with the respective information
+3. Rename `.env.example` to `.env`
+
+**Note: `.env` is automatically ignored by git`**
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Running the Application Locally
 
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `cpa.src.main.java.com.is442project.cpa.CorporatePassApplication` class from your IDE.
 
@@ -26,6 +89,8 @@ mvn spring-boot:run
 ```
 
 By default, the application runs on port 8080.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Authentication via JWT
 
@@ -64,28 +129,10 @@ Alternatively, use `scripts/get_access_token.sh` to get an access token printed 
 Bearer XXX
 ```
 
-## Deploying the application to OpenShift
-
-The easiest way to deploy the sample application to OpenShift is to use the [OpenShift CLI](https://docs.openshift.org/latest/cli_reference/index.html):
-
-```shell
-oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app
-```
-
-This will create:
-
-* An ImageStream called "springboot-maven3-centos"
-* An ImageStream called "springboot-sample-app"
-* A BuildConfig called "springboot-sample-app"
-* DeploymentConfig called "springboot-sample-app"
-* Service called "springboot-sample-app"
-
-If you want to access the app from outside your OpenShift installation, you have to expose the springboot-sample-app service:
-
-```shell
-oc expose springboot-sample-app --hostname=www.example.com
-```
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Copyright
 
 Released under the Apache License 2.0. See the [LICENSE](https://github.com/codecentric/springboot-sample-app/blob/master/LICENSE) file.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
