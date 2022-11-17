@@ -138,7 +138,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                 ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults().get(i));
                 ElectronicPass ePass = new ElectronicPass(globalConfig, ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
                 PdfFactory pdfFactory = new PdfFactory(ePass);
-                ePassAttachmentList.add(new Attachment("ePass" + (i+1), pdfFactory.generatePdfFile()));
+                ePassAttachmentList.add(new Attachment("ePass" + (i+1) +".pdf", pdfFactory.generatePdfFile()));
 
             }
 
