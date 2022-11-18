@@ -116,5 +116,60 @@ public class DashboardService implements DashboardOps {
 
         return resultList;
     }
+
+    public List<EmployeeReportDTO> getEmployeeUsageReport(int month, int year, List<UserAccount> allUsers){
+
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = YearMonth.of(year, month).atEndOfMonth();
+        // LocalDate now = LocalDate.now();
+        // int thisMonth = now.getMonthValue();
+        // int thisYear = now.getYear();
+        // LocalDate end = LocalDate.now();
+        // LocalDate start = LocalDate.now();
+        // String period = new String();
+
+        // if(duration.equals("month")){
+        //     start = now.withDayOfMonth(1);
+        //     end = now.withDayOfMonth(now.getMonth().length(now.isLeapYear()));
+        //     period = Month.of(thisMonth).toString() + " " + thisYear;
+        // } else if(duration.equals("biannual")){
+        //     if(now.getMonthValue() <= 6){
+        //         start = now.withMonth(1).withDayOfMonth(1);
+        //         end = now.withMonth(6).withDayOfMonth(30);
+        //         period = "Jan " + thisYear + " - Jun " + thisYear;
+        //     } else {
+        //         start = now.withMonth(7).withDayOfMonth(1);
+        //         end = now.withMonth(12).withDayOfMonth(31);
+        //         period = "Jul " + thisYear + " - Dec " + thisYear;
+        //     } 
+        // } else if(duration.equals("annual")){
+        //     start = now.with(TemporalAdjusters.firstDayOfYear());
+        //     end = now.with(TemporalAdjusters.lastDayOfYear());
+        //     period = thisYear + "";
+        // } else {
+        //     throw new EntityNotFoundException("Invalid duration");
+        // }
+
+        List<EmployeeReportDTO> resultList = new ArrayList<>();
+        List<Booking> bookings = bookingRepository.findByBorrowDateBetweenAndBookingStatusNot(start, end, BookingStatus.CANCELLED);
+
+        for (UserAccount user:allUsers){
+            String email = user.getEmail();
+            String name = user.getName();
+            EmployeeReportDTO employeeReport = new EmployeeReportDTO(name, email, 0, Month.of(month).toString() + " " + year);
+            resultList.add(employeeReport);
+        }
+
+        for (Booking booking:bookings){
+            String borrowerEmail = booking.getBorrower().getEmail();
+            for (EmployeeReportDTO employee:resultList){
+                if (employee.getEmployeeEmail().equals(borrowerEmail)){
+                    employee.setNumberOfLoans(employee.getNumberOfLoans() + 1);
+                }
+            }
+        }
+
+        return resultList;
+    }
     
 }

@@ -9,7 +9,9 @@ import com.is442project.cpa.dashboard.dto.MonthlyReportDTO;
 public interface DashboardOps {
 
     public abstract List<EmployeeReportDTO> getEmployeeUsageReport(String duration, List<UserAccount> allUsers);
-	
+
+    public abstract List<EmployeeReportDTO> getEmployeeUsageReport(int month, int year, List<UserAccount> allUsers);
+
     public abstract List<MonthlyReportDTO> getMonthlyReport();
 
 }
