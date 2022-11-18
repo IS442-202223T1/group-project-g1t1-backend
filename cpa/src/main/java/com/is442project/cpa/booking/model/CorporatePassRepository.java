@@ -15,6 +15,8 @@ public interface CorporatePassRepository extends JpaRepository<CorporatePass, Lo
 
     List<CorporatePass> findByMembershipAndIsActive(Membership membership, boolean isActive);
 
+    List<CorporatePass> findByMembership(Membership membership);
+
     List<CorporatePass> findByStatusNotAndMembership(Status status, Membership membership);
     
 }

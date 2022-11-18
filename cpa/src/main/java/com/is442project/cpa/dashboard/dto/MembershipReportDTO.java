@@ -3,7 +3,7 @@ package com.is442project.cpa.dashboard.dto;
 import lombok.Data;
 
 @Data
-public class MonthlyReportDTO {
+public class MembershipReportDTO {
 
     private String month;
 
@@ -13,9 +13,9 @@ public class MonthlyReportDTO {
 
     private int numberOfBorrowers;
 
-    public MonthlyReportDTO(){}
+    public MembershipReportDTO(){}
 
-    public MonthlyReportDTO(String month, String year, int numberOfLoans, int numberOfBorrowers) {
+    public MembershipReportDTO(String month, String year, int numberOfLoans, int numberOfBorrowers) {
         this.month = month;
         this.year = year;
         this.numberOfLoans = numberOfLoans;
