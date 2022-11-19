@@ -12,5 +12,6 @@ public interface GopOps {
     public abstract List<CorporatePass> getAllPasses();
 
     public abstract List<Booking> getBookingsByEmail(String email);
-    
+
+    public abstract List<Booking> getBookingsToday();
 }

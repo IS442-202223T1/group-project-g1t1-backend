@@ -490,13 +490,27 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
 
         for (Booking booking : bookings) {
             if((booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
-
                 openBookingsByEmail.add(booking);
             }
         }
 
         return openBookingsByEmail;
+    }
 
+    public List<Booking> getBookingsToday() {
+        List<Booking> bookings;
+        List<Booking> openBookingsByEmail = new ArrayList<>();
+        LocalDate localDate = LocalDate.now();
+
+        bookings = bookingRepository.findByBorrowDate(localDate);
+
+        for (Booking booking : bookings) {
+            if((booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
+                openBookingsByEmail.add(booking);
+            }
+        }
+
+        return openBookingsByEmail;
     }
 
     public boolean updateBookingStatus(int bookingID, String actionToPerform) {
