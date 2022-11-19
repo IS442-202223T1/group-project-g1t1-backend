@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -486,6 +488,31 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         }
         else{
             bookings = bookingRepository.findByBorrowerEmail(email);
+        }
+
+        for (Booking booking : bookings) {
+            if((booking.getBookingStatus() == BookingStatus.CONFIRMED ||booking.getBookingStatus() == BookingStatus.COLLECTED || booking.getBookingStatus() == BookingStatus.DUESOWED) && !booking.getCorporatePass().getMembership().getIsElectronicPass()){
+
+                openBookingsByEmail.add(booking);
+            }
+        }
+
+        return openBookingsByEmail;
+
+    }
+
+    public List<Booking> getBookingsContainingEmail(String email) {
+        List<Booking> bookings;
+        List<Booking> openBookingsByEmail = new ArrayList<>();
+
+        System.out.println(email);
+        if(email == null || email.equals("")){
+            bookings = bookingRepository.findAll();
+        }
+        else{
+            System.out.println(email);
+            bookings = bookingRepository.findByBorrowerEmailContaining(email);
+            System.out.println(bookings);
         }
 
         for (Booking booking : bookings) {
