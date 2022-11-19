@@ -110,4 +110,8 @@ public class CorporatePass {
         this.expiryDate = expiryDate;
     }
 
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
