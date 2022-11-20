@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.is442project.cpa.account.model.UserAccount;
 import com.is442project.cpa.account.service.AccountService;
@@ -688,6 +689,24 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                 logger.info("COLLECT PASS reminder email sent to: " + booking.getBorrower().getEmail());
             }
         }
+    }
+
+    public HashMap<LocalDate, HashSet<CorporatePass>> getAvailableBooking(LocalDate startDate, LocalDate endDate) {
+        HashMap<LocalDate, HashSet<CorporatePass>> availableBookings = new HashMap<>();
+        List<CorporatePass> corporatePasses = corporatePassRepository.findAll();
+        HashSet<CorporatePass> corporatePassesSet = corporatePasses.stream().collect(Collectors.toCollection(HashSet::new));
+        for (LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+            HashSet<CorporatePass> corporatePassesCopy = new HashSet<>();
+            corporatePassesCopy.addAll(corporatePassesSet);
+            availableBookings.put(date, corporatePassesCopy);
+            List<Booking> bookings = bookingRepository.findByBorrowDate(date);
+            for (Booking booking : bookings) {
+                if (booking.getBookingStatus() != BookingStatus.CANCELLED && booking.getBookingStatus() != BookingStatus.RETURNED) {
+                    availableBookings.get(date).remove(booking.getCorporatePass());
+                }
+            }
+        }
+        return availableBookings;
     }
 
 }

@@ -1,6 +1,9 @@
 package com.is442project.cpa.booking.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +27,7 @@ import com.is442project.cpa.booking.dto.BookingResponseDTO;
 import com.is442project.cpa.booking.dto.GetBookingsDTO;
 import com.is442project.cpa.booking.dto.MembershipForBorrowerResponseDTO;
 import com.is442project.cpa.booking.model.Booking;
+import com.is442project.cpa.booking.model.CorporatePass;
 import com.is442project.cpa.booking.model.Membership;
 import com.is442project.cpa.booking.service.BookingService;
 import com.is442project.cpa.booking.service.BorrowerOps;
@@ -42,6 +47,12 @@ public class BorrowerController {
     public ResponseEntity<List<Membership>> getMemberships() {
         List<Membership> result = borrowerOps.getAllActiveMemberships();
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/available-booking")
+    public ResponseEntity availableBooking(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate){
+        HashMap<LocalDate, HashSet<CorporatePass>> bookingList = borrowerOps.getAvailableBooking(LocalDate.parse(startDate), LocalDate.parse(endDate));
+        return ResponseEntity.ok(bookingList);
     }
 
     @PostMapping("/booking/create-booking")
@@ -112,5 +123,4 @@ public class BorrowerController {
         List<BookingResponseDTO> bookingList = borrowerOps.getPastBookings(getBookingsDTO.getEmail());
         return ResponseEntity.ok(bookingList);
     }
-    
 }
