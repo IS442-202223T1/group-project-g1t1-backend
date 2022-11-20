@@ -14,4 +14,6 @@ public interface GopOps {
     public abstract List<Booking> getBookingsByEmail(String email);
 
     public abstract List<Booking> getBookingsToday();
+
+    public abstract List<Booking> getBookingsContainingEmail(String email);
 }
