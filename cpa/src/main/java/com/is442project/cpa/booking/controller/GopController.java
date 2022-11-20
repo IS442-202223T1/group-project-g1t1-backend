@@ -44,6 +44,12 @@ public class GopController {
         return ResponseEntity.ok(bookingList);
     }
 
+    @GetMapping("/bookings/today")
+    public ResponseEntity bookingsByDate(){
+        List<Booking> bookingList = gopOps.getBookingsToday();
+        return ResponseEntity.ok(bookingList);
+    }
+
     @GetMapping("/bookings-containing/{email}")
     public ResponseEntity bookingsContainingEmail(@PathVariable("email") String email){
         List<Booking> bookingList = gopOps.getBookingsContainingEmail(email);
