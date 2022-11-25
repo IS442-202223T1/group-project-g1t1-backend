@@ -4,8 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -526,7 +524,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         }
         else{
             System.out.println(email);
-            bookings = bookingRepository.findByBorrowerEmailContaining(email);
+            bookings = bookingRepository.findByBorrowerEmailContainingIgnoreCase(email);
             System.out.println(bookings);
         }
 

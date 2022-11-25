@@ -3,9 +3,7 @@ package com.is442project.cpa.booking.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,7 +12,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
     List<Booking> findByBorrowerEmail(String email);
 
     // @Query("FROM Booking b WHERE b.email LIKE %:email%")
-    List<Booking> findByBorrowerEmailContaining(String email);
+    List<Booking> findByBorrowerEmailContainingIgnoreCase(String email);
 
     List<Booking> findByBorrowDate(LocalDate date);
 
