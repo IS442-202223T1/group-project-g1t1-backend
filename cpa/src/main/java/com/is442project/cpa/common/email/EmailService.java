@@ -30,7 +30,7 @@ public class EmailService {
         this.emailSender = emailSender;
     }
 
-    public void sendHtmlMessage(String to, String subject, String body) {
+    public boolean sendHtmlMessage(String to, String subject, String body) {
         try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
@@ -40,32 +40,10 @@ public class EmailService {
             mimeMessageHelper.setText(body, true);
 
             emailSender.send(mimeMessage);
-        } catch (MessagingException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public boolean sendHtmlTemplate(String to, String subject, String templatePath) {
-        String message;
-        try {
-            message = Files.asCharSource(new File(templatePath), Charsets.UTF_8).read();
-            message = message.replace("{{webServer}}", WEB_SERVER_URL);
-            message = message.replace("{{email}}", to);
-            MimeMessage mimeMessage = emailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
-            mimeMessageHelper.setFrom(EMAIL_SENDER);
-            mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(message, true);
-
-            emailSender.send(mimeMessage);
 
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        catch (MessagingException e) {
-            e.printStackTrace();
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
         }
         return false;
     }

@@ -19,6 +19,9 @@ public class EmailController {
     @Value("${spring.mail.emailChecking}")
     private boolean emailChecking;
 
+    @Value("${web.server.url}")
+    private String webServer;
+
     public EmailController(EmailService emailService) {
         this.emailService = emailService;
     }
@@ -32,9 +35,8 @@ public class EmailController {
             return ResponseEntity.badRequest().body("Invalid email");
         }
 
-        String subject = "Complete Your SSS Pass Service Account Registration";
-        String templatePath = "src/main/resources/emailTemplates/registration.html";
-        boolean isEmailSent = emailService.sendHtmlTemplate(email, subject, templatePath);
+        String subject = EmailHelper.EMAIL_SUBJECT_REGISTRATION;
+        boolean isEmailSent = emailService.sendHtmlMessage(email, subject, EmailHelper.EMAIL_CONTENT_REGISTRATION(webServer, email));
         return isEmailSent ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
     

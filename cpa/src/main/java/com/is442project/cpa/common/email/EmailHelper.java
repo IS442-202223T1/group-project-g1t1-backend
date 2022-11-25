@@ -14,6 +14,8 @@ public class EmailHelper {
     public static final String EMAIL_SUBJECT_COLLECTED = EMAIL_SUBJECT_ORIGIN + "Corporate Pass Collected!";
     public static final String EMAIL_SUBJECT_LOST_CARD = EMAIL_SUBJECT_ORIGIN + "Corporate Pass Lost";
 
+    public static final String EMAIL_SUBJECT_REGISTRATION = EMAIL_SUBJECT_ORIGIN + "Complete Your Account Registration";
+
     public static final String EMAIL_CONTENT_CANCELLED(Booking booking) {
 
         StringBuilder sb = new StringBuilder();
@@ -110,6 +112,22 @@ public class EmailHelper {
 
         sb.append("<br><br><br>");
         sb.append(EMAIL_SYSTEM_GENERATED);
+
+        return sb.toString();
+    }
+
+    public static String EMAIL_CONTENT_REGISTRATION(String webServer, String email) {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<p>Dear Borrower,</p>");
+        sb.append("<p>Please click the button below to verify your email address and complete your account creation.</p>");
+        sb.append(String.format("<a href=%s/create-account?email=%s>Verify</a>", webServer, email));
+        sb.append("<p>If you did not request for an account creation, no further action is required.</p>");
+        sb.append("<br>");
+        sb.append("Warm regards");
+        sb.append("<br>");
+        sb.append("HR Department");
 
         return sb.toString();
     }
