@@ -1,6 +1,7 @@
 package com.is442project.cpa.booking.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,9 +51,15 @@ public class GopController {
         return ResponseEntity.ok(bookingList);
     }
 
-    @GetMapping("/bookings-containing/{email}")
-    public ResponseEntity bookingsContainingEmail(@PathVariable("email") String email){
-        List<Booking> bookingList = gopOps.getBookingsContainingEmail(email);
+    @GetMapping(value={"/bookings-containing","/bookings-containing/{email}"})
+    public ResponseEntity bookingsContainingEmail(@PathVariable Optional<String> email){
+        String emailValue = "";
+
+        if(email.isPresent()) {
+            emailValue = email.get();
+        }
+
+        List<Booking> bookingList = gopOps.getBookingsContainingEmail(emailValue);
         return ResponseEntity.ok(bookingList);
     }
 
