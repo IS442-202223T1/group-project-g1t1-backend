@@ -67,6 +67,10 @@ public class BookingSeeder {
                 for (int i = 0; i < random.nextInt(passes.size()); i++) {
                     randomBooking = new Booking(LocalDate.of(2022, month, day), users.get(random.nextInt(users.size())), passes.get(i), BookingStatus.RETURNED);
                     bookingList.add(randomBooking);
+
+                    if(month == LocalDate.now().getMonthValue() && day > LocalDate.now().getDayOfMonth()) {
+                        randomBooking.setBookingStatus(BookingStatus.CONFIRMED);
+                    }
                 }
             }
         }
@@ -80,24 +84,6 @@ public class BookingSeeder {
                 bookingList.get(i).setBookingStatus(BookingStatus.CANCELLED);
             }
         }
-
-
-//        Booking booking3 = new Booking(LocalDate.of(2022, 7, 2), borrower1, corporatePass2, BookingStatus.RETURNED);
-//        Booking booking4 = new Booking(LocalDate.of(2022, 7, 3), borrower1, corporatePass1, BookingStatus.RETURNED);
-//        Booking booking5 = new Booking(LocalDate.of(2022, 7, 5), borrower2, corporatePass2, BookingStatus.RETURNED);
-//        Booking booking6 = new Booking(LocalDate.of(2022, 7, 7), borrower2, corporatePass2, BookingStatus.RETURNED);
-//
-//        Booking booking7 = new Booking(LocalDate.of(2022, 1, 16), borrower2, corporatePass1, BookingStatus.RETURNED);
-//        Booking booking8 = new Booking(LocalDate.of(2022, 1, 18), borrower2, corporatePass1, BookingStatus.RETURNED);
-//        Booking booking9 = new Booking(LocalDate.of(2022, 1, 1), borrower2, corporatePass2, BookingStatus.CONFIRMED);
-//        Booking booking10 = new Booking(LocalDate.of(2022, 1, 2), borrower1, corporatePass2, BookingStatus.COLLECTED);
-//
-//        Booking booking11 = new Booking(LocalDate.of(2022, 11, 15), borrower1, corporatePass1, BookingStatus.COLLECTED);
-//        Booking booking12 = new Booking(LocalDate.of(2022,10,12), borrower2, corporatePass2, BookingStatus.DUESOWED, 54.0);
-//        Booking booking13 = new Booking(LocalDate.of(2022,12,13), borrower2, corporatePass1, BookingStatus.CONFIRMED);
-//        Booking booking14 = new Booking(LocalDate.of(2022,12,14), borrower2, corporatePass1, BookingStatus.CONFIRMED);
-//        Booking booking15 = new Booking(LocalDate.of(2022,12,15), borrower2, corporatePass2, BookingStatus.CONFIRMED);
-//        Booking booking100 = new Booking(LocalDate.of(2022, 12, 16), borrower1, corporatePass1, BookingStatus.CONFIRMED);
 
         bookingRepository.saveAllAndFlush(bookingList);
 
