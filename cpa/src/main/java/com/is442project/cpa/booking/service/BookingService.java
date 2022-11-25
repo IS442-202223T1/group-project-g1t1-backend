@@ -518,14 +518,15 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         List<Booking> bookings;
         List<Booking> openBookingsByEmail = new ArrayList<>();
 
-        System.out.println(email);
+        logger.debug(email);
         if(email == null || email.equals("")){
             bookings = bookingRepository.findAll();
         }
         else{
-            System.out.println(email);
+            logger.debug(email);
             bookings = bookingRepository.findByBorrowerEmailContainingIgnoreCase(email);
-            System.out.println(bookings);
+            logger.debug(bookings.toString());
+
         }
 
         for (Booking booking : bookings) {
