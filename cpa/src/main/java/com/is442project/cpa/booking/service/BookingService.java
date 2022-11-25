@@ -674,12 +674,11 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
     }
 
     public void sendCollectReminderEmails() {
-        LocalDate today = LocalDate.now();
-        today.plusDays(1);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         List<Booking> bookings = bookingRepository.findAll();
         ArrayList<String> emails = new ArrayList<>();
         for (Booking booking : bookings) {
-            if (booking.getBookingStatus() == BookingStatus.CONFIRMED && booking.getBorrowDate().equals(today) && !booking.getCorporatePass().getMembership().getIsElectronicPass()) {
+            if (booking.getBookingStatus() == BookingStatus.CONFIRMED && booking.getBorrowDate().equals(tomorrow) && !booking.getCorporatePass().getMembership().getIsElectronicPass()) {
                 emailService.sendHtmlMessage(
                     booking.getBorrower().getEmail(),
                     EmailHelper.EMAIL_SUBJECT_COLLECT_REMINDER,
