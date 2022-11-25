@@ -20,7 +20,7 @@ public class GlobalConfigSeeder {
     }
 
     private void insertTestBooking(){
-        GlobalConfig globalConfig = new GlobalConfig(2,2,"src/main/resources/images/LetterHead.png", "Singapore Sports School");
+        GlobalConfig globalConfig = new GlobalConfig(2,2,"src/main/resources/images/LetterHead.png", "Singapore Sports School", "dd/MM/yyyy");
 
         globalConfigRepository.saveAllAndFlush(Arrays.asList(globalConfig));
 

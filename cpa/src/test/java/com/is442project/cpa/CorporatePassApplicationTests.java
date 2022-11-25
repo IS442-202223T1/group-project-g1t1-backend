@@ -59,9 +59,9 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(5).get();
 		GlobalConfig globalConfig = new GlobalConfig(2, 2,
-				"src/main/resources/images/LetterHead.png", "Singapore Sports School");
+				"src/main/resources/images/LetterHead.png", "Singapore Sports School", "dd/MM/yyyy");
 
-		AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(sb.toString(), Arrays.asList(booking));
+		AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(globalConfig, sb.toString(), Arrays.asList(booking));
 		AuthorizationLetter authorizationLetter = new AuthorizationLetter(globalConfig, attachmentTemplate);
 		PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 		try {
@@ -82,7 +82,10 @@ class CorporatePassApplicationTests {
 
 		Booking booking = bookingRepository.findById(5).get();
 
-		EmailTemplate emailTemplate = new EmailTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
+		GlobalConfig globalConfig = new GlobalConfig(2, 2,
+				"src/main/resources/images/LetterHead.png", "Singapore Sports School", "dd/MM/yyyy");
+
+		EmailTemplate emailTemplate = new EmailTemplate(globalConfig,sampleMemberShip.getAttachmentTemplate().getTemplateContent(), Arrays.asList(booking));
 
 
 		TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
@@ -99,9 +102,9 @@ class CorporatePassApplicationTests {
 		Booking booking = bookingRepository.findById(2).get();
 
 		GlobalConfig globalConfig = new GlobalConfig(2, 2,
-				"src/main/resources/images/LetterHead.png", "Singapore Sports School");
+				"src/main/resources/images/LetterHead.png", "Singapore Sports School", "dd/MM/yyyy");
 
-		ElectronicPassTemplate electronicPassTemplate = new ElectronicPassTemplate(sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
+		ElectronicPassTemplate electronicPassTemplate = new ElectronicPassTemplate(globalConfig,sampleMemberShip.getAttachmentTemplate().getTemplateContent(), booking);
 		ElectronicPass ePass = new ElectronicPass(globalConfig, electronicPassTemplate, booking,1);
 
 		PdfFactory pdfFactory = new PdfFactory(ePass);
