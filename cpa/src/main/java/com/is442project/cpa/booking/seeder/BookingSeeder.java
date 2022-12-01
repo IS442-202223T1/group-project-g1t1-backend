@@ -51,8 +51,8 @@ public class BookingSeeder {
 
         List<Booking> bookingList = new ArrayList<>();
 
-        Booking booking1 = new Booking(LocalDate.of(2022, 11, 18), borrower1, corporatePass1, BookingStatus.CONFIRMED);
-        Booking booking2 = new Booking(LocalDate.of(2022, 11, 18), borrower2, corporatePass2, BookingStatus.CONFIRMED);
+        Booking booking1 = new Booking(LocalDate.of(2022, 12, 6), borrower1, corporatePass1, BookingStatus.CONFIRMED);
+        Booking booking2 = new Booking(LocalDate.of(2022, 12, 6), borrower2, corporatePass2, BookingStatus.CONFIRMED);
         bookingList.add(booking1);
         bookingList.add(booking2);
 
@@ -62,7 +62,7 @@ public class BookingSeeder {
         List<CorporatePass> passes = corporatePassRepository.findAll();
 
         Booking randomBooking;
-        for (int month = 1; month <= 10 ; month++) {
+        for (int month = 1; month <= 11 ; month++) {
             for (int day = 1; day <= 28; day++) {
                 for (int i = 0; i < random.nextInt(passes.size()); i++) {
                     randomBooking = new Booking(LocalDate.of(2022, month, day), users.get(random.nextInt(users.size())), passes.get(i), BookingStatus.RETURNED);
