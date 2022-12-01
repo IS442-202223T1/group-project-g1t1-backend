@@ -4,8 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -132,13 +130,13 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         Membership membership = membershipRepository.findByMembershipName(bookingEmailDTO.getMembershipName())
                 .orElseThrow(() -> new MembershipNotFoundException(bookingEmailDTO.getMembershipName()));
 
-        EmailTemplate emailTemplate = new EmailTemplate(membership.getEmailTemplate(), bookingEmailDTO.getBookingResults());
+        EmailTemplate emailTemplate = new EmailTemplate(globalConfig, membership.getEmailTemplate(), bookingEmailDTO.getBookingResults());
         TemplateEngine templateEngine = new TemplateEngine(emailTemplate);
 
         if (membership.getIsElectronicPass()) {
             List<Attachment> ePassAttachmentList = new ArrayList<>();
             for (int i = 0; i < bookingEmailDTO.getBookingResults().size(); i++) {
-                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults().get(i));
+                ElectronicPassTemplate ePassTemplate = new ElectronicPassTemplate(globalConfig, membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults().get(i));
                 ElectronicPass ePass = new ElectronicPass(globalConfig, ePassTemplate, bookingEmailDTO.getBookingResults().get(i), i+1);
                 PdfFactory pdfFactory = new PdfFactory(ePass);
                 ePassAttachmentList.add(new Attachment("ePass" + (i+1) +".pdf", pdfFactory.generatePdfFile()));
@@ -149,7 +147,7 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
                     templateEngine.getContent(), ePassAttachmentList);
 
         } else {
-            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults());
+            AuthorizationLetterTemplate attachmentTemplate = new AuthorizationLetterTemplate(globalConfig, membership.getAttachmentTemplate(), bookingEmailDTO.getBookingResults());
             AuthorizationLetter authorizationLetter = new AuthorizationLetter(globalConfig,attachmentTemplate);
             PdfFactory pdfFactory = new PdfFactory(authorizationLetter);
 
@@ -520,14 +518,15 @@ public class BookingService implements BorrowerOps, GopOps, AdminOps {
         List<Booking> bookings;
         List<Booking> openBookingsByEmail = new ArrayList<>();
 
-        System.out.println(email);
+        logger.debug(email);
         if(email == null || email.equals("")){
             bookings = bookingRepository.findAll();
         }
         else{
-            System.out.println(email);
-            bookings = bookingRepository.findByBorrowerEmailContaining(email);
-            System.out.println(bookings);
+            logger.debug(email);
+            bookings = bookingRepository.findByBorrowerEmailContainingIgnoreCase(email);
+            logger.debug(bookings.toString());
+
         }
 
         for (Booking booking : bookings) {

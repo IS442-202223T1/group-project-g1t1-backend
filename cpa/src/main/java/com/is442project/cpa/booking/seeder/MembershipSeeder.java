@@ -39,7 +39,7 @@ public class MembershipSeeder {
                 "https://images.unsplash.com/photo-1665006518423-b81a193b4100?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
 
         Membership membership2 = new Membership("SEA Aquarium", "8 Sentosa Gateway, 098269", ePassEmailTemplate, ePassAttachmentTemplate, 20.50, true, "S.E.A. Aquarium is one of the world\'s largest aquariums, home to more than 100,000 marine animals representing 1,000 species across more than 40 diverse habitats.", "https://images.unsplash.com/photo-1577095972634-64026236ee73?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80");
-        membership2.setLogoUrl("src/main/resources/images/SEA_LOGO.jpg");
+        membership2.setLogoUrl("src/main/resources/images/sea-aquarium.png");
         membership2.setMembershipGrade("SEA STANDARD");
 
 

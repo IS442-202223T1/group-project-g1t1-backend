@@ -22,15 +22,18 @@ public class GlobalConfig {
 
     private String corporateMemberName;
 
+    private String dateFormat;
+
     public GlobalConfig() {
     }
 
     public GlobalConfig(int loanLimitPerMonth, int passLimitPerLoan, String letterHeadUrl,
-            String corporateMemberName) {
+            String corporateMemberName, String dateFormat) {
         this.loanLimitPerMonth = loanLimitPerMonth;
         this.passLimitPerLoan = passLimitPerLoan;
         this.letterHeadUrl = letterHeadUrl;
         this.corporateMemberName = corporateMemberName;
+        this.dateFormat = dateFormat;
     }
 
     public int getId() {
@@ -73,4 +76,11 @@ public class GlobalConfig {
         this.corporateMemberName = corporateMemberName;
     }
 
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
 }
